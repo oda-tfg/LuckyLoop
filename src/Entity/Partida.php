@@ -17,8 +17,10 @@ class Partida
     #[ORM\Column]
     private ?float $dineroApostado = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true, options: ["default" => "CURRENT_DATE"])]
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ["default" => "CURRENT_TIMESTAMP"])]
     private ?\DateTimeInterface $fechaJuego = null;
+
 
     #[ORM\Column]
     private ?float $resultado = null;
