@@ -13,11 +13,12 @@ class Juego
     #[ORM\Column]
     private ?int $id = null;
 
+    
     #[ORM\Column(length: 255)]
     private ?string $nombre = null;
 
-    #[ORM\Column]
-    private ?int $apuestaMinima = null;
+    #[ORM\Column(type: 'integer', nullable: true, options: ['default' => 1])]
+    private ?int $apuestaMinima = 1;
 
     #[ORM\Column]
     private ?int $apuestaMaxima = null;
