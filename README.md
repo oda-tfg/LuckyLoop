@@ -1,5 +1,5 @@
-# LuckyLoop 🚀
-Hecho por Omar, Alejandro y Dario.
+# LuckyLoop 🚀🥇
+Hecho por Omar Daza, Alejandro Cernada y Dario Collar. 💸
 
 ## Primer Diagrama
 
