@@ -18,8 +18,8 @@ class Recompensa
     #[ORM\Column]
     private ?int $nivel = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $recompensa = null;
+    #[ORM\Column(type: "integer", nullable: true, options: ["default" => 0])]
+    private ?int $recompensa = null;
 
     /**
      * @var Collection<int, Usuario>

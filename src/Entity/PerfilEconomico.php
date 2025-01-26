@@ -13,11 +13,12 @@ class PerfilEconomico
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: "float", nullable: true, options: ["default" => 0])]
     private ?float $dineroDepositado = null;
-
-    #[ORM\Column]
+    
+    #[ORM\Column(type: "float", nullable: true, options: ["default" => 0])]
     private ?float $dineroRetirado = null;
+    
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]

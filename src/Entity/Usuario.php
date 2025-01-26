@@ -14,25 +14,27 @@ class Usuario
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $nombre = null;
+
 
     #[ORM\Column(length: 255)]
     private ?string $correo = null;
 
-    #[ORM\Column(length: 9)]
+    #[ORM\Column(length: 9, unique: true)]
     private ?string $telefono = null;
 
     #[ORM\Column(length: 255)]
     private ?string $contraseña = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: "float", nullable: true, options: ["default" => 0])]
     private ?float $saldoActual = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: "datetime", nullable: true, options: ["default" => "CURRENT_TIMESTAMP"])]
     private ?\DateTimeInterface $fechaRegistro = null;
 
-    #[ORM\Column(length: 255)]
+
+    #[ORM\Column(length: 255, options: ["default" => "normal"])]
     private ?string $rol = null;
 
     #[ORM\ManyToOne(inversedBy: 'usuarios')]
