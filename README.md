@@ -10,6 +10,9 @@ Hecho por Omar Daza, Alejandro Cernada y Dario Collar. 💸
 ```
 git clone https://github.com/oda-tfg/LuckyLoop.git
 ```
+```
+composer install
+```
 
 ## Actualización si ya tienes el proyecto
 ```
