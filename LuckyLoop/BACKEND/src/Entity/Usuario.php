@@ -5,27 +5,37 @@ namespace App\Entity;
 use App\Repository\UsuarioRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UsuarioRepository::class)]
-class Usuario
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+
+class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    /**
+     * @var list<string> The user roles
+     */
+    #[ORM\Column]
+    private array $roles = [];
+
     #[ORM\Column(length: 255, unique: true)]
     private ?string $nombre = null;
 
 
     #[ORM\Column(length: 255)]
-    private ?string $correo = null;
+    private ?string $email = null;
 
     #[ORM\Column(length: 9, unique: true)]
     private ?string $telefono = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $contraseña = null;
+    private ?string $password = null;
 
     #[ORM\Column(type: "float", nullable: true, options: ["default" => 0])]
     private ?float $saldoActual = null;
@@ -33,12 +43,8 @@ class Usuario
     #[ORM\Column(type: "datetime", nullable: true, options: ["default" => "CURRENT_TIMESTAMP"])]
     private ?\DateTimeInterface $fechaRegistro = null;
 
-
-    #[ORM\Column(length: 255, options: ["default" => "normal"])]
-    private ?string $rol = null;
-
     #[ORM\ManyToOne(inversedBy: 'usuarios')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Recompensa $nivel = null;
 
     public function getId(): ?int
@@ -58,14 +64,39 @@ class Usuario
         return $this;
     }
 
-    public function getCorreo(): ?string
+    /**
+     * @see UserInterface
+     *
+     * @return list<string>
+     */
+    public function getRoles(): array
     {
-        return $this->correo;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
 
-    public function setCorreo(string $correo): static
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): static
     {
-        $this->correo = $correo;
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
 
         return $this;
     }
@@ -82,14 +113,14 @@ class Usuario
         return $this;
     }
 
-    public function getContraseña(): ?string
+    public function getPassword(): ?string
     {
-        return $this->contraseña;
+        return $this->password;
     }
 
-    public function setContraseña(string $contraseña): static
+    public function setPassword(string $password): static
     {
-        $this->contraseña = $contraseña;
+        $this->password = $password;
 
         return $this;
     }
@@ -118,18 +149,6 @@ class Usuario
         return $this;
     }
 
-    public function getRol(): ?string
-    {
-        return $this->rol;
-    }
-
-    public function setRol(string $rol): static
-    {
-        $this->rol = $rol;
-
-        return $this;
-    }
-
     public function getNivel(): ?Recompensa
     {
         return $this->nivel;
@@ -140,5 +159,24 @@ class Usuario
         $this->nivel = $nivel;
 
         return $this;
+    }
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 }
