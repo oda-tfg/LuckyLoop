@@ -1,12 +1,57 @@
-
 <div class="nav">
-    
-    <a href="" class="textoNav"><svg class="logo" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2L2 12H5V20H11V14H13V20H19V12H22L12 2Z" fill="white"/>
-    </svg>Inicio</a><br>
-    <a href="" class="textoNav"><img class="logo" src="logoJuegoBG.png" alt="">Juegos</a><br>
-    <a href="" class="textoNav"><svg class="logo" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2C9.24 2 7 4.24 7 7C7 9.76 9.24 12 12 12C14.76 12 17 9.76 17 7C17 4.24 14.76 2 12 2ZM12 10C10.34 10 9 8.66 9 7C9 5.34 10.34 4 12 4C13.66 4 15 5.34 15 7C15 8.66 13.66 10 12 10ZM18 20H6V19C6 16.33 10 14.5 12 14.5C14 14.5 18 16.33 18 19V20Z" fill="white"/>
-    </svg>Contacto</a><br>
-    
+    <a href="#" class="textoNav">
+        <svg class="logo" viewBox="0 0 24 24">
+            <path d="M12 2L2 12H5V20H11V14H13V20H19V12H22L12 2Z"/>
+        </svg>
+        <span class="nav-texto">Inicio</span>
+    </a>
+    <a href="#" class="textoNav">
+        <svg class="logo" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.54-12.54L13 12.6l-3.54-3.54-1.06 1.06 4.6 4.6 5.66-5.66-1.06-1.06z"/>
+        </svg>
+        <span class="nav-texto">Juegos</span>
+    </a>
+    <a href="#" class="textoNav">
+        <svg class="logo" viewBox="0 0 24 24">
+            <path d="M12 2C9.24 2 7 4.24 7 7s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 8c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm9 11v-1c0-3.87-3.13-7-7-7h-4c-3.87 0-7 3.13-7 7v1h18z"/>
+        </svg>
+        <span class="nav-texto">Contacto</span>
+    </a>
 </div>
+<!-- Menú hamburguesa (visible en móvil) -->
+<label class="popup">
+  <input type="checkbox" id="menu-toggle">
+  <div class="burger" tabindex="0">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <nav class="popup-window">
+    <ul>
+      <li>
+        <a href="#" class="textoNav-mobile">
+          <svg class="logo" viewBox="0 0 24 24">
+            <path d="M12 2L2 12H5V20H11V14H13V20H19V12H22L12 2Z"/>
+          </svg>
+          <span>Inicio</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="textoNav-mobile">
+          <svg class="logo" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.54-12.54L13 12.6l-3.54-3.54-1.06 1.06 4.6 4.6 5.66-5.66-1.06-1.06z"/>
+          </svg>
+          <span>Juegos</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="textoNav-mobile">
+          <svg class="logo" viewBox="0 0 24 24">
+            <path d="M12 2C9.24 2 7 4.24 7 7s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 8c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm9 11v-1c0-3.87-3.13-7-7-7h-4c-3.87 0-7 3.13-7 7v1h18z"/>
+          </svg>
+          <span>Contacto</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</label>

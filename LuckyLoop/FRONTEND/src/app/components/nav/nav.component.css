@@ -1,19 +1,115 @@
-.nav{
- background-color: #4b4b4b;
- width: 14em;
- height: 100vh;
+.nav {
+    background-color: #4b4b4b;
+    width: 14em;
+    height: 100vh;
+    padding: 1rem;
+    position: fixed;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
-    
 
-.logo{
-    width: 3em;
-    height: 3em;
-    margin-right: 10px;
+.logo {
+    width: 2em;
+    height: 2em;
+    min-width: 2em;
+    fill: white;
+    transition: transform 0.3s ease;
 }
 
-.textoNav{
-    color: rgb(255, 255, 255);
-    display:flex;
-    align-items: center;
+.textoNav {
+    color: white;
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.nav-texto {
+    white-space: nowrap;
+    transition: opacity 0.3s ease;
+}
+
+/* Estilos originales del nav */
+.nav {
+  display: block;
+  /* mantener tus estilos originales */
+}
+
+/* Menú hamburguesa - oculto en desktop */
+.popup {
+  display: none;
+  position: fixed;
+  top:1rem;
+  left: 1rem;
+  z-index: -1;
+}
+
+/* Mostrar hamburguesa en móvil */
+@media (max-width: 768px) {
+  .nav {
+    display: none;
+  }
+  
+  .popup {
+    display: block;
+  }
+}
+
+/* Estilos del popup adaptados a tu tema */
+.popup-window {
+  background: #4b4b4b;
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.2);
+  padding: 1rem;
+  position: absolute;
+  top: 120%;
+  left: 0;
+  min-width: 200px;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.2s ease;
+  pointer-events: none;
+}
+
+.popup input:checked ~ .popup-window {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: all;
+}
+
+.textoNav-mobile {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+}
+
+/* Estilos del botón hamburguesa */
+.burger span {
+  background: white;
+  height: 2px;
+  width: 24px;
+  margin: 4px 0;
+  display: block;
+  transition: all 0.3s ease;
+}
+
+.popup input:checked ~ .burger span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.popup input:checked ~ .burger span:nth-child(2) {
+  opacity: 0;
+}
+
+.popup input:checked ~ .burger span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
 }
