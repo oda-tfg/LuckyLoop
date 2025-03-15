@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { JuegoComponent } from './juego/juego.component';
+
 
 @Component({
   selector: 'app-root',
