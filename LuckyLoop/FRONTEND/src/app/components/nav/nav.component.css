@@ -1,0 +1,19 @@
+.nav{
+ background-color: #4b4b4b;
+ width: 14em;
+ height: 100vh;
+}
+    
+
+.logo{
+    width: 3em;
+    height: 3em;
+    margin-right: 10px;
+}
+
+.textoNav{
+    color: rgb(255, 255, 255);
+    display:flex;
+    align-items: center;
+    text-decoration: none;
+}
