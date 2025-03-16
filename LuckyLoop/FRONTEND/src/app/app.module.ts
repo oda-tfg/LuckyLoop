@@ -8,6 +8,7 @@ import { NavComponent } from './components/nav/nav.component';
 
 import { JuegoComponent } from './components/juego/juego.component';
 import { SeccionJuegosComponent } from './components/seccion-juegos/seccion-juegos.component';
+import { HeaderComponent } from './components/header/header.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { SeccionJuegosComponent } from './components/seccion-juegos/seccion-jueg
     NavComponent,
 
     JuegoComponent,
-    SeccionJuegosComponent
+    SeccionJuegosComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
