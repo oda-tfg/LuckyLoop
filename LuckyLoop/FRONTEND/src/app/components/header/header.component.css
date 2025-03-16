@@ -12,7 +12,6 @@ header {
     padding: 0 40px;
     position: relative;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    border-bottom: 2px solid var(--verde-chillon);
     margin: 0;
     position: relative;
 }
@@ -27,8 +26,16 @@ header h1 {
     letter-spacing: 2px;
     text-shadow:
         2px 2px 4px rgba(0, 0, 0, 0.5),
-        0 0 8px var(--azul);
-    /* Efecto neón sutil */
+        0 0 8px var(--morado);
+    cursor: pointer;
+
+    &:hover{
+        text-shadow:
+        2px 2px 8px rgba(0, 0, 0, 0.5),
+        0 0 8px var(--morado);
+        scale: 1.05;
+        transition: .4s;
+    }
 }
 
 
@@ -117,12 +124,12 @@ header h1 {
     left: 5px;
     filter: blur(20px);
     opacity: 0.8;
-    animation: leftright 4s ease-in infinite;
+    animation: leftright 8s ease-in infinite;
     transition: all 2s;
 }
 
 #main:hover>#pink-mask {
-    animation: rotate 4s linear infinite;
+    animation: rotate 8s linear infinite;
     opacity: 0;
 }
 
@@ -152,7 +159,7 @@ header h1 {
             rgba(0, 0, 0, 0) 50%,
             #dfa2da,
             rgba(0, 0, 0, 0) 58%);
-    animation: rotate 4s linear infinite;
+    animation: rotate 8s linear infinite;
     transition: all 2s;
 }
 
@@ -182,7 +189,7 @@ header h1 {
             #1c191c 50%,
             #cf30aa 60%,
             #1c191c 64%);
-    animation: rotate 4s 0.1s linear infinite;
+    animation: rotate 8s 0.1s linear infinite;
     transition: all 2s;
 }
 
@@ -284,15 +291,13 @@ header h1 {
     height: 999px;
     background-repeat: no-repeat;
     background-position: 0 0;
-    /*border color, change middle color*/
     background-image: conic-gradient(#000,
             #402fb5 5%,
             #000 38%,
             #000 50%,
             #cf30aa 60%,
             #000 87%);
-    /* change speed here */
-    animation: rotate 4s 0.3s linear infinite;
+    animation: rotate 8s 0.3s linear infinite;
     transition: all 2s;
 }
 
@@ -374,7 +379,7 @@ header h1 {
             rgba(0, 0, 0, 0) 50%,
             #3d3a4f,
             rgba(0, 0, 0, 0) 100%);
-    animation: rotate 4s linear infinite;
+    animation: rotate 8s linear infinite;
 }
 
 #main {

@@ -17,4 +17,6 @@
 
 body{
     background: var(--color-fondo);
+    color: white;
 }
+

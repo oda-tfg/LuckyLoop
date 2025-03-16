@@ -1,1 +1,19 @@
-<p>seccion-juegos works!</p>
+<!-- plantilla-principal.component.html -->
+<section class="contenedor-juegos">
+    <h2>{{nombre}}</h2>
+    <div class="carrusel">
+        <button class="flecha flecha-izq" 
+        *ngIf="mostrarFlechaIzq" 
+        (click)="moverCarrusel(-1)">‹</button>
+        <div class="juegos-contenedor" #juegosContenedor>
+            <app-juego 
+                *ngFor="let juego of juegos" 
+                [nombre]="juego.nombre" 
+                [imagen]="juego.imagen">
+            </app-juego>
+        </div>
+        <button class="flecha flecha-der" 
+        *ngIf="mostrarFlechaDer" 
+        (click)="moverCarrusel(1)">›</button>
+    </div>
+</section>

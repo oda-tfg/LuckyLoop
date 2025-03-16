@@ -1,5 +1,6 @@
 .nav {
-    background-color: #4b4b4b;
+    background-color: var(--color-header);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     width: 14em;
     height: 100vh;
     padding: 1rem;
