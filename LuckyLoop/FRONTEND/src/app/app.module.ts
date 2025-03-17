@@ -10,6 +10,7 @@ import { JuegoComponent } from './components/juego/juego.component';
 import { SeccionJuegosComponent } from './components/seccion-juegos/seccion-juegos.component';
 import { HeaderComponent } from './components/header/header.component';
 import { PlantillaPrincipalComponent } from './components/plantillas/plantilla-principal/plantilla-principal.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { PlantillaPrincipalComponent } from './components/plantillas/plantilla-p
     JuegoComponent,
     SeccionJuegosComponent,
     HeaderComponent,
-    PlantillaPrincipalComponent
+    PlantillaPrincipalComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
