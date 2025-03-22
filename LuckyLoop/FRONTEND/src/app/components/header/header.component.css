@@ -14,6 +14,7 @@ header {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     margin: 0;
     position: relative;
+    gap: 10px;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
@@ -651,8 +652,20 @@ button {
 
     /* Ajuste para pantallas medianas */
     @media (max-width: 768px) {
+        .header-container {
+            margin-left: 70px;
+        }
         #titulo {
             max-width: 35%;
+        }
+        .switch {
+            margin-left: 80px;
+            width: 4em;
+            height: 0,3em;
+        }
+
+        .container{
+            margin-left: -40px;
         }
     }
 

@@ -19,16 +19,16 @@
     </a>
 </div>
 <!-- Menú hamburguesa (visible en móvil) -->
-<label class="popup">
+<div class="popup">
   <input type="checkbox" id="menu-toggle">
-  <div class="burger" tabindex="0">
+  <label for="menu-toggle" class="burger" tabindex="0">
     <span></span>
     <span></span>
     <span></span>
-  </div>
+  </label>
   <nav class="popup-window">
     <ul>
-      <li>
+      <li class="liNav">
         <a href="#" class="textoNav-mobile">
           <svg class="logo" viewBox="0 0 24 24">
             <path d="M12 2L2 12H5V20H11V14H13V20H19V12H22L12 2Z"/>
@@ -36,7 +36,7 @@
           <span>Inicio</span>
         </a>
       </li>
-      <li>
+      <li class="liNav">
         <a href="#" class="textoNav-mobile">
           <svg class="logo" viewBox="0 0 24 24">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.54-12.54L13 12.6l-3.54-3.54-1.06 1.06 4.6 4.6 5.66-5.66-1.06-1.06z"/>
@@ -44,14 +44,14 @@
           <span>Juegos</span>
         </a>
       </li>
-      <li>
+      <li class="liNav">
         <a href="#" class="textoNav-mobile">
           <svg class="logo" viewBox="0 0 24 24">
-            <path d="M12 2C9.24 2 7 4.24 7 7s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 8c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm9 11v-1c0-3.87-3.13-7-7-7h-4c-3.87 0-7 3.13-7 7v1h18z"/>
+            <path d="M12 2C9.24 2 7 4.24 7 7s2.24 5 5 5 5-2.24 5-5-5-5zm0 8c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm9 11v-1c0-3.87-3.13-7-7-7h-4c-3.87 0-7 3.13-7 7v1h18z"/>
           </svg>
           <span>Contacto</span>
         </a>
       </li>
     </ul>
   </nav>
-</label>
+</div>

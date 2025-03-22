@@ -33,16 +33,23 @@ export class SeccionJuegosComponent {
 
   moverCarrusel(direccion: number) {
     const contenedor = this.juegosContenedor.nativeElement;
-    const anchoContenedor = contenedor.clientWidth;
+    const scrollAmount = contenedor.clientWidth * 0.8; // Ajuste más preciso
     
-    this.currentScroll += direccion * anchoContenedor;
+    this.currentScroll += direccion * scrollAmount;
+    
+    // Limitar los límites del scroll
+    this.currentScroll = Math.max(0, Math.min(
+        this.currentScroll, 
+        contenedor.scrollWidth - contenedor.clientWidth
+    ));
+    
     contenedor.scrollTo({
-      left: this.currentScroll,
-      behavior: 'smooth'
+        left: this.currentScroll,
+        behavior: 'smooth'
     });
 
-    // Actualizar después de la animación
-    setTimeout(() => this.actualizarFlechas(), 500);
-  }
+    // Actualizar flechas después de la animación
+    contenedor.addEventListener('scrollend', () => this.actualizarFlechas(), {once: true});
+}
 
 }

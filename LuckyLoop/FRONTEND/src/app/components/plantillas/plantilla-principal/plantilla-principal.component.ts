@@ -12,7 +12,7 @@ import { SeccionJuegosComponent } from '../../seccion-juegos/seccion-juegos.comp
   styleUrl: './plantilla-principal.component.css'
 })
 export class PlantillaPrincipalComponent {
-  nombre = 'Lo mas jugado';
+  nombre = 'Lo mas jugado'
   juegos=[
     {
       'nombre':'Ruleta',
