@@ -1,0 +1,15 @@
+# config/packages/nelmio_api_doc.yaml
+nelmio_api_doc:
+    documentation:
+        info:
+            title: LuckyLoop API
+            description: Documentación de la API del proyecto LuckyLoop
+            version: 1.0.0
+    areas:
+        default:
+            path_patterns: [ ^/api ]
+            documentation:
+                info:
+                    title: "LuckyLoop API"
+                    description: "Documentación de la API del proyecto LuckyLoop"
+                    version: "1.0.0"
