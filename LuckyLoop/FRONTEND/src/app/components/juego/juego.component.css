@@ -1,5 +1,5 @@
 .card {
-    width: 190px;
+    width: 195px; /* Ahora será responsivo */
     height: 254px;
     border-radius: 30px;
     background: var(--color-fondo);
@@ -76,4 +76,41 @@
     border-radius: 0 0 30px 30px;
     animation: neon-pulse 2s infinite;
 }
+
+
+/* Responsive Design */
+@media (max-width: 1500px) {
+
+    .card{
+        width: 182px;
+        height: 245px;
+    }
+
+}
+@media (max-width: 1200px) {
+
+    .card{
+        width: 175px;
+        height: 238px;
+    }
+
+}
+
+@media (max-width: 992px) {
+    .card{
+        width: 165px;
+        height: 220px;
+    
+    }
+}
+
+
+@media (max-width: 768px) {
+    .card{
+        width: 155px;
+        height: 205px;
+    }
+}
+
+
 

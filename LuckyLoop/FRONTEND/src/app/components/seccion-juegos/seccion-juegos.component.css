@@ -3,24 +3,35 @@
     padding: 2rem;
     max-width: 1400px;
     margin: 0 auto;
+    margin-left: 17%;
 }
 
 .carrusel {
     position: relative;
     overflow: hidden;
+    padding: 0 3rem;  /* Padding para flechas */
+    margin-left: -3rem;  /* Compensar padding del título */
 }
+
+
+.TituloDiv {
+    margin: 0 0 1rem 3rem; /* Igualar padding izquierdo del carrusel */
+    padding: 0;
+}
+
 
 .juegos-contenedor {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: calc((100% / 4) - 1rem);
+    grid-auto-columns: calc((100% - (1.5rem * 3)) / 4); /* 4 columnas con 3 gaps */
     gap: 1.5rem;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     padding: 1rem 0;
-    -ms-overflow-style: none;  /* Ocultar scrollbar en IE/Edge */
-    scrollbar-width: none;  /* Ocultar scrollbar en Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    margin-left: 50px;
 }
 
 .juegos-contenedor::-webkit-scrollbar {
@@ -40,36 +51,95 @@
     cursor: pointer;
     z-index: 1;
     transition: opacity 0.3s;
+    padding: 10px;
+    /* Asegurar que estén fuera del contenido */
+    filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
 }
 
 .flecha-izq {
-    left: 1rem;
+    left: 0.5rem;
 }
 
 .flecha-der {
-    right: 1rem;
+    right: 0.5rem;
 }
 
 /* Responsive Design */
+
 @media (max-width: 1200px) {
     .juegos-contenedor {
-        grid-auto-columns: calc((100% / 3) - 1rem);
+        grid-auto-columns: calc((100% - (1.5rem * 2)) / 3); /* 3 columnas */
+    }
+    .contenedor-juegos {
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+        margin-left: 22%;
+    }
+    .TituloDiv {
+        margin-left: 2rem;
+    }
+    .carrusel {
+        padding: 0 2rem;
+        margin-left: -2rem;
     }
 }
 
 @media (max-width: 992px) {
     .juegos-contenedor {
-        grid-auto-columns: calc((100% / 2) - 1rem);
+        grid-auto-columns: calc((100% - 1.5rem) / 2); /* 2 columnas */
+    }.contenedor-juegos {
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+        margin-left: 20%
     }
+    .TituloDiv {
+        margin-left: 1.5rem;
+    }
+    .carrusel {
+        padding: 0 1.5rem;
+        margin-left: -1.5rem;
+    }
+ 
 }
 
 @media (max-width: 768px) {
     .juegos-contenedor {
-        grid-auto-columns: 100%;
+        grid-auto-columns: calc((100% - 1.5rem) / 2); /* 2 columnas */
     }
-    
-    .flecha {
-        width: 30px;
-        height: 30px;
+    .carrusel {
+        padding: 0 1.5rem; /* Menos padding en móviles */
+    }.contenedor-juegos {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    margin-left: 1.5%
+    }
+    .TituloDiv {
+        margin-left: 1rem;
+    }
+    .carrusel {
+        padding: 0 1rem;
+        margin-left: -1rem;
+    }
+
+}
+@media (max-width: 570px) {
+    .juegos-contenedor {
+        grid-auto-columns: 100%; /* 1 columna */
+    }
+    .carrusel {
+        padding: 0 1.5rem; /* Menos padding en móviles */
+    }.contenedor-juegos {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    margin-left: 1.5%
+    }.TituloDiv {
+        margin-left: 1rem;
+    }
+    .carrusel {
+        padding: 0 1rem;
     }
 }
