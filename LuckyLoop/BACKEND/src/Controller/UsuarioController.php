@@ -24,21 +24,57 @@ final class UsuarioController extends AbstractController
     }
 
     #[Route('/api/usuario/getSaldo/{id}', name: 'get_saldo', methods: ['GET'])]
-    public function getSaldo(EntityManagerInterface $entityManager, $id): Response
+    #[OA\Get(
+        path: '/api/usuario/getSaldo/{id}',
+        summary: 'Obtener el saldo actual de un usuario por ID',
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                in: 'path',
+                required: true,
+                description: 'ID del usuario',
+                schema: new OA\Schema(type: 'integer', example: 5)
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Saldo del usuario encontrado',
+                content: new OA\JsonContent(
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'saldo', type: 'number', example: 150.75)
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Usuario no encontrado',
+                content: new OA\JsonContent(
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'error', type: 'string', example: 'Usuario no encontrado')
+                    ]
+                )
+            )
+        ]
+    )]
+    public function getSaldo(EntityManagerInterface $entityManager, $id): JsonResponse
     {
-        $usuarioRep= $entityManager->getRepository(Usuario::class);
-        $usuario= $usuarioRep->find($id);
-
+        $usuarioRep = $entityManager->getRepository(Usuario::class);
+        $usuario = $usuarioRep->find($id);
+    
         if (!$usuario) {
             return $this->json([
                 'error' => 'Usuario no encontrado',
             ], Response::HTTP_NOT_FOUND);
         }
-
+    
         return $this->json([
             'saldo' => $usuario->getSaldoActual()
         ]);
     }
+    
 
     #[Route('/api/usuario/restarSaldoApostado', name: 'restar_saldo', methods: ['POST'])]
     #[OA\Post(
