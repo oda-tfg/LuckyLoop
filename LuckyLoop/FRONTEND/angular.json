@@ -31,6 +31,7 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
+              "src/assets/gameEjemplo", //linea para añadir el juego 
               {
                 "glob": "**/*",
                 "input": "public"
@@ -67,6 +68,18 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+
+          //añadido para juego unity
+          "options": {
+            "headers": {
+              // 👇 Solo nombres de archivo VÁLIDOS (sin caracteres especiales)
+              "Wasm": "Content-Type: application/wasm",
+              "Data": "Content-Type: application/octet-stream",
+              "Js": "Content-Type: application/javascript"
+            }
+          },
+
+
           "configurations": {
             "production": {
               "buildTarget": "FRONTEND:build:production"

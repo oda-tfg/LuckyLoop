@@ -11,6 +11,7 @@ import { SeccionJuegosComponent } from './components/seccion-juegos/seccion-jueg
 import { HeaderComponent } from './components/header/header.component';
 import { PlantillaPrincipalComponent } from './components/plantillas/plantilla-principal/plantilla-principal.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { UnityGameComponent } from './components/unity-game/unity-game.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { FooterComponent } from './components/footer/footer.component';
     SeccionJuegosComponent,
     HeaderComponent,
     PlantillaPrincipalComponent,
-    FooterComponent
+    FooterComponent,
+    UnityGameComponent
   ],
   imports: [
     BrowserModule,
