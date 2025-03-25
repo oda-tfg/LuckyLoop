@@ -3,13 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Usuario;
+use App\Service\MailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
+
+
 
 
 
@@ -27,6 +31,7 @@ final class UsuarioController extends AbstractController
     #[OA\Get(
         path: '/api/usuario/getSaldo/{id}',
         summary: 'Obtener el saldo actual de un usuario por ID',
+        tags: ['Usuario'],
         parameters: [
             new OA\Parameter(
                 name: 'id',
@@ -80,6 +85,7 @@ final class UsuarioController extends AbstractController
     #[OA\Post(
         path: '/api/usuario/restarSaldoApostado',
         summary: 'Resta saldo a un usuario después de apostar',
+        tags: ['Usuario'],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
@@ -139,6 +145,64 @@ final class UsuarioController extends AbstractController
         return $this->json([
             'message' => 'Saldo actualizado correctamente',
             'nuevoSaldo' => $nuevoSaldo
+        ]);
+    }
+
+    #[Route('/api/usuario/emailToken', name: 'generar_token', methods: ['POST'])]
+    #[OA\Post(
+        path: '/api/usuario/emailToken',
+        summary: 'Genera un token a un usuario si su email existe y le envia un email',
+        tags: ['Usuario'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                type: 'object',
+                required: ['email'],
+                properties: [
+                    new OA\Property(property: 'email', type: 'email', example: 'example@gmail.com'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Email enviado correctamente',
+                content: new OA\JsonContent(
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'message', type: 'string', example: 'Email enviado correctamente'),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 400,
+                description: 'Faltan datos en la petición'
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Email no encontrado'
+            )
+        ]
+    )]
+    public function emailToken(EntityManagerInterface $entityManager, Request $request, MailService $mailer)
+    {
+
+        $userRepo = $entityManager->getRepository(Usuario::class);
+        $data = json_decode($request->getContent(), true);
+        $email = $data['email'];
+        $usuario = $userRepo->findOneBy(['email' => $email]);
+
+        if (!$usuario) {
+            return $this->json(['error' => 'Email no encontrado'], 404);
+        }
+
+        $mensaje= 'Hola, para recuperar tu contraseña, haz click en el siguiente enlace: <a href="link">Recuperar Contraseña</a>';
+
+
+        $mailer->enviarEmail($email, 'Recuperar Contraseña', $mensaje, 'Recuperar Contraseña');
+
+        return $this->json([
+            'message' => 'Email enviado correctamente'
         ]);
     }
     
