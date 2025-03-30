@@ -1,0 +1,67 @@
+<footer class="footer">
+    <div class="container">
+      <!-- Logo y descripción -->
+      <div class="footer-top">
+        <div class="footer-logo">
+          <img src="assets/images/casino-logo-white.png" alt="Casino Logo">
+          <p>Tu destino para disfrutar de los mejores juegos de casino online. Juega de manera responsable.</p>
+        </div>
+        
+        <!-- Enlaces de pago -->
+        <div class="payment-methods">
+          <h4>Métodos de Pago</h4>
+          <div class="payment-icons">
+            <img *ngFor="let method of paymentMethods" 
+                 src="assets/images/payments/{{ method }}.png" 
+                 alt="{{ method }}">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Enlaces del sitio -->
+      <div class="footer-links">
+        <div class="link-group" *ngFor="let group of footerLinks">
+          <h4>{{ group.title }}</h4>
+          <ul>
+            <li *ngFor="let link of group.links">
+              <a [routerLink]="link.url">{{ link.text }}</a>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- Boletín informativo -->
+        <div class="newsletter">
+          <h4>Boletín Informativo</h4>
+          <p>Suscríbete para recibir promociones exclusivas y novedades.</p>
+          <div class="newsletter-form">
+            <input type="email" placeholder="Tu correo electrónico">
+            <button>Suscribirse</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Redes sociales y licencias -->
+      <div class="footer-bottom">
+        <div class="social-media">
+          <h4>Síguenos</h4>
+          <div class="social-icons">
+            <a *ngFor="let social of socialMedia" [href]="social.url" target="_blank">
+              <i class="fab" [ngClass]="'fa-' + social.name"></i>
+            </a>
+          </div>
+        </div>
+        
+        <div class="licenses">
+          <img src="assets/images/licenses/license1.png" alt="Licencia de Juego">
+          <img src="assets/images/licenses/license2.png" alt="Juego Seguro">
+          <img src="assets/images/licenses/license3.png" alt="18+">
+        </div>
+      </div>
+      
+      <!-- Copyright -->
+      <div class="copyright">
+        <p>&copy; {{ currentYear }} Casino. Todos los derechos reservados.</p>
+        <p>Juega de manera responsable. El juego debe ser una forma de entretenimiento, no una forma de generar ingresos o resolver problemas financieros.</p>
+      </div>
+    </div>
+  </footer>

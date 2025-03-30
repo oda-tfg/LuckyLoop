@@ -1,0 +1,249 @@
+.header {
+  background-color: rgba(5, 5, 15, 0.8);
+  color: var(--text-white);
+  padding: 15px 0;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-index-header);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.8);
+  border-bottom: 1px solid rgba(81, 0, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  flex: 0 0 auto;
+  position: relative;
+}
+
+/* Nuevo estilo para el logo de texto neÃ³n */
+.neon-logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin: 0;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 
+    0 0 5px #0051ff,
+    0 0 10px #0051ff,
+    0 0 20px #0051ff,
+    0 0 40px #0051ff;
+  animation: logoFlicker 3s infinite alternate;
+  position: relative;
+}
+
+@keyframes logoFlicker {
+  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+    opacity: 1;
+    text-shadow: 
+      0 0 5px #0051ff,
+      0 0 10px #0051ff,
+      0 0 20px #0051ff,
+      0 0 40px #0051ff;
+  }
+  20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+    opacity: 0.8;
+    text-shadow: none;
+  }
+}
+
+.neon-logo span {
+  color: #23ff00;
+  text-shadow: 
+    0 0 5px #23ff00,
+    0 0 10px #23ff00,
+    0 0 20px #23ff00,
+    0 0 40px #23ff00;
+  animation: logoSpanFlicker 2.5s infinite alternate;
+  animation-delay: 0.5s;
+}
+
+@keyframes logoSpanFlicker {
+  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+    opacity: 1;
+    text-shadow: 
+      0 0 5px #23ff00,
+      0 0 10px #23ff00,
+      0 0 20px #23ff00,
+      0 0 40px #23ff00;
+  }
+  20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+    opacity: 0.8;
+    text-shadow: none;
+  }
+}
+
+.neon-logo::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  border-radius: 5px;
+  background: rgba(0, 81, 255, 0.1);
+  z-index: -1;
+  filter: blur(10px);
+  opacity: 0;
+  animation: logoPulse 4s infinite;
+}
+
+@keyframes logoPulse {
+  0% { opacity: 0; }
+  50% { opacity: 0.5; }
+  100% { opacity: 0; }
+}
+
+.search-bar {
+  flex: 1 1 auto;
+  margin: 0 20px;
+  position: relative;
+}
+  
+.search-bar input {
+  width: 100%;
+  padding: 12px 40px 12px 15px;
+  border-radius: 25px;
+  border: 1px solid var(--neon-purple);
+  background-color: rgba(10, 10, 25, 0.6);
+  color: var(--text-white);
+  font-size: var(--font-size-md);
+  box-shadow: 0 0 10px rgba(81, 0, 255, 0.3);
+  transition: all 0.3s;
+}
+  
+.search-bar input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+  
+.search-bar input:focus {
+  outline: none;
+  border-color: var(--neon-blue);
+  box-shadow: 0 0 15px rgba(0, 81, 255, 0.5);
+  background-color: rgba(10, 10, 25, 0.8);
+}
+  
+.search-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--neon-purple);
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 18px;
+}
+  
+.search-button:hover {
+  color: var(--neon-blue);
+  text-shadow: 0 0 10px var(--neon-blue);
+}
+
+.login-button {
+  flex: 0 0 auto;
+}
+  
+.login-button button {
+  background-color: transparent;
+  color: var(--text-white);
+  border: 2px solid var(--neon-purple);
+  border-radius: 25px;
+  padding: 10px 25px;
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 0 10px rgba(81, 0, 255, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-button button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.5s;
+}
+  
+.login-button button:hover {
+  background-color: var(--neon-purple);
+  color: var(--text-white);
+  box-shadow: 0 0 15px var(--neon-purple), 0 0 30px rgba(81, 0, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.login-button button:hover:before {
+  left: 100%;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .header-content {
+    flex-wrap: wrap;
+  }
+  
+  .logo {
+    margin-bottom: 10px;
+  }
+  
+  .neon-logo {
+    font-size: 24px;
+  }
+  
+  .search-bar {
+    order: 3;
+    width: 100%;
+    margin: 10px 0 0;
+  }
+  
+  .login-button {
+    order: 2;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .logo {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  
+  .neon-logo {
+    font-size: 22px;
+  }
+  
+  .login-button {
+    margin-top: 15px;
+  }
+  
+  .login-button button {
+    width: 100%;
+  }
+}

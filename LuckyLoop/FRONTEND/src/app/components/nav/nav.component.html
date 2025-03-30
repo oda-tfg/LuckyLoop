@@ -1,0 +1,16 @@
+<nav class="nav-container" [class.mobile-open]="mobileMenuOpen">
+    <div class="mobile-toggle" (click)="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  
+    <ul class="nav-menu">
+      <li *ngFor="let item of menuItems">
+        <a [routerLink]="item.route" routerLinkActive="active">
+          <i class="fa" [ngClass]="'fa-' + item.icon"></i>
+          <span>{{ item.title }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>

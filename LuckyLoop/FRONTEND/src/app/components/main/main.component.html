@@ -1,0 +1,60 @@
+<main class="main-content">
+    <!-- Banner Principal -->
+    <section class="banner">
+      <div class="container">
+        <div class="banner-content">
+          <h1>¡Bienvenido al Casino!</h1>
+          <p>Disfruta de los mejores juegos y promociones exclusivas</p>
+          <button class="cta-button">Jugar Ahora</button>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Juegos Destacados -->
+    <section class="games">
+      <div class="container">
+        <h2>Juegos Destacados</h2>
+        
+        <div class="games-grid">
+          <div class="game-card" *ngFor="let game of featuredGames">
+            <div class="game-image">
+              <img [src]="game.image" [alt]="game.name">
+              <span class="game-tag" *ngIf="game.isHot">HOT</span>
+            </div>
+            <div class="game-info">
+              <h3>{{ game.name }}</h3>
+              <p>{{ game.category }}</p>
+              <button class="play-button">Jugar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+
+    
+    <!-- Información adicional -->
+    <section class="info">
+      <div class="container">
+        <div class="info-grid">
+          <div class="info-card">
+            <i class="fa fa-shield-alt"></i>
+            <h3>Juego Seguro</h3>
+            <p>Utilizamos las últimas tecnologías de seguridad para proteger tus datos y transacciones.</p>
+          </div>
+          
+          <div class="info-card">
+            <i class="fa fa-headset"></i>
+            <h3>Soporte 24/7</h3>
+            <p>Nuestro equipo de atención al cliente está disponible las 24 horas para ayudarte.</p>
+          </div>
+          
+          <div class="info-card">
+            <i class="fa fa-wallet"></i>
+            <h3>Pagos Rápidos</h3>
+            <p>Retira tus ganancias de forma rápida y segura con múltiples métodos de pago.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
