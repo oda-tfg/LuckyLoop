@@ -205,5 +205,61 @@ final class UsuarioController extends AbstractController
             'message' => 'Email enviado correctamente'
         ]);
     }
+
+    #[Route('/api/usuario/comprobarToken', name: 'generar_token', methods: ['GET'])]
+    #[OA\Post(
+        path: '/api/usuario/comprobarToken',
+        summary: 'Comprueba si el token del usuario es valido',
+        tags: ['Usuario'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                type: 'token',
+                required: ['token'],
+                properties: [
+                    new OA\Property(property: 'token', type: 'token', example: '1u23123891270389...'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'code', type: 'boolean', example: 1),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 400,
+                description: 'token no valido'
+            )
+        ]
+    )]
+    public function comprobarToken(EntityManagerInterface $entityManager, Request $request, MailService $mailer)
+    {
+
+        $userRepo = $entityManager->getRepository(Usuario::class);
+        $data = json_decode($request->getContent(), true);
+        $email = $data['email'];
+        $usuario = $userRepo->findOneBy(['email' => $email]);
+
+        if (!$usuario) {
+            return $this->json(['error' => 'Email no encontrado'], 404);
+        }
+
+
+
+        $mensaje= 'Hola, para recuperar tu contraseña, haz click en el siguiente enlace: <a href="link">Recuperar Contraseña</a>';
+
+
+        $mailer->enviarEmail($email, 'Recuperar Contraseña', $mensaje, 'Recuperar Contraseña');
+
+        return $this->json([
+            'message' => 'Email enviado correctamente'
+        ]);
+    }
     
 }

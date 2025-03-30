@@ -47,6 +47,9 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: true)]
     private ?Recompensa $nivel = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $tokenPassword = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -178,5 +181,17 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getTokenPassword(): ?string
+    {
+        return $this->tokenPassword;
+    }
+
+    public function setTokenPassword(string $tokenPassword): static
+    {
+        $this->tokenPassword = $tokenPassword;
+
+        return $this;
     }
 }
