@@ -53,7 +53,7 @@ export class MainComponent implements OnInit {
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.showGame = this.router.url === '/blackjack';
-      this.timestamp = Date.now(); // Actualizar timestamp al navegar
+      this.timestamp = Date.now(); //Actualiza timestamp al navegar
     });
   }
 
