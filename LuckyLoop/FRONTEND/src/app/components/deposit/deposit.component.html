@@ -1,0 +1,26 @@
+<div class="deposit-container">
+  <h2 class="deposit-title">Depositar Fondos</h2>
+
+  <div class="amount-selector">
+    <label for="amount">Cantidad (EUR):</label>
+    <input 
+      id="amount" 
+      type="number" 
+      [(ngModel)]="amount" 
+      min="5" 
+      max="1000"
+      class="amount-input"
+    >
+  </div>
+
+  <!-- Contenedor para el elemento de la tarjeta -->
+  <div id="card-element" class="card-element-box"></div>
+
+  <button 
+    (click)="handleDeposit()" 
+    [disabled]="loading" 
+    class="deposit-button"
+  >
+    {{ loading ? 'Procesando...' : 'Depositar ' + amount + '€' }}
+  </button>
+</div>

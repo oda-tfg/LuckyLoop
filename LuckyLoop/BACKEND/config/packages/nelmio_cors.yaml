@@ -1,0 +1,7 @@
+nelmio_cors:
+    defaults:
+        allow_credentials: false
+        allow_origin: ['*'] # Para desarrollo. En producción, usa tu dominio Angular (ej: ['http://localhost:4200'])
+        allow_headers: ['*']
+        allow_methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+        max_age: 3600
