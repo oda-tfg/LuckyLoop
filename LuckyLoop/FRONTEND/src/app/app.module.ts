@@ -12,6 +12,8 @@ import { FooterComponent } from './components/footer/footer.component';
 // Definimos las rutas de la aplicación
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
+
   { path: 'home', component: MainComponent },
   // Aquí se pueden agregar más rutas según se vayan necesitando
   { path: 'blackjack', component: MainComponent }, // Usa el componente existente 
@@ -30,6 +32,9 @@ const routes: Routes = [
     BrowserModule,
     FormsModule,
     RouterModule.forRoot(routes)
+  ],
+  exports: [
+    RouterModule
   ],
   providers: [],
   bootstrap: [AppComponent]
