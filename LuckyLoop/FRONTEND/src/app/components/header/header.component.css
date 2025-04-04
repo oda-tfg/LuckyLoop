@@ -1,3 +1,8 @@
+:host {
+  position: relative;
+  z-index: 1001; /* Mayor que el iframe */
+}
+
 .header {
   background-color: rgba(5, 5, 15, 0.8);
   color: var(--text-white);

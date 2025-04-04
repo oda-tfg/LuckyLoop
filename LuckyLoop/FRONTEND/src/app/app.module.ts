@@ -14,6 +14,7 @@ const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: MainComponent },
   // Aquí se pueden agregar más rutas según se vayan necesitando
+  { path: 'blackjack', component: MainComponent }, // Usa el componente existente 
   { path: '**', redirectTo: '/home' } // Ruta para manejar rutas no encontradas
 ];
 
