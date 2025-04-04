@@ -3,7 +3,6 @@ import { HeaderComponent } from './components/header/header.component';
 import { NavComponent } from './components/nav/nav.component';
 import { MainComponent } from './components/main/main.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { DepositComponent } from './components/deposit/deposit.component';
 
 @Component({
   selector: 'app-root',
