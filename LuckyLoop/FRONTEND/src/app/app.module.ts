@@ -18,7 +18,8 @@ const routes: Routes = [
   { path: 'home', component: MainComponent },
   // Aquí se pueden agregar más rutas según se vayan necesitando
   { path: 'depositar', component: DepositComponent }, 
-  { path: '**', redirectTo: '/home' }, // Ruta para manejar rutas no encontradas
+  { path: 'blackjack', component: MainComponent }, // Usa el componente existente 
+  { path: '**', redirectTo: '/home' } // Ruta para manejar rutas no encontradas
 ];
 
 
