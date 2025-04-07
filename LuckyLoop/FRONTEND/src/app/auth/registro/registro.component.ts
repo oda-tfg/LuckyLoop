@@ -8,8 +8,11 @@ import { Router } from '@angular/router';
   styleUrls: ['./registro.component.css']
 })
 export class RegistroComponent {
+  nombreUsuario: string = "";
   email: string = '';
   password: string = '';
+  repetirPassword: string = "";
+  telefono: string = "";
 
   constructor(private router: Router) {}
 

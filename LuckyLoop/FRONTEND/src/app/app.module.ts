@@ -16,10 +16,10 @@ const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
 
-  { path: 'home', component: MainComponent },
+  { path: 'home', component: MainComponent, data: { showGame: false } },
   // Aquí se pueden agregar más rutas según se vayan necesitando
 /*   { path: 'depositar', component: DepositComponent },  */
-  { path: 'blackjack', component: MainComponent }, // Usa el componente existente 
+{ path: 'blackjack', component: MainComponent, data: { showGame: true } }, // Usa el componente existente 
   { path: '**', redirectTo: '/home' } // Ruta para manejar rutas no encontradas
 ];
 
