@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-main',
@@ -46,19 +45,23 @@ export class MainComponent implements OnInit {
     }
   ];
 
-  constructor(private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router // Inyectado Router
+  ) {}
 
-  ngOnInit(): void {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      this.showGame = this.router.url === '/blackjack';
-      this.timestamp = Date.now(); //Actualiza timestamp al navegar
+  ngOnInit() {
+    this.route.data.subscribe(data => {
+      this.showGame = data['showGame'] || false;
     });
   }
 
   goToGame(url: string): void {
-    this.router.navigate([url]);
+    if (url) {
+      this.router.navigate([url]);
+    } else {
+      this.showAlert();
+    }
   }
 
   showAlert(): void {

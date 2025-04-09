@@ -2,8 +2,11 @@
     <h2>Registro</h2>
   
     <form (submit)="register()">
+      <input [(ngModel)]="nombreUsuario" name="nombreUsuario" type="text" placeholder="Nombre usuario" required />
       <input [(ngModel)]="email" name="email" type="email" placeholder="Correo electrónico" required />
       <input [(ngModel)]="password" name="password" type="password" placeholder="Contraseña" required />
+      <input [(ngModel)]="repetirPassword" name="repetirPassword" type="password" placeholder="Repetir Contraseña" required />
+      <input [(ngModel)]="telefono" name="telefono" type="tel" placeholder="Telefono" required />
       <button type="submit">Registrarse</button>
     </form>
   
