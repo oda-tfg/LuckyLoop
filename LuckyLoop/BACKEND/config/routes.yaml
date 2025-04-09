@@ -7,3 +7,17 @@ controllers:
 nelmio_api_doc:
     path: /api/doc
     controller: nelmio_api_doc.controller.swagger_ui
+    
+api_login:
+    path: /api/login
+    methods: ['POST']
+    
+app_logout:
+    path: /logout
+    methods: ['GET']
+
+# Ruta para el controlador de API (para pruebas)
+api_test:
+    path: /api/test
+    controller: App\Controller\ApiController::test
+    methods: ['GET']

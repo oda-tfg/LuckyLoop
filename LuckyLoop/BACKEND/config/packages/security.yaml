@@ -1,3 +1,4 @@
+# config/packages/security.yaml
 security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
@@ -14,6 +15,18 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+            
+        api:
+            pattern: ^/api
+            stateless: true
+            provider: app_user_provider
+            json_login:
+                check_path: api_login
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            jwt: ~
         
         main:
             lazy: true
@@ -27,13 +40,17 @@ security:
                 path: app_logout
                 target: /login
                 
-
     access_control:
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/doc, roles: PUBLIC_ACCESS }
+        - { path: ^/api/usuario/comprobarToken, roles: PUBLIC_ACCESS }
+        - { path: ^/api/usuario/emailToken, roles: PUBLIC_ACCESS }
+        - { path: ^/api/usuario/cambiarPassword, roles: PUBLIC_ACCESS }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/estadisticas, roles: ROLE_MANAGER }
         # - { path: ^/user, roles: ROLE_USER }
 
-# Definir la ruta del logout en routes.yaml para evitar errores
 when@test:
     security:
         password_hashers:
