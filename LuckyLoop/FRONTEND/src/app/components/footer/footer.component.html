@@ -18,27 +18,7 @@
         </div>
       </div>
       
-      <!-- Enlaces del sitio -->
-      <div class="footer-links">
-        <div class="link-group" *ngFor="let group of footerLinks">
-          <h4>{{ group.title }}</h4>
-          <ul>
-            <li *ngFor="let link of group.links">
-              <a [routerLink]="link.url">{{ link.text }}</a>
-            </li>
-          </ul>
-        </div>
-        
-        <!-- Boletín informativo -->
-        <div class="newsletter">
-          <h4>Boletín Informativo</h4>
-          <p>Suscríbete para recibir promociones exclusivas y novedades.</p>
-          <div class="newsletter-form">
-            <input type="email" placeholder="Tu correo electrónico">
-            <button>Suscribirse</button>
-          </div>
-        </div>
-      </div>
+      
       
       <!-- Redes sociales y licencias -->
       <div class="footer-bottom">

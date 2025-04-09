@@ -13,37 +13,7 @@ export class FooterComponent {
     'visa', 'mastercard', 'paypal', 'skrill', 'neteller'
   ];
 
-  footerLinks = [
-    {
-      title: 'Casino',
-      links: [
-        { text: 'Slots', url: '/slots' },
-        { text: 'Ruleta', url: '/roulette' },
-        { text: 'Blackjack', url: '/blackjack' },
-        { text: 'Poker', url: '/poker' },
-        { text: 'Baccarat', url: '/baccarat' }
-      ]
-    },
-    {
-      title: 'Información',
-      links: [
-        { text: 'Sobre Nosotros', url: '/about' },
-        { text: 'Términos y Condiciones', url: '/terms' },
-        { text: 'Política de Privacidad', url: '/privacy' },
-        { text: 'Juego Responsable', url: '/responsible-gaming' },
-        { text: 'Afiliados', url: '/affiliates' }
-      ]
-    },
-    {
-      title: 'Soporte',
-      links: [
-        { text: 'FAQ', url: '/faq' },
-        { text: 'Contacto', url: '/contact' },
-        { text: 'Ayuda', url: '/help' },
-        { text: 'Métodos de Pago', url: '/payment-methods' }
-      ]
-    }
-  ];
+  footerLinks = [];
 
   socialMedia = [
     { name: 'facebook', url: 'https://facebook.com/' },
