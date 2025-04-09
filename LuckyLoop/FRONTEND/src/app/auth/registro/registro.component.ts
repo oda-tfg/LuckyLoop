@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+/* import { AuthService } from '../auth/auth.service'; */
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-registro',
@@ -8,20 +10,32 @@ import { Router } from '@angular/router';
   styleUrls: ['./registro.component.css']
 })
 export class RegistroComponent {
-  nombreUsuario: string = "";
+  username: string = "";
   email: string = '';
   password: string = '';
   repetirPassword: string = "";
   telefono: string = "";
 
-  constructor(private router: Router) {}
+  isLoading = false;
+  errorMessage: string | null = null;
+
+  constructor(
+    private router: Router,
+    /* private authService: AuthService */
+  ) { }
 
   register() {
-    // Aquí va la lógica de registro
-    console.log('Registrando usuario con', this.email, this.password);
+    // Usar this para acceder a los valores directamente
+    if (!this.username || !this.email || !this.password || this.password !== this.repetirPassword) {
+      this.errorMessage = 'Por favor completa todos los campos correctamente';
+      return;
+    }
+  
+    
   }
-
+  //lleva a la ruta login cuando da a enlace
   goToLogin() {
     this.router.navigate(['/login']);
   }
+
 }

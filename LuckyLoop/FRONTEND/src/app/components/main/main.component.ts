@@ -17,30 +17,30 @@ export class MainComponent implements OnInit {
     {
       id: 1,
       name: 'BlackJack',
-      image: 'assets/images/games/mega-fortune.jpg',
-      category: 'slots',
+      image: 'assets/images/games/blackjack.webp',
+      category: 'Juego de Mesa',
       isHot: true,
       url: '/blackjack' //ruta del juego
     },
     {
       id: 2,
-      name: 'Starburst',
-      image: 'assets/images/games/starburst.jpg',
-      category: 'slots',
+      name: 'Plinko',
+      image: 'assets/images/games/plinko.webp',
+      category: 'Juego de Azar',
       isHot: true
     },
     {
       id: 3,
-      name: 'European Roulette',
-      image: 'assets/images/games/european-roulette.jpg',
-      category: 'table',
+      name: 'Ruleta',
+      image: 'assets/images/games/ruleta.webp',
+      category: 'Juego de Mesa',
       isHot: false
     },
     {
       id: 4,
-      name: 'Texas Holdem',
-      image: 'assets/images/games/texas-holdem.jpg',
-      category: 'poker',
+      name: 'Programa y Gana',
+      image: 'assets/images/games/programaGana.webp',
+      category: 'Juego de Programación',
       isHot: true
     }
   ];

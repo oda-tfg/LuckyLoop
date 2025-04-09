@@ -14,7 +14,7 @@ class StripeController extends AbstractController
     public function createPaymentIntent(Request $request): JsonResponse
     {
         // Configura tu clave secreta de Stripe (modo prueba)
-        $stripe = new StripeClient($_ENV['sk_test_51RA7GDATTvNshzGtOMfC7fBiefAEkmfU8qT7AW3ZmGcDPauRooLQZ18lf2YWixugNJiNkCRHYElGgaXB0anTWNwb00AADVwWz0']); // Reemplaza con tu clave secreta
+        $stripe = new StripeClient($_ENV['STRIPE_SECRET_KEY']); // Reemplaza con tu clave secreta
 
         $data = json_decode($request->getContent(), true);
         $amount = $data['amount']; // El monto en centavos (ej. $50 = 5000)
