@@ -8,6 +8,8 @@ import { HeaderComponent } from './components/header/header.component';
 import { NavComponent } from './components/nav/nav.component';
 import { MainComponent } from './components/main/main.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { DepositComponent } from './components/deposit/deposit.component';
+
 
 
 
@@ -18,8 +20,8 @@ const routes: Routes = [
 
   { path: 'home', component: MainComponent, data: { showGame: false } },
   // Aquí se pueden agregar más rutas según se vayan necesitando
-/*   { path: 'depositar', component: DepositComponent },  */
-{ path: 'blackjack', component: MainComponent, data: { showGame: true } }, // Usa el componente existente 
+  { path: 'depositar', component: DepositComponent }, 
+  { path: 'blackjack', component: MainComponent, data: { showGame: true } }, // Usa el componente existente 
   { path: '**', redirectTo: '/home' } // Ruta para manejar rutas no encontradas
 ];
 
@@ -30,8 +32,8 @@ const routes: Routes = [
     HeaderComponent,
     NavComponent,
     MainComponent,
-    FooterComponent
-    /* DepositComponent */
+    FooterComponent,
+    DepositComponent
   ],
   imports: [
     BrowserModule,
