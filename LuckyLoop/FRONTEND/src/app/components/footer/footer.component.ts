@@ -10,16 +10,12 @@ export class FooterComponent {
   currentYear = new Date().getFullYear();
 
   paymentMethods = [
-    'visa', 'mastercard', 'paypal', 'skrill', 'neteller'
+    'stripe'
   ];
 
   footerLinks = [];
 
   socialMedia = [
-    { name: 'facebook', url: 'https://facebook.com/' },
-    { name: 'twitter', url: 'https://twitter.com/' },
-    { name: 'instagram', url: 'https://instagram.com/' },
-    { name: 'youtube', url: 'https://youtube.com/' },
-    { name: 'twitch', url: 'https://twitch.tv/' }
+    { name: 'github', url: 'https://github.com/oda-tfg' },
   ];
 }
