@@ -20,12 +20,26 @@
         </button>
       </div>
 
-      <!-- Botón de inicio de sesión -->
-      <div class="login-button">
-        <button routerLink="/registro">Inicio Sesión</button>
+      <!-- Saldo del usuario (visible solo cuando está logueado) -->
+      <div class="user-balance" *ngIf="isLoggedIn">
+        <div class="balance-display">
+          <span class="balance-amount">{{userBalance}} €</span>
+        </div>
       </div>
-      <div class="login-button">
-        <button (click)="goToDeposit()">Depositar</button>
+
+      <!-- Botones de acción cuando el usuario está logueado -->
+      <div class="action-buttons" *ngIf="isLoggedIn">
+        <button class="icon-button deposit-btn" (click)="goToDeposit()" title="Depositar">
+          <i class="fa fa-plus-circle"></i>
+        </button>
+        <button class="icon-button logout-btn" (click)="logout()" title="Cerrar Sesión">
+          <i class="fa fa-sign-out-alt"></i>
+        </button>
+      </div>
+
+      <!-- Botón de inicio de sesión -->
+      <div class="login-button" *ngIf="!isLoggedIn">
+        <button routerLink="/login">Inicio Sesión</button>
       </div>
     </div>
   </div>

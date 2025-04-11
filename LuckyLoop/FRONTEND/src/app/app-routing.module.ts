@@ -6,17 +6,20 @@ import { DepositComponent } from './components/deposit/deposit.component';
 import { FullLayoutComponent } from './components/layouts/full-layout/full-layout.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { RegistroComponent } from './components/auth/registro/registro.component';
+import { RecuperarPasswordComponent } from './components/recuperar-password/recuperar-password.component';
+import { CambiarPasswordComponent } from './components/cambiar-password/cambiar-password.component';
 
+// app-routing.module.ts
 const routes: Routes = [
-  { path: '',component:FullLayoutComponent },
-  {path: 'home', component: FullLayoutComponent},
+  { path: '', component: FullLayoutComponent },
+  { path: 'home', component: FullLayoutComponent },
   { path: 'ruleta', component: RuletaComponent },
   { path: 'depositar', component: DepositComponent },
   { path: 'blackjack', component: MainComponent, data: { showGame: true } },
-  //rutas autenticacion
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },
-  //ruta comodin ** siempre al final
+  { path: 'recuperar-password', component: RecuperarPasswordComponent },
+  { path: 'cambiarPassword', component: CambiarPasswordComponent },  // Nueva ruta
   { path: '**', redirectTo: 'home' },
 ];
 

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../../services/auth/auth.service';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router'; // Importar Router
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,8 @@ export class LoginComponent {
   isLoading = false;
 
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   togglePasswordVisibility(): void {
@@ -24,19 +26,15 @@ export class LoginComponent {
   }
 
   login(): void {
-    // Limpiar mensaje de error previo
     this.errorMessage = '';
     console.log('Email:', this.email);
     console.log('Password:', this.password);
 
     this.authService.login(this.email, this.password).subscribe({
       next: (response) => {
-        console.log('Login exitoso', response);
-        // Guardamos el token en localStorage
         if (response && response.token) {
           localStorage.setItem('auth_token', response.token);
-          console.log('Login exitoso');
-          // Aquí puedes agregar redirección a otra página
+          this.router.navigate(['/home']);
         }
       },
       error: (error) => {

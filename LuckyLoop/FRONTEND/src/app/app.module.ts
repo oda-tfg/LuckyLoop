@@ -16,6 +16,8 @@ import { RegistroComponent } from './components/auth/registro/registro.component
 import { AuthService } from './services/auth/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './components/auth/login/login.component';
+import { RecuperarPasswordComponent } from './components/recuperar-password/recuperar-password.component';
+import { CambiarPasswordComponent } from './components/cambiar-password/cambiar-password.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { LoginComponent } from './components/auth/login/login.component';
     RuletaComponent,
     FullLayoutComponent,
     RegistroComponent,
-    LoginComponent
+    LoginComponent,
+    RecuperarPasswordComponent,
+    CambiarPasswordComponent
   ],
   imports: [
     BrowserModule,

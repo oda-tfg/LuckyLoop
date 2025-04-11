@@ -27,19 +27,13 @@ final class UsuarioController extends AbstractController
         ]);
     }
 
-    #[Route('/api/usuario/getSaldo/{id}', name: 'get_saldo', methods: ['GET'])]
+    #[Route('/api/usuario/getSaldo', name: 'get_saldo', methods: ['GET'])]
     #[OA\Get(
-        path: '/api/usuario/getSaldo/{id}',
+        path: '/api/usuario/getSaldo',
         summary: 'Obtener el saldo actual de un usuario por ID',
         tags: ['Usuario'],
         parameters: [
-            new OA\Parameter(
-                name: 'id',
-                in: 'path',
-                required: true,
-                description: 'ID del usuario',
-                schema: new OA\Schema(type: 'integer', example: 5)
-            )
+           
         ],
         responses: [
             new OA\Response(
@@ -64,10 +58,9 @@ final class UsuarioController extends AbstractController
             )
         ]
     )]
-    public function getSaldo(EntityManagerInterface $entityManager, $id): JsonResponse
+    public function getSaldo(): JsonResponse
     {
-        $usuarioRep = $entityManager->getRepository(Usuario::class);
-        $usuario = $usuarioRep->find($id);
+        $usuario=$this->getUser();
 
         if (!$usuario) {
             return $this->json([

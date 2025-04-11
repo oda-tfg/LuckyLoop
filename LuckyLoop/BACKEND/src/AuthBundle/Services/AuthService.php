@@ -44,7 +44,7 @@ class AuthService {
         <body>
             <p>Hola,</p>
             <p>Para recuperar tu contraseña, haz click en el siguiente enlace:</p>
-            <p><a href="http://localhost:8000/api/usuario/comprobarToken/' . $token .'">Recuperar Contraseña</a></p>
+                <p><a href="http://localhost:4200/cambiarPassword?token=' . $token .'">Recuperar Contraseña</a></p>
             <p>Si no solicitaste un cambio de contraseña, puedes ignorar este mensaje.</p>
         </body>
         </html>';
@@ -75,7 +75,7 @@ class AuthService {
             ], 400);
         }
 
-        if($password==$user->getPassword()) {
+        if(password_verify($password, $user->getPassword())) {
             return new JsonResponse([
                 'message' => 'La nueva contraseña no puede ser igual a la anterior'
             ], 400);

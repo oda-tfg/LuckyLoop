@@ -252,3 +252,79 @@
     width: 100%;
   }
 }
+/* Estilo mejorado para el saldo del usuario */
+.user-balance {
+  flex: 0 0 auto;
+  margin-right: 15px;
+}
+
+.balance-display {
+  background: rgba(10, 10, 25, 0.8);
+  border: 1px solid rgba(35, 255, 0, 0.5);
+  border-radius: 20px;
+  padding: 8px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 8px rgba(35, 255, 0, 0.3);
+}
+
+.balance-amount {
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Estilos para los botones de icono */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.icon-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 2px solid var(--neon-purple);
+  color: var(--text-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 0 8px rgba(81, 0, 255, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.icon-button i {
+  font-size: 18px;
+}
+
+.icon-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 12px var(--neon-purple);
+}
+
+.deposit-btn {
+  border-color: #23ff00;
+}
+
+.deposit-btn:hover {
+  background-color: rgba(35, 255, 0, 0.2);
+  box-shadow: 0 0 12px #23ff00;
+}
+
+.logout-btn:hover {
+  background-color: rgba(81, 0, 255, 0.2);
+}
+
+/* Ajuste responsivo para los botones de iconos */
+@media (max-width: 768px) {
+  .action-buttons {
+    order: 2;
+  }
+}

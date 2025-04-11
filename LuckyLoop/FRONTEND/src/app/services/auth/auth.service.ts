@@ -15,9 +15,18 @@ export class AuthService {
 
     login(email: string, password: string): Observable<any> {
         return this.http.post(`${this.apiUrl}/login`, { email, password })
-
-
     }
 
+    comprobarEmail(email:string){
+        return this.http.post(`${this.apiUrl}/usuario/emailToken`, { email })
+    }
+
+    comporbarToken(token:string){
+        return this.http.get(`${this.apiUrl}/usuario/comprobarToken/${token}`)
+    }
+
+    cambiarPassword(token:string, password:string, email:string, confirmPassword:string){
+        return this.http.post(`${this.apiUrl}/usuario/cambiarPassword`, { token, password, email, confirmPassword })
+    }
 }
 

@@ -1,12 +1,10 @@
-
 <div class="auth-container">
   <h2>Iniciar Sesión</h2>
 
-  <div ngIf="errorMessage" class="error-message">
-    {{ errorMessage }}
+  <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
   </div>
   
-
   <form (submit)="login(); $event.preventDefault()">
     <input type="email" [(ngModel)]="email" name="email" placeholder="Correo electrónico" required />
 
@@ -16,7 +14,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
           <circle cx="12" cy="12" r="3"></circle>
-          <path ngIf="showPassword" d="M3 3l18 18" stroke-width="2"></path>
+          <path *ngIf="showPassword" d="M3 3l18 18" stroke-width="2"></path>
         </svg>
       </button>
     </div>
@@ -24,5 +22,8 @@
     <button type="submit">Entrar</button>
   </form>
 
-  <p>¿No tienes cuenta todavía? <a routerLink="/auth/registro">Registrarse</a></p> 
+  <div class="auth-links">
+    <p>¿No tienes cuenta todavía? <a routerLink="/registro">Registrarse</a></p>
+    <p><a routerLink="/recuperar-password">Olvidé mi contraseña</a></p>
+  </div>
 </div>
