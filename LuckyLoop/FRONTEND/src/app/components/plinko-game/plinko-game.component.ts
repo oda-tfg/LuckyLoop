@@ -1,5 +1,6 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, ChangeDetectorRef, OnInit } from '@angular/core';
 import * as Matter from 'matter-js';
+import { SaldoService } from '../../services/saldo/saldo.service';
 
 @Component({
   selector: 'app-plinko-game',
@@ -7,11 +8,11 @@ import * as Matter from 'matter-js';
   styleUrls: ['./plinko-game.component.css'],
   standalone: false
 })
-export class PlinkoGameComponent implements AfterViewInit, OnDestroy {
+export class PlinkoGameComponent implements OnInit, AfterViewInit, OnDestroy {
   // Configuración del juego
-  betAmounts = [0.20, 0.40, 0.60, 1.00, 2.00];
+  betAmounts = [1.00, 5.00, 10.00, 50.00, 100.00];
   selectedBet = 0.20;
-  saldo = 20;
+  saldo = 0; // Inicializado a 0, lo actualizaremos con getSaldo
   
   // Referencias de Matter.js
   @ViewChild('plinkoContainer') containerRef!: ElementRef<HTMLDivElement>;
@@ -21,7 +22,31 @@ export class PlinkoGameComponent implements AfterViewInit, OnDestroy {
   private pegs: Matter.Body[] = [];
   private balls: Matter.Body[] = [];
 
-  constructor(private cd: ChangeDetectorRef) {}
+  constructor(
+    private cd: ChangeDetectorRef,
+    private saldoService: SaldoService
+  ) {}
+
+  ngOnInit() {
+    // Cargar el saldo al inicializar el componente
+    this.loadSaldo();
+  }
+
+  // Método para cargar el saldo del usuario
+  loadSaldo(): void {
+    this.saldoService.getSaldo().subscribe({
+      next: (response) => {
+        if (response && response.saldo !== undefined) {
+          this.saldo = response.saldo;
+          console.log('Saldo obtenido:', this.saldo);
+          this.cd.detectChanges(); // Asegurarse de que la vista se actualiza
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener el saldo:', error);
+      }
+    });
+  }
 
   selectBet(amount: number) {
     this.selectedBet = amount;
