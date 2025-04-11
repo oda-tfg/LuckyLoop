@@ -55,4 +55,39 @@ class AuthService {
             'message' => 'Email enviado correctamente'
         ]);
     }
+
+    public function cambiarPassword(Request $request){
+        $data = json_decode($request->getContent(), true);
+        $user= $this->entityManager->getRepository(Usuario::class)->findOneBy(['email' => $data['email']]);
+
+        if (!$user) {
+            return new JsonResponse([
+                'message' => 'Email no encontrado'
+            ], 400);
+        }
+
+        $password = $data['password'];
+        $confirmPassword = $data['confirmPassword'];
+
+        if($password !== $confirmPassword) {
+            return new JsonResponse([
+                'message' => 'Las contraseñas no coinciden'
+            ], 400);
+        }
+
+        if($password==$user->getPassword()) {
+            return new JsonResponse([
+                'message' => 'La nueva contraseña no puede ser igual a la anterior'
+            ], 400);
+        }
+
+        $user->setPassword(password_hash($password, PASSWORD_DEFAULT));
+        $user->setTokenPassword('');
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+        return new JsonResponse([
+            'message' => 'Contraseña actualizada correctamente'
+        ], 200);
+    }
 }
