@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -8,16 +8,35 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  email = '';
-  password = '';
-  showPassword = false;
-  
-  togglePasswordVisibility() {
+  email: string = '';
+  password: string = '';
+  showPassword: boolean = false;
+  errorMessage: string = '';
+
+  constructor(
+    private authService: AuthService
+  ) {}
+
+  togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
-  
-  login() {
-    // Lógica de login
-    console.log('Login clicked', this.email, this.password);
+
+  login(): void {
+    this.errorMessage = '';
+
+    this.authService.login(this.email, this.password).subscribe({
+      next: (response) => {
+        //Guardamos el token en localStorage
+        if (response && response.token) {
+          localStorage.setItem('auth_token', response.token);
+          console.log('Login exitoso');
+          //Aquí puedes agregar redirección a otra página
+        }
+      },
+      error: (error) => {
+        console.error('Error en login:', error);
+        this.errorMessage = 'Credenciales inválidas';
+      }
+    });
   }
 }

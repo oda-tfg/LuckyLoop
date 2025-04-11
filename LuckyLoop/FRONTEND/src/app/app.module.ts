@@ -11,6 +11,10 @@ import { FooterComponent } from './components/footer/footer.component';
 import { DepositComponent } from './components/deposit/deposit.component';
 import { RuletaComponent } from './components/ruleta/ruleta.component';
 import { FullLayoutComponent } from './components/layouts/full-layout/full-layout.component';
+import { RouterModule } from '@angular/router';
+import { RegistroComponent } from './components/auth/registro/registro.component';
+import { AuthService } from './services/auth/auth.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -21,14 +25,20 @@ import { FullLayoutComponent } from './components/layouts/full-layout/full-layou
     FooterComponent,
     DepositComponent,
     RuletaComponent,
-    FullLayoutComponent
+    FullLayoutComponent,
+    RegistroComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    AppRoutingModule  // Usar este módulo en lugar de RouterModule.forRoot
+    AppRoutingModule,  //Usar este módulo en lugar de RouterModule.forRoot
+    RouterModule,
+    HttpClientModule //usar este en vez de HttpClient
+    
   ],
-  providers: [],
+  providers: [
+    AuthService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

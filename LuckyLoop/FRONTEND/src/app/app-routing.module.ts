@@ -4,6 +4,8 @@ import { MainComponent } from './components/main/main.component';
 import { RuletaComponent } from './components/ruleta/ruleta.component';
 import { DepositComponent } from './components/deposit/deposit.component';
 import { FullLayoutComponent } from './components/layouts/full-layout/full-layout.component';
+import { LoginComponent } from './components/auth/login/login.component';
+import { RegistroComponent } from './components/auth/registro/registro.component';
 
 const routes: Routes = [
   { path: '',component:FullLayoutComponent },
@@ -11,8 +13,11 @@ const routes: Routes = [
   { path: 'ruleta', component: RuletaComponent },
   { path: 'depositar', component: DepositComponent },
   { path: 'blackjack', component: MainComponent, data: { showGame: true } },
-  { path: 'auth', loadChildren: () => import('./components/auth/auth.module').then(m => m.AuthModule) },
-  { path: '**', redirectTo: 'home' }
+  //rutas autenticacion
+  { path: 'login', component: LoginComponent },
+  { path: 'registro', component: RegistroComponent },
+  //ruta comodin ** siempre al final
+  { path: '**', redirectTo: 'home' },
 ];
 
 @NgModule({

@@ -120,3 +120,12 @@
       color: #0046e0;
       text-shadow: none;
     }
+
+    /*mensaje error login*/
+    .error-message {
+      color: #ff0051;
+      padding: 10px;
+      margin-bottom: 15px;
+      font-size: 14px;
+      text-align: center;
+    }
