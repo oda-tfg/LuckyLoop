@@ -18,6 +18,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './components/auth/login/login.component';
 import { RecuperarPasswordComponent } from './components/recuperar-password/recuperar-password.component';
 import { CambiarPasswordComponent } from './components/cambiar-password/cambiar-password.component';
+import { PlinkoGameComponent } from './components/plinko-game/plinko-game.component';
+
 
 @NgModule({
   declarations: [
@@ -32,7 +34,8 @@ import { CambiarPasswordComponent } from './components/cambiar-password/cambiar-
     RegistroComponent,
     LoginComponent,
     RecuperarPasswordComponent,
-    CambiarPasswordComponent
+    CambiarPasswordComponent,
+    PlinkoGameComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,16 @@
+<div class="plinkoContainer" #plinkoContainer>
+    <div class="bet-controls">
+        <button class="dropBallBtn" (click)="dropBall()">Jugar</button>
+
+        <div class="bet-buttons">
+            <button class="bet-btn" *ngFor="let amount of betAmounts" (click)="selectBet(amount)"
+                [class.selected]="selectedBet === amount">
+                {{amount}}€
+            </button>
+        </div>
+
+        <div class="saldo-display">
+            Saldo: {{saldo.toFixed(2)}}€
+        </div>
+    </div>
+</div>

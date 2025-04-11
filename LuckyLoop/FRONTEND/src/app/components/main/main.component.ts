@@ -27,7 +27,8 @@ export class MainComponent implements OnInit {
       name: 'Plinko',
       image: 'assets/images/games/plinko.webp',
       category: 'Juego de Azar',
-      isHot: true
+      isHot: true,
+      url: '/plinko/'
     },
     {
       id: 3,

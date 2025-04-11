@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MainComponent } from './components/main/main.component';
 import { RuletaComponent } from './components/ruleta/ruleta.component';
 import { DepositComponent } from './components/deposit/deposit.component';
+import { PlinkoGameComponent } from './components/plinko-game/plinko-game.component';
 import { FullLayoutComponent } from './components/layouts/full-layout/full-layout.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { RegistroComponent } from './components/auth/registro/registro.component';
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'home', component: FullLayoutComponent },
   { path: 'ruleta', component: RuletaComponent },
   { path: 'depositar', component: DepositComponent },
+  { path: 'plinko', component: PlinkoGameComponent},
   { path: 'blackjack', component: MainComponent, data: { showGame: true } },
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },
