@@ -12,6 +12,7 @@ export class LoginComponent {
   password: string = '';
   showPassword: boolean = false;
   errorMessage: string = '';
+  isLoading = false;
 
   constructor(
     private authService: AuthService
@@ -22,15 +23,16 @@ export class LoginComponent {
   }
 
   login(): void {
+    // Limpiar mensaje de error previo
     this.errorMessage = '';
 
     this.authService.login(this.email, this.password).subscribe({
       next: (response) => {
-        //Guardamos el token en localStorage
+        // Guardamos el token en localStorage
         if (response && response.token) {
           localStorage.setItem('auth_token', response.token);
           console.log('Login exitoso');
-          //Aquí puedes agregar redirección a otra página
+          // Aquí puedes agregar redirección a otra página
         }
       },
       error: (error) => {
