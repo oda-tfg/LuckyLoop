@@ -15,6 +15,7 @@ import { RouterModule } from '@angular/router';
 import { RegistroComponent } from './components/auth/registro/registro.component';
 import { AuthService } from './services/auth/auth.service';
 import { HttpClientModule } from '@angular/common/http';
+import { LoginComponent } from './components/auth/login/login.component';
 
 @NgModule({
   declarations: [
@@ -26,13 +27,13 @@ import { HttpClientModule } from '@angular/common/http';
     DepositComponent,
     RuletaComponent,
     FullLayoutComponent,
-    RegistroComponent
+    RegistroComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     AppRoutingModule,  //Usar este módulo en lugar de RouterModule.forRoot
-    RouterModule,
     HttpClientModule //usar este en vez de HttpClient
     
   ],

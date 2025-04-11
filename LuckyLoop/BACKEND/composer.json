@@ -7,7 +7,7 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
-<<<<<<< HEAD
+
 
         "doctrine/dbal": "^3.9.4",
         "doctrine/doctrine-bundle": "^2.14",
@@ -28,7 +28,7 @@
         "nelmio/cors-bundle": ">=2.5",
         "stripe/stripe-php": "^17.1.1",
 
-=======
+
         "doctrine/dbal": "^3",
         "doctrine/doctrine-bundle": "^2.13",
         "doctrine/doctrine-migrations-bundle": "^3.4",
@@ -38,7 +38,7 @@
         "nelmio/api-doc-bundle": "^5.0",
         "nelmio/cors-bundle": "^2.5",
         "stripe/stripe-php": "^17.1",
->>>>>>> 32dca9b9b842e4e728846cbce84282918bfbb37e
+
         "symfony/console": "7.2.*",
         "symfony/dotenv": "7.2.*",
         "symfony/flex": "^2.5",
