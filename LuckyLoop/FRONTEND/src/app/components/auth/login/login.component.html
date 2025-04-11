@@ -1,8 +1,12 @@
-
+<!-- login.component.html -->
 <div class="auth-container">
   <h2>Iniciar Sesión</h2>
   
-  <form (submit)="login()">
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+  
+  <form (submit)="login(); $event.preventDefault()">
     <input [(ngModel)]="email" name="email" type="email" placeholder="Correo electrónico" required />
     
     <div class="password-container">
@@ -16,9 +20,11 @@
       </button>
     </div>
     
-    <button type="submit">Entrar</button>
+    <button type="submit" [disabled]="isLoading">
+      <span *ngIf="!isLoading">Entrar</span>
+      <span *ngIf="isLoading">Procesando...</span>
+    </button>
   </form>
 
   <p>¿No tienes cuenta todavía? <a routerLink="/auth/registro">Registrarse</a></p> 
 </div>
-  

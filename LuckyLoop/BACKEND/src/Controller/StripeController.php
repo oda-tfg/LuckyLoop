@@ -13,14 +13,12 @@ class StripeController extends AbstractController
     #[Route('/create-payment-intent', name: 'create_payment_intent', methods: ['POST'])]
     public function createPaymentIntent(Request $request): JsonResponse
     {
-        // Configura tu clave secreta de Stripe (modo prueba)
-        $stripe = new StripeClient($_ENV['STRIPE_SECRET_KEY']); // Reemplaza con tu clave secreta
+        $stripe = new StripeClient($_ENV['STRIPE_SECRET_KEY']);
 
         $data = json_decode($request->getContent(), true);
-        $amount = $data['amount']; // El monto en centavos (ej. $50 = 5000)
+        $amount = $data['amount']; 
 
         try {
-            // Crea un PaymentIntent
             $paymentIntent = $stripe->paymentIntents->create([
                 'amount' => $amount,
                 'currency' => 'eur',
