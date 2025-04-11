@@ -1,0 +1,221 @@
+/* roulette.component.css */
+.roulette-container {
+    font-family: 'Arial', sans-serif;
+    background-color: #0a5c36;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    max-width: 900px;
+    margin: 0 auto;
+    color: white;
+  }
+  
+  .casino-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #cca352;
+    padding-bottom: 10px;
+  }
+  
+  .casino-title h2 {
+    font-size: 28px;
+    margin: 0;
+    color: #ffd700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .balance-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .balance-display span {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffd700;
+  }
+  
+  .reset-btn {
+    background-color: #b33a3a;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .reset-btn:hover {
+    background-color: #d43b3b;
+  }
+  
+  .roulette-area {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+  
+  .wheel-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+  }
+  
+  .wheel {
+    width: 100%;
+    height: 100%;
+    transition: transform 5s ease-out;
+    transform-origin: center;
+  }
+  
+  .wheel-pin {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    background-color: silver;
+    border-radius: 50%;
+    z-index: 10;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  }
+  
+  .wheel-pin::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 15px;
+    background-color: silver;
+  }
+  
+  .controls-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .betting-controls, .result-area, .history-area {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 15px;
+  }
+  
+  .betting-controls h3, .result-area h3, .history-area h3 {
+    margin-top: 0;
+    color: #ffd700;
+    border-bottom: 1px solid #cca352;
+    padding-bottom: 5px;
+  }
+  
+  .bet-amount {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .bet-amount button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background-color: #1a1a1a;
+    color: white;
+    font-size: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .bet-amount button:hover:not(:disabled) {
+    background-color: #333;
+  }
+  
+  .bet-amount button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .bet-amount span {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffd700;
+  }
+  
+  .spin-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #b8860b;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-transform: uppercase;
+  }
+  
+  .spin-btn:hover:not(:disabled) {
+    background-color: #daa520;
+  }
+  
+  .spin-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .result-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+  }
+  
+  .number-bubble {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    border: 2px solid gold;
+  }
+  
+  .number-bubble.small {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+  
+  .history-numbers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  
+  .no-results {
+    font-style: italic;
+    opacity: 0.7;
+  }
+  
+  @media (max-width: 768px) {
+    .roulette-area {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .wheel-container {
+      margin-bottom: 20px;
+    }
+  }

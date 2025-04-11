@@ -329,7 +329,7 @@
   
   .licenses {
     display: flex;
-    gap: 20px;
+    gap: 20px; 
   }
     
   .licenses img {
@@ -337,12 +337,13 @@
     opacity: 0.7;
     transition: all 0.3s;
     filter: grayscale(0.5);
+    opacity: .9;
+    filter: grayscale(0) drop-shadow(0 0 5px rgba(0, 81, 255, 0.5));
+    transform: translateY(-3px);
   }
     
   .licenses img:hover {
-    opacity: 1;
-    filter: grayscale(0) drop-shadow(0 0 5px rgba(0, 81, 255, 0.5));
-    transform: translateY(-3px);
+   opacity: 1;
   }
   
   /* Copyright */

@@ -68,21 +68,4 @@ export class MainComponent implements OnInit {
     alert('¡Este juego estará disponible próximamente!');
   }
 
-  // Datos para las promociones actuales
-  currentPromotions = [
-    {
-      id: 1,
-      title: 'Bono de Bienvenida',
-      description: '100% hasta 500€ en tu primer depósito',
-      image: 'assets/images/promotions/welcome-bonus.jpg',
-      expiry: '2025-04-30'
-    },
-    {
-      id: 2,
-      title: 'Giros Gratis',
-      description: '50 giros gratis en Starburst',
-      image: 'assets/images/promotions/free-spins.jpg',
-      expiry: '2025-04-15'
-    }
-  ];
 }

@@ -1,0 +1,52 @@
+<!-- roulette.component.html -->
+<div class="roulette-container">
+    <div class="casino-title">
+      <h2>Ruleta de Casino</h2>
+      <div class="balance-display">
+        <span>Saldo: €{{ balance }}</span>
+        <button (click)="resetGame()" class="reset-btn">Reiniciar</button>
+      </div>
+    </div>
+    
+    <div class="roulette-area">
+      <div class="wheel-container">
+        <div #wheel class="wheel">
+          <canvas #canvas width="300" height="300"></canvas>
+        </div>
+        <div class="wheel-pin"></div>
+      </div>
+      
+      <div class="controls-area">
+        <div class="betting-controls">
+          <h3>Apuesta</h3>
+          <div class="bet-amount">
+            <button (click)="changeBetAmount(-5)" [disabled]="betAmount <= 5 || isSpinning">-</button>
+            <span>€{{ betAmount }}</span>
+            <button (click)="changeBetAmount(5)" [disabled]="betAmount >= 100 || isSpinning">+</button>
+          </div>
+          <button class="spin-btn" (click)="spin()" [disabled]="isSpinning || balance < betAmount">
+            {{ isSpinning ? 'Girando...' : 'Girar' }}
+          </button>
+        </div>
+        
+        <div class="result-area">
+          <h3>Resultado</h3>
+          <div class="result-number" *ngIf="selectedNumber !== null">
+            <div class="number-bubble" [style.background-color]="colors[selectedNumber]">
+              {{ selectedNumber }}
+            </div>
+          </div>
+        </div>
+        
+        <div class="history-area">
+          <h3>Últimos Resultados</h3>
+          <div class="history-numbers">
+            <div class="number-bubble small" *ngFor="let number of lastResults" [style.background-color]="colors[number]">
+              {{ number }}
+            </div>
+            <div *ngIf="lastResults.length === 0" class="no-results">Sin resultados</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
