@@ -7,9 +7,21 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Stripe\StripeClient;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class StripeController extends AbstractController
 {
+
+    private $entityManager;
+    private $security;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+
     #[Route('/create-payment-intent', name: 'create_payment_intent', methods: ['POST'])]
     public function createPaymentIntent(Request $request): JsonResponse
     {
@@ -35,4 +47,23 @@ class StripeController extends AbstractController
             ], 400);
         }
     }
+
+
+    #[Route('/update-saldo', name: 'update_saldo', methods: ['POST'])]
+public function updateSaldo(Request $request): JsonResponse
+{
+    /** @var Usuario $user */
+    $user = $this->getUser(); // Esto funciona porque implementas UserInterface
+    
+    $data = json_decode($request->getContent(), true);
+    $amount = $data['amount'] / 100;
+
+    $user->setSaldoActual($user->getSaldoActual() + $amount);
+    $this->entityManager->flush();
+
+    return $this->json([
+        'success' => true,
+        'newBalance' => $user->getSaldoActual()
+    ]);
+}
 }

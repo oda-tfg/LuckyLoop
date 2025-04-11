@@ -56,11 +56,25 @@ export class DepositComponent implements OnInit {
       }
     });
 
-    this.loading = false;
-    if (error) {
-      alert(`Error: ${error.message}`);
-    } else {
-      alert('¡Depósito simulado exitoso! 🎉');
+    // 3. Si el pago es exitoso, actualiza el saldo en el backend
+    const updateResponse = await fetch('http://localhost:8000/update-saldo', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token') // Asegúrate de tener el token
+      },
+      body: JSON.stringify({ amount: this.amount * 100 })
+    });
+
+    const updateResult = await updateResponse.json();
+
+    if (!updateResponse.ok) {
+      throw new Error(updateResult.error || 'Error al actualizar el saldo');
     }
-  }
+
+    alert(`¡Depósito exitoso! Tu nuevo saldo es: ${updateResult.newBalance}€ 🎉`);
+
+  } catch (error: any) {
+    alert(`Error: ${error.message}`);
+  } 
 }
