@@ -49,13 +49,22 @@ class StripeController extends AbstractController
     }
 
 
-    #[Route('/update-saldo', name: 'update_saldo', methods: ['POST'])]
+    #[Route('/api/update-saldo', name: 'update_saldo', methods: ['POST'])]
 public function updateSaldo(Request $request): JsonResponse
 {
-    /** @var Usuario $user */
-    $user = $this->getUser(); // Esto funciona porque implementas UserInterface
-    
+    /** @var Usuario|null $user */
+    $user = $this->getUser();
+
+    if (!$user) {
+        return $this->json(['error' => 'Usuario no autenticado'], 401);
+    }
+
     $data = json_decode($request->getContent(), true);
+
+    if (!isset($data['amount'])) {
+        return $this->json(['error' => 'Falta el campo amount'], 400);
+    }
+
     $amount = $data['amount'] / 100;
 
     $user->setSaldoActual($user->getSaldoActual() + $amount);
@@ -66,4 +75,5 @@ public function updateSaldo(Request $request): JsonResponse
         'newBalance' => $user->getSaldoActual()
     ]);
 }
+
 }
