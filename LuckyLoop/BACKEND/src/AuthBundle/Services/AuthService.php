@@ -90,4 +90,31 @@ class AuthService {
             'message' => 'Contraseña actualizada correctamente'
         ], 200);
     }
+
+    public function registrar(Request $request) {
+        $data = json_decode($request->getContent(), true);
+        $nombreUsuario = $data['nombreUsuario'];
+        $correoElectronico = $data['correoElectronico'];
+        $contrasena = password_hash($data['contrasena'], PASSWORD_DEFAULT);
+        $telefono = $data['telefono'];
+    
+        if ($data['contrasena'] !== $data['repetirContrasena']) {
+            return new JsonResponse([
+                'message' => 'Las contraseñas no coinciden'
+            ], 400);
+        }
+    
+        $usuario = new Usuario();
+        $usuario->setNombre($nombreUsuario);
+        $usuario->setEmail($correoElectronico);
+        $usuario->setPassword($contrasena);
+        $usuario->setTelefono($telefono);
+    
+        $this->entityManager->persist($usuario);
+        $this->entityManager->flush();
+    
+        return new JsonResponse([
+            'message' => 'Usuario registrado correctamente'
+        ], 200);
+    }
 }

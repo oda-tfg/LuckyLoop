@@ -42,6 +42,7 @@ security:
                 
     access_control:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/usuario/registrar, roles: PUBLIC_ACCESS }
         - { path: ^/api/doc, roles: PUBLIC_ACCESS }
         - { path: ^/api/usuario/comprobarToken, roles: PUBLIC_ACCESS }
         - { path: ^/api/usuario/emailToken, roles: PUBLIC_ACCESS }

@@ -147,4 +147,45 @@ public function __construct(AuthService $authService) {
     {
         return $this->authService->cambiarPassword($request);
     }
+    #[Route('/api/usuario/registrar', name: 'registrar-usuario', methods: ['POST'])]
+    #[OA\Post(
+        path: '/api/usuario/registrar',
+        summary: 'Registra un nuevo usuario',
+        tags: ['Usuario'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                type: 'object',
+                required: ['nombreUsuario', 'correoElectronico', 'contrasena', 'repetirContrasena', 'telefono'],
+                properties: [
+                    new OA\Property(property: 'nombreUsuario', type: 'string', example: 'usuario123'),
+                    new OA\Property(property: 'correoElectronico', type: 'string', example: 'usuario@ejemplo.com'),
+                    new OA\Property(property: 'contrasena', type: 'string', example: 'Contraseña123'),
+                    new OA\Property(property: 'repetirContrasena', type: 'string', example: 'Contraseña123'),
+                    new OA\Property(property: 'telefono', type: 'string', example: '123456789')
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Usuario registrado correctamente',
+                content: new OA\JsonContent(
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'code', type: 'boolean', example: 1),
+                        new OA\Property(property: 'message', type: 'string', example: 'Usuario registrado exitosamente')
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 400,
+                description: 'Error en la validación de datos'
+            )
+        ]
+    )]
+    public function registrar(Request $request)
+    {
+        return $this->authService->registrar($request);
+    }
 }
