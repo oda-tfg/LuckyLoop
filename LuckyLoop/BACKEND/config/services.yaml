@@ -20,9 +20,6 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
     
-    # explícitamente registrar el AuthBundle
-    App\AuthBundle\:
-        resource: '../src/AuthBundle/'
-
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\AuthBundle\Controller\:
+        resource: '../src/AuthBundle/Controller'
+        tags: ['controller.service_arguments']

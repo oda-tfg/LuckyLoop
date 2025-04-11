@@ -12,6 +12,7 @@ use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 
+
 class AuthController extends AbstractController{
 
     private $authService;
@@ -142,39 +143,8 @@ public function __construct(AuthService $authService) {
             )
         ]
     )]
-    public function cambiarPassword(EntityManagerInterface $em, Request $request)
+    public function cambiarPassword(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
-        $user= $em->getRepository(Usuario::class)->findOneBy(['email' => $data['email']]);
-
-        if (!$user) {
-            return new JsonResponse([
-                'message' => 'Email no encontrado'
-            ], 400);
-        }
-
-        $password = $data['password'];
-        $confirmPassword = $data['confirmPassword'];
-
-        if($password !== $confirmPassword) {
-            return new JsonResponse([
-                'message' => 'Las contraseñas no coinciden'
-            ], 400);
-        }
-
-        if($password==$user->getPassword()) {
-            return new JsonResponse([
-                'message' => 'La nueva contraseña no puede ser igual a la anterior'
-            ], 400);
-        }
-
-        $user->setPassword(password_hash($password, PASSWORD_DEFAULT));
-        $user->setTokenPassword('');
-        $em->persist($user);
-        $em->flush();
-
-        return new JsonResponse([
-            'message' => 'Contraseña actualizada correctamente'
-        ], 200);
+        return $this->authService->cambiarPassword($request);
     }
 }

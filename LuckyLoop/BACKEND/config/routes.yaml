@@ -15,9 +15,3 @@ api_login:
 app_logout:
     path: /logout
     methods: ['GET']
-
-# Ruta para el controlador de API (para pruebas)
-api_test:
-    path: /api/test
-    controller: App\Controller\ApiController::test
-    methods: ['GET']
