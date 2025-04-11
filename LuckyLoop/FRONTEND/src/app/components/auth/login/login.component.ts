@@ -8,17 +8,16 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  email: string = '';
-  password: string = '';
-
-  constructor(private router: Router) {}
-
-  login() {
-    // Aquí iría la lógica real
-    console.log('Iniciando sesión con', this.email, this.password);
+  email = '';
+  password = '';
+  showPassword = false;
+  
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
-
-  goToRegistro() {
-    this.router.navigate(['/registro']);
+  
+  login() {
+    // Lógica de login
+    console.log('Login clicked', this.email, this.password);
   }
 }

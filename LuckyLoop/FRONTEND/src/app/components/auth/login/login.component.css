@@ -1,0 +1,122 @@
+    /* Estilos para el componente */
+    .auth-container {
+      max-width: 400px;
+      width: 90%;
+      padding: var(--spacing-xl);
+      border-radius: var(--border-radius-lg);
+      background-color: var(--bg-lighter);
+      box-shadow: var(--box-shadow-lg);
+      position: relative;
+      overflow: hidden;
+      border-top: 3px solid var(--neon-blue);
+      /* Centrado */
+      margin: 0 auto;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--text-white);
+      font-size: var(--font-size-xxl);
+      margin-bottom: var(--spacing-xl);
+      font-weight: 600;
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      margin-bottom: var(--spacing-lg);
+      padding: var(--spacing-md);
+      background-color: var(--bg-darker);
+      border: 1px solid rgba(81, 0, 255, 0.3);
+      border-radius: var(--border-radius-md);
+      color: var(--text-white);
+      font-size: var(--font-size-md);
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+
+    .password-container {
+      position: relative;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .password-container input {
+      margin-bottom: 0;
+      padding-right: 45px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-lighter);
+      padding: 0;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toggle-password:hover,
+    .toggle-password:focus {
+      color: var(--neon-blue);
+      outline: none;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--neon-blue);
+      box-shadow: none;
+    }
+
+    input::placeholder {
+      color: var(--text-lighter);
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: var(--spacing-md);
+      background-color: var(--neon-blue);
+      color: var(--text-white);
+      border: none;
+      border-radius: var(--border-radius-md);
+      cursor: pointer;
+      font-size: var(--font-size-md);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: var(--spacing-md);
+      transition: background-color 0.2s, transform 0.2s;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #0046e0;
+      transform: translateY(-1px);
+    }
+
+    p {
+      text-align: center;
+      color: var(--text-light);
+      margin-top: var(--spacing-lg);
+      font-size: var(--font-size-sm);
+    }
+
+    a {
+      color: var(--neon-blue);
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    a:hover {
+      color: #0046e0;
+      text-shadow: none;
+    }

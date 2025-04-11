@@ -10,6 +10,7 @@ import { MainComponent } from './components/main/main.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { DepositComponent } from './components/deposit/deposit.component';
 import { RuletaComponent } from './components/ruleta/ruleta.component';
+import { FullLayoutComponent } from './components/layouts/full-layout/full-layout.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { RuletaComponent } from './components/ruleta/ruleta.component';
     MainComponent,
     FooterComponent,
     DepositComponent,
-    RuletaComponent
+    RuletaComponent,
+    FullLayoutComponent
   ],
   imports: [
     BrowserModule,

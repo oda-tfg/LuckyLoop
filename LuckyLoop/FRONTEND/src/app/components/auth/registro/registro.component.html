@@ -5,7 +5,7 @@
     <!-- Campo Nombre de Usuario -->
     <div class="form-group">
       <input [(ngModel)]="username" name="username" type="text" 
-             placeholder="Nombre de usuario" required minlength="3" #usernameInput="ngModel">
+            placeholder="Nombre de usuario" required minlength="3" #usernameInput="ngModel">
       <div *ngIf="usernameInput.invalid && (usernameInput.dirty || usernameInput.touched)" class="error-message">
         <span *ngIf="usernameInput.errors?.['required']">Nombre de usuario es requerido</span>
         <span *ngIf="usernameInput.errors?.['minlength']">
@@ -17,8 +17,7 @@
     <!-- Campo Email -->
     <div class="form-group">
       <input [(ngModel)]="email" name="email" type="email" 
-             placeholder="Correo electrónico" required email #emailInput="ngModel">
-             <!-- dirty (al escribir en el input) y touched (al salir del input) -->
+            placeholder="Correo electrónico" required email #emailInput="ngModel">
       <div *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched)" class="error-message"> 
         <span *ngIf="emailInput.errors?.['required']">Email es requerido</span>
         <span *ngIf="emailInput.errors?.['email']">Por favor ingresa un email válido</span>
@@ -27,8 +26,17 @@
 
     <!-- Campo Contraseña -->
     <div class="form-group">
-      <input [(ngModel)]="password" name="password" type="password" 
-             placeholder="Contraseña" required minlength="6" #passwordInput="ngModel">
+      <div class="password-container">
+        <input [(ngModel)]="password" name="password" [type]="showPassword ? 'text' : 'password'" 
+              placeholder="Contraseña" required minlength="6" #passwordInput="ngModel">
+        <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+            <path *ngIf="showPassword" d="M3 3l18 18" stroke-width="2"></path>
+          </svg>
+        </button>
+      </div>
       <div *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)" class="error-message">
         <span *ngIf="passwordInput.errors?.['required']">Contraseña es requerida</span>
         <span *ngIf="passwordInput.errors?.['minlength']">
@@ -39,8 +47,17 @@
 
     <!-- Campo Repetir Contraseña -->
     <div class="form-group">
-      <input [(ngModel)]="repetirPassword" name="repetirPassword" type="password" 
-             placeholder="Repetir Contraseña" required #repeatPasswordInput="ngModel">
+      <div class="password-container">
+        <input [(ngModel)]="repetirPassword" name="repetirPassword" [type]="showRepeatPassword ? 'text' : 'password'" 
+              placeholder="Repetir Contraseña" required #repeatPasswordInput="ngModel">
+        <button type="button" class="toggle-password" (click)="toggleRepeatPasswordVisibility()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+            <path *ngIf="showRepeatPassword" d="M3 3l18 18" stroke-width="2"></path>
+          </svg>
+        </button>
+      </div>
       <div *ngIf="(repetirPassword !== password) && repeatPasswordInput.touched" class="error-message">
         Las contraseñas no coinciden
       </div>
@@ -48,9 +65,8 @@
 
     <!-- Campo Teléfono -->
     <div class="form-group">
-      <!-- pattern (expresion regular de telefono) -->
       <input [(ngModel)]="telefono" name="telefono" type="tel" 
-             placeholder="Teléfono" pattern="[0-9]{9}" #telefonoInput="ngModel">
+            placeholder="Teléfono" pattern="[0-9]{9}" #telefonoInput="ngModel">
       <div *ngIf="telefonoInput.invalid && telefonoInput.touched" class="error-message">
         <span *ngIf="telefonoInput.errors?.['pattern']">Teléfono debe tener 9 dígitos</span>
       </div>
