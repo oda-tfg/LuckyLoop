@@ -112,23 +112,42 @@ final class UsuarioController extends AbstractController
             )
         ]
     )]
+
+
+
+    #[Route('/api/usuario/restarSaldoApostado', name: 'restar_saldo', methods: ['POST'])]
     public function restarSaldoApostado(EntityManagerInterface $entityManager, Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
-        if (!isset($data['id']) || !isset($data['dineroApostado'])) {
-            return $this->json(['error' => 'Parámetros "id" y "dineroApostado" son requeridos.'], 400);
+        // Validar que se envió el dinero a apostar
+        if (!isset($data['dineroApostado'])) {
+            return $this->json(['error' => 'El parámetro "dineroApostado" es requerido.'], 400);
         }
 
-        $id = $data['id'];
         $dineroApostado = $data['dineroApostado'];
-
-        $usuario = $entityManager->getRepository(Usuario::class)->find($id);
+        
+        // Obtener el usuario autenticado directamente del token
+        $usuario = $this->getUser();
 
         if (!$usuario) {
-            return $this->json(['error' => 'Usuario no encontrado'], 404);
+            return $this->json(['error' => 'Usuario no autenticado'], 401);
         }
 
+        // Verificar que el usuario es instancia de la entidad Usuario
+        if (!$usuario instanceof Usuario) {
+            return $this->json(['error' => 'Tipo de usuario no válido'], 403);
+        }
+
+        // Validar que el saldo no sea negativo después de la operación
+        if ($usuario->getSaldoActual() < $dineroApostado) {
+            return $this->json([
+                'error' => 'Saldo insuficiente',
+                'saldoActual' => $usuario->getSaldoActual()
+            ], 400);
+        }
+
+        // Realizar la operación
         $nuevoSaldo = $usuario->getSaldoActual() - $dineroApostado;
         $usuario->setSaldoActual($nuevoSaldo);
 

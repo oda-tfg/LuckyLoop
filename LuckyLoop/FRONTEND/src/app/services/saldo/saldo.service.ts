@@ -20,4 +20,18 @@ export class SaldoService {
         
         return this.http.get(`${this.apiUrl}/usuario/getSaldo`, { headers });
     }
+
+    setSaldo(dineroApostado: number): Observable<any> {
+        const token = localStorage.getItem('auth_token');
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        });
+        
+        const body = {
+            dineroApostado: dineroApostado
+        };
+        
+        return this.http.post(`${this.apiUrl}/usuario/restarSaldoApostado`, body, { headers });
+    }
 }

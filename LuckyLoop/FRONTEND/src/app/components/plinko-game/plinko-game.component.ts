@@ -11,9 +11,9 @@ import { SaldoService } from '../../services/saldo/saldo.service';
 export class PlinkoGameComponent implements OnInit, AfterViewInit, OnDestroy {
   // Configuración del juego
   betAmounts = [1.00, 5.00, 10.00, 50.00, 100.00];
-  selectedBet = 0.20;
+  selectedBet = 1;
   saldo = 0; // Inicializado a 0, lo actualizaremos con getSaldo
-  
+
   // Referencias de Matter.js
   @ViewChild('plinkoContainer') containerRef!: ElementRef<HTMLDivElement>;
   private engine: Matter.Engine | null = null;
@@ -25,7 +25,7 @@ export class PlinkoGameComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private cd: ChangeDetectorRef,
     private saldoService: SaldoService
-  ) {}
+  ) { }
 
   ngOnInit() {
     // Cargar el saldo al inicializar el componente
@@ -125,14 +125,43 @@ export class PlinkoGameComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public dropBall() {
+    // Verificar saldo suficiente
     if (this.saldo < this.selectedBet) {
       console.log('Saldo insuficiente');
       return;
     }
 
-    this.saldo = this.saldo - this.selectedBet;
+    // Guardar saldo anterior por si hay error
+    const previousSaldo = this.saldo;
+
+    // Actualizar saldo localmente (optimista)
+    this.saldo -= this.selectedBet;
     this.cd.detectChanges();
 
+    // Llamar al servicio (sin necesidad de user ID)
+    this.saldoService.setSaldo(this.selectedBet).subscribe({
+      next: (response) => {
+        console.log('Saldo actualizado en el servidor', response);
+        // Sincronizar con el servidor por si hay otros ajustes
+        if (response?.nuevoSaldo !== undefined) {
+          this.saldo = response.nuevoSaldo;
+          this.cd.detectChanges();
+        }
+
+        // Lanzar bola solo después de confirmar la transacción
+        this.createAndDropBall();
+      },
+      error: (error) => {
+        console.error('Error al actualizar el saldo:', error);
+        // Revertir cambio local
+        this.saldo = previousSaldo;
+        this.cd.detectChanges();
+        alert('Error al procesar la apuesta. Inténtalo de nuevo.');
+      }
+    });
+  }
+
+  private createAndDropBall() {
     if (!this.engine) return;
 
     const ball = Matter.Bodies.circle(
