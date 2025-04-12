@@ -1,0 +1,588 @@
+.available-balance {
+    font-size: 0.8em;
+    color: #ffeb3b;
+    font-weight: normal;
+}.new-game-required {
+    background: linear-gradient(145deg, #ff9800, #f57c00);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    animation: pulse 2s infinite;
+}/* Diálogo de seguro */
+.insurance-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.insurance-content {
+    background: linear-gradient(145deg, #1a401a, #0d7f0d);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    padding: 30px;
+    width: 90%;
+    max-width: 500px;
+    color: white;
+    text-align: center;
+    border: 2px solid gold;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.insurance-content h3 {
+    color: gold;
+    margin-bottom: 20px;
+    font-size: calc(min(1.8rem, 6vw));
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.insurance-content p {
+    margin-bottom: 15px;
+    font-size: calc(min(1.2rem, 4vw));
+}
+
+.insurance-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+.insurance-buttons .btn {
+    padding: 10px 20px;
+    font-size: calc(min(1rem, 3.5vw));
+    min-width: 150px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}.deck-area {
+    display: none;
+}
+
+/* Versión simplificada - ocultamos esta animación que podría causar lag *//* Animación para dealer sacando carta - Versión simplificada */
+@keyframes dealerDrawCard {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card.animated {
+    animation: dealerDrawCard 0.3s ease-out forwards;
+}body {
+    background-color: #0a5c0a;
+    color: white;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.game-container {
+    max-width: 100%;
+    height: 100vh;
+    margin: 0 auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.table {
+    background-color: #0d7f0d;
+    border-radius: 50% / 100%;
+    border: 10px solid #5e4123;
+    padding: 15px;
+    position: relative;
+    margin-bottom: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 0;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+}
+
+.dealer-area {
+    height: 40%;
+    padding: 10px;
+    position: relative;
+    border-bottom: 2px dashed rgba(255, 255, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+}
+
+.player-area {
+    height: 60%;
+    padding: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.area-label {
+    position: absolute;
+    left: 20px;
+    top: 10px;
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.card-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    flex-grow: 1;
+}
+
+/* Animación para repartir cartas - Versión simplificada */
+@keyframes dealCard {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    width: calc(min(100px, 15vw));
+    margin-left: calc(min(-50px, -7.5vw));
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+.card.dealing {
+    animation: dealCard 0.3s ease-out forwards;
+}
+
+.card:first-child {
+    margin-left: 0;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+.score {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 1.2rem;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 5px 15px;
+    border-radius: 20px;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 10px 0;
+    flex-wrap: wrap;
+}
+
+.bet-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+    height: auto;
+}
+
+.chips-container {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin: 10px 0;
+    flex-wrap: wrap;
+}
+
+.chip {
+    width: calc(min(60px, 10vw));
+    height: calc(min(60px, 10vw));
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: calc(min(1rem, 3vw));
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 3px dashed white;
+    position: relative;
+    z-index: 1;
+}
+
+.chip:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    border: 2px dotted rgba(255, 255, 255, 0.7);
+    z-index: -1;
+}
+
+.chip:hover:not(.disabled) {
+    transform: scale(1.1) rotate(10deg);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.chip-1 {
+    background-color: #ffffff;
+    color: #000;
+}
+
+.chip-2 {
+    background-color: #ff9800;
+    color: #000;
+}
+
+.chip-5 {
+    background-color: #f44336;
+    color: white;
+}
+
+.chip-10 {
+    background-color: #2196f3;
+    color: white;
+}
+
+.chip-20 {
+    background-color: #4caf50;
+    color: white;
+}
+
+.chip-50 {
+    background-color: #9c27b0;
+    color: white;
+}
+
+.chip-100 {
+    background-color: #000000;
+    color: white;
+}
+
+.bet-display {
+    font-size: calc(min(1rem, 3vw));
+    padding: 5px 15px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    margin-top: 5px;
+}
+
+.current-bet {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.current-bet-chips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 400px;
+    margin-top: 10px;
+}
+
+.current-bet-chip {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+    margin: -5px;
+    border: 2px dashed white;
+}
+
+.result-message {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: calc(min(2.5rem, 8vw));
+    font-weight: bold;
+    padding: 15px 30px;
+    border-radius: 10px;
+    z-index: 1000;
+    text-align: center;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    letter-spacing: 2px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.win {
+    background: linear-gradient(145deg, rgba(76, 175, 80, 0.9), rgba(56, 142, 60, 0.9));
+    animation: pulse 1.5s infinite;
+}
+
+.lose {
+    background: linear-gradient(145deg, rgba(244, 67, 54, 0.9), rgba(198, 40, 40, 0.9));
+}
+
+.push {
+    background: linear-gradient(145deg, rgba(255, 152, 0, 0.9), rgba(230, 81, 0, 0.9));
+}
+
+.mixed {
+    background: linear-gradient(145deg, rgba(156, 39, 176, 0.9), rgba(123, 31, 162, 0.9));
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    }
+}
+
+.player-stats {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 15px;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(30, 30, 30, 0.7));
+    border-radius: 10px;
+    margin-bottom: 5px;
+    font-size: calc(min(1rem, 3vw));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+}
+
+.balance {
+    color: #fff27c;
+    font-weight: bold;
+}
+
+.games {
+    color: #b3e5fc;
+}
+
+.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.btn {
+    font-weight: bold;
+    font-size: calc(min(1rem, 3vw));
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+    border-radius: 30px;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: all 0.5s ease;
+}
+
+.btn:hover:not(.disabled):before {
+    left: 100%;
+}
+
+.btn:hover:not(.disabled) {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.btn-primary {
+    background: linear-gradient(145deg, #2196f3, #1a7ad9);
+}
+
+.btn-success {
+    background: linear-gradient(145deg, #4caf50, #3d8b40);
+}
+
+.btn-danger {
+    background: linear-gradient(145deg, #f44336, #d9372d);
+}
+
+.btn-info {
+    background: linear-gradient(145deg, #00bcd4, #0097a7);
+}
+
+.btn-secondary {
+    background: linear-gradient(145deg, #9e9e9e, #757575);
+}
+
+.btn-warning {
+    background: linear-gradient(145deg, #ff9800, #e68900);
+}
+
+.clear-bet {
+    margin-left: 10px;
+    font-size: 0.9rem;
+    padding: 5px 15px;
+}
+
+.card-back {
+    background-color: #b71c1c;
+}
+
+/* Styles for multiple hands */
+#playerHands {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    height: 100%;
+    align-items: center;
+}
+
+.hand-container {
+    position: relative;
+    padding: 10px;
+    border-radius: 10px;
+    min-width: calc(min(250px, 40vw));
+    transition: all 0.3s ease;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.current-hand {
+    background-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    animation: highlight 2s infinite;
+}
+
+@keyframes highlight {
+    0% {
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+}
+
+.win-hand {
+    background-color: rgba(76, 175, 80, 0.2);
+    border: 2px solid #4caf50;
+}
+
+.lose-hand, .bust-hand {
+    background-color: rgba(244, 67, 54, 0.2);
+    border: 2px solid #f44336;
+}
+
+.push-hand {
+    background-color: rgba(255, 152, 0, 0.2);
+    border: 2px solid #ff9800;
+}
+
+.blackjack-hand {
+    background-color: rgba(156, 39, 176, 0.2);
+    border: 2px solid #9c27b0;
+}
+
+.hand-bet {
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
+    font-size: 1rem;
+    padding: 3px 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+}
+
+.busted-hand .card {
+    opacity: 0.7;
+}
+
+.busted-hand:after {
+    content: 'PASADO';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    color: #f44336;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    z-index: 10;
+}
+
+.current-hand-indicator {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: bold;
+    z-index: 5;
+    font-size: calc(min(1rem, 3vw));
+}

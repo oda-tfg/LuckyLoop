@@ -1,5 +1,16 @@
-// ruleta.component.ts
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  AfterViewInit
+} from '@angular/core';
+import * as THREE from 'three';
+// @ts-ignore
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+// @ts-ignore
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+// @ts-ignore
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 @Component({
   selector: 'app-ruleta',
@@ -7,407 +18,140 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener }
   standalone: false,
   styleUrls: ['./ruleta.component.css']
 })
-export class RuletaComponent implements OnInit, AfterViewInit {
-  @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('wheel') wheelRef!: ElementRef<HTMLDivElement>;
-  @ViewChild('ball') ballRef!: ElementRef<HTMLDivElement>;
-  
-  numbers: number[] = [];
-  selectedNumber: number | null = null;
-  isSpinning: boolean = false;
-  betAmount: number = 5;
-  balance: number = 1000;
-  lastResults: number[] = [];
-  
-  // Colores de la ruleta (rojo, negro, verde para el 0)
-  colors: { [key: number]: string } = {};
-  
-  // Propiedades para el sistema de fichas
-  selectedChip: number = 5;
-  availableChips: number[] = [1, 5, 10, 25, 100];
-  bettingBoard: { [key: string]: number } = {};
-  
-  // Tipos de apuestas
-  betTypes: { [key: string]: { label: string, payout: number, numbers: number[] } } = {};
-  
-  // Variable para mostrar/ocultar instrucciones
-  showInstructions: boolean = false;
-  
-  constructor() {
-    // Números del 0 al 36
-    this.numbers = Array.from({ length: 37 }, (_, i) => i);
-    
-    // Configurar colores (rojo/negro, 0 es verde)
-    const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
-    
-    this.numbers.forEach(num => {
-      if (num === 0) {
-        this.colors[num] = '#008000'; // Verde para el 0
-      } else if (redNumbers.includes(num)) {
-        this.colors[num] = '#e81c1c'; // Rojo
-      } else {
-        this.colors[num] = '#000000'; // Negro
-      }
-    });
-    
-    // Inicializar tipos de apuestas
-    this.initBetTypes();
-  }
+export class RuletaComponent implements AfterViewInit {
+  @ViewChild('canvas3D', { static: true }) canvasRef!: ElementRef;
+  private scene!: THREE.Scene;
+  private camera!: THREE.PerspectiveCamera;
+  private renderer!: THREE.WebGLRenderer;
+  private wheel!: THREE.Object3D;
+  private ball!: THREE.Object3D;
+  private spinning = false;
+  private rotationSpeed = 0.1;
+  private ballAngle = 0;
 
-  // Manejar el tamaño del canvas cuando cambia el tamaño de la ventana
-  @HostListener('window:resize', ['$event'])
-  onResize() {
-    if (this.canvasRef && this.canvasRef.nativeElement) {
-      this.drawRouletteWheel();
-    }
-  }
-
-  initBetTypes(): void {
-    // Apuestas a números individuales
-    this.numbers.forEach(num => {
-      this.betTypes[`number_${num}`] = {
-        label: num.toString(),
-        payout: 35,
-        numbers: [num]
-      };
-    });
-
-    // Apuestas a color
-    this.betTypes['red'] = {
-      label: 'Rojo',
-      payout: 1,
-      numbers: [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
-    };
-    
-    this.betTypes['black'] = {
-      label: 'Negro',
-      payout: 1,
-      numbers: [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35]
-    };
-
-    // Apuestas a par/impar
-    this.betTypes['even'] = {
-      label: 'Par',
-      payout: 1,
-      numbers: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36]
-    };
-    
-    this.betTypes['odd'] = {
-      label: 'Impar',
-      payout: 1,
-      numbers: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35]
-    };
-
-    // Apuestas a rangos
-    this.betTypes['low'] = {
-      label: '1-18',
-      payout: 1,
-      numbers: Array.from({ length: 18 }, (_, i) => i + 1)
-    };
-    
-    this.betTypes['high'] = {
-      label: '19-36',
-      payout: 1,
-      numbers: Array.from({ length: 18 }, (_, i) => i + 19)
-    };
-
-    // Apuestas a docenas
-    this.betTypes['first_dozen'] = {
-      label: '1ª Docena',
-      payout: 2,
-      numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-    };
-    
-    this.betTypes['second_dozen'] = {
-      label: '2ª Docena',
-      payout: 2,
-      numbers: [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
-    };
-    
-    this.betTypes['third_dozen'] = {
-      label: '3ª Docena',
-      payout: 2,
-      numbers: [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]
-    };
-
-    // Apuestas a columnas
-    this.betTypes['first_column'] = {
-      label: '1ª Columna',
-      payout: 2,
-      numbers: [1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34]
-    };
-    
-    this.betTypes['second_column'] = {
-      label: '2ª Columna',
-      payout: 2,
-      numbers: [2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35]
-    };
-    
-    this.betTypes['third_column'] = {
-      label: '3ª Columna',
-      payout: 2,
-      numbers: [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36]
-    };
-  }
-
-  resetBets(): void {
-    this.bettingBoard = {};
-    Object.keys(this.betTypes).forEach(betType => {
-      this.bettingBoard[betType] = 0;
-    });
-  }
-
-  getTotalBets(): number {
-    const values = Object.values(this.bettingBoard);
-    if (values.length === 0) return 0;
-    return values.reduce((sum, bet) => sum + bet, 0);
-  }
-
-  placeBet(betType: string): void {
-    if (this.isSpinning || this.selectedChip > this.balance) {
-      return;
-    }
-    
-    this.bettingBoard[betType] = (this.bettingBoard[betType] || 0) + this.selectedChip;
-    this.balance -= this.selectedChip;
-  }
-
-  removeBet(betType: string): void {
-    if (this.isSpinning || !this.bettingBoard[betType] || this.bettingBoard[betType] === 0) {
-      return;
-    }
-    
-    const chipValue = Math.min(this.selectedChip, this.bettingBoard[betType]);
-    this.bettingBoard[betType] -= chipValue;
-    this.balance += chipValue;
-  }
-
-  selectChip(value: number): void {
-    if (!this.isSpinning) {
-      this.selectedChip = value;
-    }
-  }
-
-  ngOnInit(): void {
-    // Inicializar tablero de apuestas
-    this.resetBets();
-  }
+  private europeanOrder = [
+    0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13,
+    36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20,
+    14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26
+  ];
 
   ngAfterViewInit(): void {
-    this.drawRouletteWheel();
+    this.initScene();
+    this.animate();
   }
 
-  drawRouletteWheel(): void {
+  private initScene(): void {
     const canvas = this.canvasRef.nativeElement;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    this.scene = new THREE.Scene();
+    this.scene.background = new THREE.Color(0x000000);
 
-    // Configuración de la ruleta
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const radius = Math.min(centerX, centerY) - 10;
-    const arc = 2 * Math.PI / this.numbers.length;
+    this.camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+    this.camera.position.set(0, 60, 60);
+    this.camera.lookAt(0, 0, 0);
 
-    // Limpiar el canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    this.renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+    this.renderer.shadowMap.enabled = true;
 
-    // Dibujar los sectores
-    for (let i = 0; i < this.numbers.length; i++) {
-      const angle = i * arc;
-      const num = this.numbers[i];
+    const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+    this.scene.add(ambient);
 
-      // Dibujar el sector
-      ctx.beginPath();
-      ctx.fillStyle = this.colors[num];
-      ctx.arc(centerX, centerY, radius, angle, angle + arc);
-      ctx.lineTo(centerX, centerY);
-      ctx.fill();
-      ctx.strokeStyle = 'white';
-      ctx.lineWidth = 2;
-      ctx.stroke();
+    const spotlight = new THREE.SpotLight(0xffffff, 1);
+    spotlight.position.set(0, 150, 100);
+    spotlight.castShadow = true;
+    this.scene.add(spotlight);
 
-      // Dibujar los números
-      ctx.save();
-      ctx.translate(centerX, centerY);
-      ctx.rotate(angle + arc / 2);
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#FFFFFF';
-      ctx.font = 'bold 14px Arial';
-      ctx.fillText(num.toString(), radius * 0.75, 0);
-      ctx.restore();
-    }
+    const loader = new GLTFLoader();
+    loader.load('assets/models/roulette.glb', gltf => {
+      const model = gltf.scene;
+      model.scale.set(20, 20, 20);
+      model.position.set(0, 0, 0);
+      this.scene.add(model);
 
-    // Dibujar el círculo central
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, 30, 0, 2 * Math.PI);
-    ctx.fillStyle = '#8B4513'; // Marrón para simular madera
-    ctx.fill();
-    ctx.strokeStyle = 'gold';
-    ctx.lineWidth = 3;
-    ctx.stroke();
-    
-    // Añadir brillo y efectos visuales
-    ctx.beginPath();
-    const gradient = ctx.createRadialGradient(
-      centerX, centerY, 0,
-      centerX, centerY, radius
-    );
-    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.1)');
-    gradient.addColorStop(0.7, 'rgba(255, 255, 255, 0)');
-    gradient.addColorStop(1, 'rgba(0, 0, 0, 0.2)');
-    
-    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-    ctx.fillStyle = gradient;
-    ctx.fill();
-    
-    // Dibujar divisiones metálicas más detalladas
-    for (let i = 0; i < this.numbers.length; i++) {
-      const angle = i * arc;
-      ctx.beginPath();
-      ctx.moveTo(centerX, centerY);
-      ctx.lineTo(
-        centerX + radius * Math.cos(angle),
-        centerY + radius * Math.sin(angle)
-      );
-      ctx.strokeStyle = 'rgba(255, 215, 0, 0.6)';
-      ctx.lineWidth = 1;
-      ctx.stroke();
-    }
-    
-    // Añadir efecto de reflejo en la parte superior
-    ctx.beginPath();
-    const highlightGradient = ctx.createLinearGradient(
-      centerX - radius, centerY - radius,
-      centerX + radius, centerY + radius
-    );
-    highlightGradient.addColorStop(0, 'rgba(255, 255, 255, 0.1)');
-    highlightGradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.05)');
-    highlightGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-    
-    ctx.fillStyle = highlightGradient;
-    ctx.fillRect(centerX - radius, centerY - radius, radius * 2, radius * 0.6);
+      model.traverse(child => {
+        if (child.name.toLowerCase().includes('wheel') || child.name.toLowerCase().includes('circle')) {
+          this.wheel = child;
+        }
+
+        if (child.name.toLowerCase().includes('ball')) {
+          this.ball = child;
+        }
+      });
+
+      if (!this.wheel) console.warn('⚠️ No se encontró la parte giratoria');
+      if (!this.ball) console.warn('⚠️ No se encontró la bola');
+
+      this.addNumberTexts(); // Añadir números
+    });
   }
+
+  private addNumberTexts(): void {
+    const fontLoader = new FontLoader();
+    fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font: any) => {
+      const angleStep = (2 * Math.PI) / 37;
+      const radius = 15.5;
+
+      this.europeanOrder.forEach((num, i) => {
+        const angle = i * angleStep + Math.PI / 2;
+
+        const textGeo = new TextGeometry(num.toString(), {
+          font: font,
+          size: 0.3,
+          height: 0.01
+        } as any);
+        
+        textGeo.computeBoundingBox();
+        textGeo.center(); // centra el texto sin deformarlo
+        
+
+        const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const textMesh = new THREE.Mesh(textGeo, material);
+
+        textMesh.position.set(
+          radius * Math.cos(angle),
+          2.1,
+          radius * Math.sin(angle)
+        );
+
+        textMesh.rotation.y = -angle; // rotar en su sitio sin estirar
+        this.scene.add(textMesh);
+      });
+    });
+  }
+
+  private animate = () => {
+    requestAnimationFrame(this.animate);
+
+    if (this.spinning && this.wheel) {
+      this.wheel.rotation.y += this.rotationSpeed;
+      this.ballAngle += this.rotationSpeed * 1.8;
+      this.rotationSpeed *= 0.98;
+
+      if (this.ball) {
+        const radius = 13.3;
+        this.ball.position.x = radius * Math.cos(this.ballAngle);
+        this.ball.position.z = radius * Math.sin(this.ballAngle);
+        this.ball.position.y = 1.6;
+      }
+
+      if (this.rotationSpeed < 0.001) {
+        this.spinning = false;
+        this.rotationSpeed = 0.1;
+
+        const number = this.europeanOrder[Math.floor(Math.random() * this.europeanOrder.length)];
+        console.log('🎯 Número ganador:', number);
+
+        const index = this.europeanOrder.indexOf(number);
+        const anglePerNumber = (2 * Math.PI) / 37;
+        const offset = Math.PI / 2;
+        this.ballAngle = index * anglePerNumber + offset;
+      }
+    }
+
+    this.renderer.render(this.scene, this.camera);
+  };
 
   spin(): void {
-    if (this.isSpinning || this.getTotalBets() === 0) return;
-    
-    this.isSpinning = true;
-    this.selectedNumber = null;
-    
-    // Obtener un número aleatorio de vueltas (entre 2 y 5)
-    const rounds = 2 + Math.random() * 3;
-    
-    // Obtener un número aleatorio (0-36)
-    const winningNumber = Math.floor(Math.random() * 37);
-    
-    // Calcular el ángulo de rotación
-    const arc = 2 * Math.PI / this.numbers.length;
-    const wheelIndex = this.numbers.indexOf(winningNumber);
-    
-    // El ángulo final debe incluir varias vueltas completas más el ángulo correspondiente al número ganador
-    const stopAngle = rounds * 2 * Math.PI + (this.numbers.length - wheelIndex) * arc;
-    
-    // Animar la ruleta
-    this.animateWheel(stopAngle, winningNumber);
-    
-    // Reproducir sonido de ruleta (si está disponible en el proyecto)
-    this.playSound('roulette-spin');
-  }
-
-  animateWheel(stopAngle: number, winningNumber: number): void {
-    const wheel = this.wheelRef.nativeElement;
-    wheel.style.transition = `transform 5s cubic-bezier(0.17, 0.67, 0.83, 0.67)`;
-    wheel.style.transform = `rotate(${stopAngle}rad)`;
-    
-    // Activar la animación de la bola si existe la referencia
-    if (this.ballRef) {
-      const ball = this.ballRef.nativeElement;
-      ball.classList.add('visible');
-      ball.classList.add('spinning');
-      
-      // Reiniciar la animación para que se vea cada vez
-      ball.style.animation = 'none';
-      setTimeout(() => {
-        ball.style.animation = 'ballSpin 5s cubic-bezier(0.33, 0.82, 0.8, 0.99)';
-      }, 10);
-    }
-    
-    // Cuando la animación termine, mostrar resultado
-    setTimeout(() => {
-      this.isSpinning = false;
-      this.selectedNumber = winningNumber;
-      this.lastResults.unshift(winningNumber);
-      if (this.lastResults.length > 10) {
-        this.lastResults.pop();
-      }
-      
-      // Reproducir sonido del resultado
-      this.playSound('roulette-ball-drop');
-      
-      // Calcular ganancias
-      this.calculateWinnings(winningNumber);
-      
-      // Ocultar la bola al terminar
-      if (this.ballRef) {
-        const ball = this.ballRef.nativeElement;
-        ball.classList.remove('spinning');
-      }
-      
-    }, 5000); // 5 segundos, igual que la duración de la animación
-  }
-
-  calculateWinnings(winningNumber: number): void {
-    let totalWinnings = 0;
-    
-    // Verificar todas las apuestas para ver cuáles ganaron
-    Object.keys(this.bettingBoard).forEach(betType => {
-      const betAmount = this.bettingBoard[betType];
-      
-      if (betAmount > 0 && this.betTypes[betType]) {
-        // Verificar si el número ganador está en los números de esta apuesta
-        if (this.betTypes[betType].numbers.includes(winningNumber)) {
-          const payout = this.betTypes[betType].payout;
-          const winnings = betAmount * (payout + 1); // Pago + devolución de la apuesta
-          this.balance += winnings;
-          totalWinnings += winnings - betAmount; // Solo contamos las ganancias netas
-        }
-      }
-    });
-    
-    // Si hubo ganancias, reproducir sonido de victoria
-    if (totalWinnings > 0) {
-      this.playSound('win-sound');
-    }
-    
-    // Restablecer las apuestas
-    this.resetBets();
-  }
-
-  // Método para reproducir sonidos (implementar si se desea agregar sonidos)
-  playSound(soundName: string): void {
-    try {
-      // Comprobar si el navegador soporta el API de Audio
-      const audio = new Audio(`assets/sounds/${soundName}.mp3`);
-      audio.volume = 0.5; // Volumen al 50%
-      audio.play().catch(e => {
-        // Silenciar errores si el navegador bloquea la reproducción automática
-        console.log('No se pudo reproducir el sonido:', e);
-      });
-    } catch (error) {
-      // Silenciar errores si no se puede cargar el sonido
-    }
-  }
-
-  changeBetAmount(amount: number): void {
-    this.betAmount = Math.max(1, this.betAmount + amount);
-  }
-
-  resetGame(): void {
-    this.balance = 1000;
-    this.lastResults = [];
-    this.selectedNumber = null;
-    this.resetBets();
-    this.betAmount = 5;
-    this.playSound('chip-stack');
+    this.spinning = true;
   }
 }

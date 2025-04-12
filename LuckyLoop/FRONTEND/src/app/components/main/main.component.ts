@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { url } from 'node:inspector';
 
 @Component({
   selector: 'app-main',
@@ -35,7 +36,8 @@ export class MainComponent implements OnInit {
       name: 'Ruleta',
       image: 'assets/images/games/ruleta.webp',
       category: 'Juego de Mesa',
-      isHot: false
+      isHot: false,
+      url: '/ruleta/'
     },
     {
       id: 4,

@@ -9,6 +9,7 @@ import { LoginComponent } from './components/auth/login/login.component';
 import { RegistroComponent } from './components/auth/registro/registro.component';
 import { RecuperarPasswordComponent } from './components/recuperar-password/recuperar-password.component';
 import { CambiarPasswordComponent } from './components/cambiar-password/cambiar-password.component';
+import { BlackjackComponent } from './components/blackjack/blackjack.component';
 
 // app-routing.module.ts
 const routes: Routes = [
@@ -17,7 +18,7 @@ const routes: Routes = [
   { path: 'ruleta', component: RuletaComponent },
   { path: 'depositar', component: DepositComponent },
   { path: 'plinko', component: PlinkoGameComponent},
-  { path: 'blackjack', component: MainComponent, data: { showGame: true } },
+  { path: 'blackjack', component:BlackjackComponent},
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },
   { path: 'recuperar-password', component: RecuperarPasswordComponent },

@@ -19,6 +19,7 @@ import { LoginComponent } from './components/auth/login/login.component';
 import { RecuperarPasswordComponent } from './components/recuperar-password/recuperar-password.component';
 import { CambiarPasswordComponent } from './components/cambiar-password/cambiar-password.component';
 import { PlinkoGameComponent } from './components/plinko-game/plinko-game.component';
+import { BlackjackComponent } from './components/blackjack/blackjack.component';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { PlinkoGameComponent } from './components/plinko-game/plinko-game.compon
     LoginComponent,
     RecuperarPasswordComponent,
     CambiarPasswordComponent,
-    PlinkoGameComponent
+    PlinkoGameComponent,
+    BlackjackComponent
   ],
   imports: [
     BrowserModule,

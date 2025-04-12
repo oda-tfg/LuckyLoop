@@ -1,0 +1,145 @@
+<div class="game-container">
+    <div class="player-stats">
+        <div class="balance">Saldo: $<span id="playerBalance">{{game.playerBalance}}</span></div>
+        <div class="games">G: <span id="playerWins">{{game.playerWins}}</span> | P: <span id="playerLosses">{{game.playerLosses}}</span> | E:
+            <span id="playerPushes">{{game.playerPushes}}</span>
+        </div>
+    </div>
+
+    <div class="table">
+        <div class="dealer-area">
+            <div class="area-label">Crupier</div>
+            <div class="score" id="dealerScore">Puntos: {{game.showDealerCards || game.playerStood ? game.dealerScore : game.getDealerFirstCardScore()}}</div>
+            <div class="card-container" id="dealerCards">
+                <img *ngFor="let card of game.dealerCards; let i = index; trackBy: trackByFn" 
+                     [src]="i === 1 && !game.showDealerCards && !game.playerStood ? './assets/images/red_back.png' : './assets/images/' + card + '.png'"
+                     [class.card-back]="i === 1 && !game.showDealerCards && !game.playerStood"
+                     [class.dealing]="game.dealingInProgress && (
+                        (game.cardBeingDealt?.type === 'dealer' && game.cardBeingDealt?.cardIndex === i) ||
+                        (game.cardBeingDealt?.type === 'all')
+                     )"
+                     [class.animated]="game.dealerPlayInProgress && i === game.currentDealerCardIndex"
+                     class="card" alt="Carta">
+            </div>
+        </div>
+        
+        <div class="current-hand-indicator" id="currentHand" [style.display]="game.playerHands.length > 1 ? 'block' : 'none'">
+            Jugando Mano {{game.currentHandIndex + 1}} de {{game.playerHands.length}}
+        </div>
+        
+        <div class="player-area">
+            <div class="area-label">Jugador</div>
+            <div id="playerHands">
+                <div *ngFor="let idx of getHandsArray(); trackBy: trackByFn" 
+                     [id]="'hand-' + idx" 
+                     class="hand-container"
+                     [class.current-hand]="idx === game.currentHandIndex"
+                     [class.win-hand]="game.handResults[idx] === 'win'"
+                     [class.lose-hand]="game.handResults[idx] === 'lose'"
+                     [class.push-hand]="game.handResults[idx] === 'push'"
+                     [class.blackjack-hand]="game.handResults[idx] === 'blackjack'"
+                     [class.busted-hand]="game.handResults[idx] === 'bust'">
+                    
+                    <div [id]="'score-' + idx" class="score">Puntos: {{game.playerScores[idx] || 0}}</div>
+                    
+                    <div class="card-container">
+                        <img *ngFor="let card of game.playerHands[idx]; let cardIdx = index; trackBy: trackByFn" 
+                             src="./assets/images/{{card}}.png" 
+                             [class.dealing]="game.dealingInProgress && (
+                                (game.cardBeingDealt?.type === 'player' && game.cardBeingDealt?.handIndex === idx && game.cardBeingDealt?.cardIndex === cardIdx) ||
+                                (game.cardBeingDealt?.type === 'all')
+                             )"
+                             class="card" alt="Carta">
+                    </div>
+                    
+                    <div [id]="'bet-' + idx" class="hand-bet">Apuesta: ${{game.playerBets[idx] || 0}}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="deck-area" [class.shuffling]="game.shufflingDeck">
+            <div class="deck-card"></div>
+            <div class="deck-card"></div>
+        </div>
+        
+        <div class="insurance-dialog" *ngIf="game.showInsuranceDialog">
+            <div class="insurance-content">
+                <h3>Seguro disponible</h3>
+                <p>El crupier muestra un As. ¿Deseas comprar un seguro?</p>
+                <p>Costo del seguro: ${{game.currentBet / 2 | number:'1.0-0'}}</p>
+                <div class="insurance-buttons">
+                    <button class="btn btn-success" (click)="takeInsurance()">Sí, comprar seguro</button>
+                    <button class="btn btn-danger" (click)="declineInsurance()">No, rechazar</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="result-message" 
+             [ngClass]="game.resultType"
+             [style.display]="game.showResult ? 'block' : 'none'">
+            {{game.resultMessage}}
+        </div>
+    </div>
+
+    <div class="bet-area">
+        <h5>Coloca tu Apuesta <span class="available-balance">(Disponible: ${{game.playerBalance - game.currentBet}})</span></h5>
+        <div *ngIf="game.gameFinished" class="new-game-required">
+            Pulsa "Nuevo" para comenzar otra partida
+        </div>
+        <div class="current-bet">
+            <div class="bet-display">Apuesta: $<span id="currentBetAmount">{{game.currentBet}}</span></div>
+            <div class="current-bet-chips" id="currentBetChips">
+                <div *ngFor="let chip of game.currentBetChips; trackBy: trackByFn" 
+                     class="current-bet-chip chip-{{chip}}">
+                    ${{chip}}
+                </div>
+            </div>
+            <button class="btn btn-sm btn-secondary clear-bet" 
+                    [class.disabled]="isDisabled('clear')"
+                    (click)="clearBet()">
+                Borrar
+            </button>
+        </div>
+        <div class="chips-container">
+            <div *ngFor="let value of [1, 2, 5, 10, 20, 50, 100]"
+                 class="chip chip-{{value}}" 
+                 [class.disabled]="isDisabled('chip') || value > game.playerBalance || (value + game.currentBet) > game.playerBalance"
+                 (click)="addChip(value)">
+                ${{value}}
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-sm btn-primary" 
+                [class.disabled]="isDisabled('deal') || game.currentBet <= 0"
+                (click)="dealCards()">
+            Repartir
+        </button>
+        <button class="btn btn-sm btn-success" 
+                [class.disabled]="isDisabled('hit')"
+                (click)="playerHit()">
+            Pedir
+        </button>
+        <button class="btn btn-sm btn-danger" 
+                [class.disabled]="isDisabled('stand')"
+                (click)="playerStand()">
+            Plantarse
+        </button>
+        <button class="btn btn-sm btn-info" 
+                [class.disabled]="isDisabled('double')"
+                (click)="playerDoubleDown()">
+            Doblar
+        </button>
+        <button class="btn btn-sm btn-secondary" 
+                [class.disabled]="isDisabled('split')"
+                (click)="playerSplit()">
+            Dividir
+        </button>
+        <button class="btn btn-sm btn-warning" 
+                [class.disabled]="isDisabled('new')"
+                (click)="startNewGame()">
+            Nuevo
+        </button>
+    </div>
+</div>
