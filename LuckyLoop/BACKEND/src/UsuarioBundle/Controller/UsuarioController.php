@@ -111,7 +111,7 @@ final class UsuarioController extends AbstractController
         ]
     )]
     #[Route('/api/usuario/updateSaldo', name: 'update_saldo', methods: ['POST'])]
-    public function restarSaldoApostado(EntityManagerInterface $entityManager, Request $request)
+    public function updateSaldo(EntityManagerInterface $entityManager, Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
