@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BlackjackService } from './blackjack.service';
+import { SaldoService } from '../../services/saldo/saldo.service';
 
 @Component({
   selector: 'app-blackjack',
@@ -10,20 +11,33 @@ import { BlackjackService } from './blackjack.service';
 })
 export class BlackjackComponent implements OnInit {
   
-  constructor(public game: BlackjackService) {}
+  constructor(public game: BlackjackService, private saldoService: SaldoService) {}
 
   ngOnInit(): void {
-    this.game.startNewGame();
+    // Obtener el saldo actual del usuario antes de iniciar el juego
+    this.saldoService.getSaldo().subscribe({
+      next: (response) => {
+        if (response && response.saldo !== undefined) {
+          this.game.playerBalance = response.saldo;
+        }
+        this.game.startNewGame();
+      },
+      error: (error) => {
+        console.error('Error al obtener saldo:', error);
+        // Iniciar el juego con el saldo predeterminado
+        this.game.startNewGame();
+      }
+    });
   }
 
   dealCards(): void {
     if (this.game.currentBet <= 0) {
-      alert('Please place a bet first');
+      alert('Por favor, coloca una apuesta primero');
       return;
     }
     
     if (this.game.currentBet > this.game.playerBalance) {
-      alert('Not enough balance for this bet');
+      alert('No tienes suficiente saldo para esta apuesta');
       return;
     }
     
@@ -44,7 +58,7 @@ export class BlackjackComponent implements OnInit {
     if (!this.game.gameInProgress || !this.game.canDoubleDown || this.game.handCompleted) return;
     
     if (this.game.playerBalance < this.game.playerBets[this.game.currentHandIndex]) {
-      alert('Not enough balance to double down');
+      alert('No tienes suficiente saldo para doblar');
       return;
     }
     
@@ -55,7 +69,7 @@ export class BlackjackComponent implements OnInit {
     if (!this.game.gameInProgress || !this.game.canSplit || this.game.handCompleted) return;
     
     if (this.game.playerBalance < this.game.playerBets[this.game.currentHandIndex]) {
-      alert('Not enough balance to split');
+      alert('No tienes suficiente saldo para dividir');
       return;
     }
     
@@ -81,7 +95,20 @@ export class BlackjackComponent implements OnInit {
   startNewGame(): void {
     // Solo permitir iniciar un nuevo juego si no hay uno en progreso
     if (!this.game.gameInProgress) {
-      this.game.startNewGame();
+      // Refrescar el saldo del usuario antes de iniciar un nuevo juego
+      this.saldoService.getSaldo().subscribe({
+        next: (response) => {
+          if (response && response.saldo !== undefined) {
+            this.game.playerBalance = response.saldo;
+          }
+          this.game.startNewGame();
+        },
+        error: (error) => {
+          console.error('Error al obtener saldo:', error);
+          // Iniciar el juego con el saldo actual
+          this.game.startNewGame();
+        }
+      });
     }
   }
 

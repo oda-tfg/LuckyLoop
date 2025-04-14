@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as _ from 'underscore';
+import { take } from 'rxjs/operators';
+import { SaldoService } from '../../services/saldo/saldo.service';
 
 @Injectable({
   providedIn: 'root'
@@ -43,7 +45,17 @@ export class BlackjackService {
   insuranceBet: number = 0;
   showInsuranceDialog: boolean = false;
 
-  constructor() { }
+  constructor(private saldoService: SaldoService) { 
+    // Obtener saldo inicial del usuario
+    this.loadUserBalance();
+  }
+
+  // Cargar el saldo del usuario desde el servicio
+  loadUserBalance(): void {
+    // Esta función simula la carga del saldo del usuario
+    // En una implementación real, aquí consultarías el saldo del usuario mediante API
+    // Por ahora mantenemos el saldo inicial en 1000 como estaba
+  }
 
   // Create a deck of cards
   createDeck(): string[] {
@@ -142,44 +154,67 @@ export class BlackjackService {
   // Deal cards with animation (versión simplificada)
   dealCards(): void {
     this.gameInProgress = true;
-    this.playerBalance -= this.currentBet;
-    this.playerBets[0] = this.currentBet;
     
-    // Deal initial cards
-    this.playerHands[0] = [];
-    this.dealerCards = [];
+    // Actualizar el saldo a través del servicio (restar apuesta)
+    const betAmount = -this.currentBet; // Negativo para restar
     
-    // Set up dealing animation sequence - más rápido para evitar lags
-    this.dealingInProgress = true;
-    
-    // Deal all cards at once pero mostrando animación
-    this.playerHands[0].push(this.deck.pop()!);
-    this.dealerCards.push(this.deck.pop()!);
-    this.playerHands[0].push(this.deck.pop()!);
-    this.dealerCards.push(this.deck.pop()!);
-    
-    // Indicar cuál es la carta que se está repartiendo para la animación
-    this.cardBeingDealt = {type: 'all', handIndex: 0, cardIndex: -1};
-    
-    // Calculate scores
-    this.playerScores[0] = this.calculateScore(this.playerHands[0]);
-    this.dealerScore = this.calculateScore(this.dealerCards);
-    
-    // Quitar animación tras un breve tiempo
-    setTimeout(() => {
-      this.dealingInProgress = false;
-      this.cardBeingDealt = null;
-      
-      // Check if insurance is available (dealer first card is Ace)
-      if (this.dealerCards[0].startsWith('A')) {
-        this.insuranceAvailable = true;
-        this.showInsuranceDialog = true;
-        // The game will wait for player's decision on insurance
-        return;
+    this.saldoService.setSaldo(betAmount).pipe(take(1)).subscribe({
+      next: (response) => {
+        // Actualizar el saldo local con la respuesta del servidor
+        this.playerBalance = response.nuevoSaldo;
+        
+        // Continuar con el reparto de cartas
+        this.playerBets[0] = this.currentBet;
+        
+        // Deal initial cards
+        this.playerHands[0] = [];
+        this.dealerCards = [];
+        
+        // Set up dealing animation sequence - más rápido para evitar lags
+        this.dealingInProgress = true;
+        
+        // Deal all cards at once pero mostrando animación
+        this.playerHands[0].push(this.deck.pop()!);
+        this.dealerCards.push(this.deck.pop()!);
+        this.playerHands[0].push(this.deck.pop()!);
+        this.dealerCards.push(this.deck.pop()!);
+        
+        // Indicar cuál es la carta que se está repartiendo para la animación
+        this.cardBeingDealt = {type: 'all', handIndex: 0, cardIndex: -1};
+        
+        // Calculate scores
+        this.playerScores[0] = this.calculateScore(this.playerHands[0]);
+        this.dealerScore = this.calculateScore(this.dealerCards);
+        
+        // Quitar animación tras un breve tiempo
+        setTimeout(() => {
+          this.dealingInProgress = false;
+          this.cardBeingDealt = null;
+          
+          // Check if insurance is available (dealer first card is Ace)
+          if (this.dealerCards[0].startsWith('A')) {
+            this.insuranceAvailable = true;
+            this.showInsuranceDialog = true;
+            // The game will wait for player's decision on insurance
+            return;
+          }
+          
+          this.proceedAfterInsuranceDecision();
+        }, 300); // Tiempo reducido para mayor fluidez
+      },
+      error: (error) => {
+        // Mostrar mensaje si hay error
+        console.error('Error al actualizar saldo:', error);
+        if (error.error && error.error.message) {
+          alert(error.error.message);
+        } else {
+          alert('No se pudo actualizar el saldo. Inténtalo de nuevo.');
+        }
+        
+        // Cancelar el inicio del juego
+        this.gameInProgress = false;
       }
-      
-      this.proceedAfterInsuranceDecision();
-    }, 300); // Tiempo reducido para mayor fluidez
+    });
   }
   
   // Method to handle the game logic after insurance decision
@@ -214,44 +249,58 @@ export class BlackjackService {
     // Insurance bet is half the original bet
     const insuranceAmount = Math.floor(this.currentBet / 2);
     
-    // Check if player has enough balance
-    if (insuranceAmount > this.playerBalance) {
-      alert('No tienes suficiente saldo para el seguro');
-      this.declineInsurance();
-      return;
-    }
-    
-    // Deduct insurance amount from balance
-    this.playerBalance -= insuranceAmount;
-    this.insuranceBet = insuranceAmount;
-    
-    // Now check if dealer has blackjack
-    if (this.dealerScore === 21) {
-      // Dealer has blackjack, insurance pays 2:1
-      this.playerBalance += this.insuranceBet * 3; // Return bet plus 2x win
-      
-      // Show dealer's cards
-      this.showDealerCards = true;
-      
-      setTimeout(() => {
-        alert('¡El crupier tiene Blackjack! El seguro paga 2:1');
+    // Deduct insurance amount using the service
+    this.saldoService.setSaldo(-insuranceAmount).pipe(take(1)).subscribe({
+      next: (response) => {
+        // Update local balance
+        this.playerBalance = response.nuevoSaldo;
+        this.insuranceBet = insuranceAmount;
         
-        // End the game according to player's hand
-        if (this.playerScores[0] === 21) {
-          // Player also has blackjack - Push
-          this.endGame('push');
+        // Now check if dealer has blackjack
+        if (this.dealerScore === 21) {
+          // Dealer has blackjack, insurance pays 2:1
+          const winAmount = this.insuranceBet * 3; // Return bet plus 2x win
+          
+          // Add the win amount to the balance
+          this.saldoService.setSaldo(winAmount).pipe(take(1)).subscribe({
+            next: (response) => {
+              this.playerBalance = response.nuevoSaldo;
+              
+              // Show dealer's cards
+              this.showDealerCards = true;
+              
+              setTimeout(() => {
+                alert('¡El crupier tiene Blackjack! El seguro paga 2:1');
+                
+                // End the game according to player's hand
+                if (this.playerScores[0] === 21) {
+                  // Player also has blackjack - Push
+                  this.endGame('push');
+                } else {
+                  // Player doesn't have blackjack - Lose, but recovered with insurance
+                  this.endGame('lose');
+                }
+              }, 500);
+            },
+            error: (error) => {
+              console.error('Error al añadir ganancias del seguro:', error);
+              alert('Error al procesar ganancias del seguro');
+            }
+          });
         } else {
-          // Player doesn't have blackjack - Lose, but recovered with insurance
-          this.endGame('lose');
+          // Dealer doesn't have blackjack, insurance is lost
+          setTimeout(() => {
+            alert('El crupier no tiene Blackjack. Pierdes el seguro.');
+            this.proceedAfterInsuranceDecision();
+          }, 500);
         }
-      }, 500);
-    } else {
-      // Dealer doesn't have blackjack, insurance is lost
-      setTimeout(() => {
-        alert('El crupier no tiene Blackjack. Pierdes el seguro.');
-        this.proceedAfterInsuranceDecision();
-      }, 500);
-    }
+      },
+      error: (error) => {
+        console.error('Error al procesar el seguro:', error);
+        alert('No se pudo procesar el seguro: ' + (error.error?.message || 'Error desconocido'));
+        this.declineInsurance();
+      }
+    });
   }
   
   // Player declines insurance
@@ -339,86 +388,110 @@ export class BlackjackService {
   playerDoubleDown(): void {
     if (!this.gameInProgress || !this.canDoubleDown || this.handCompleted || this.dealingInProgress) return;
     
-    // Double the bet
-    this.playerBalance -= this.playerBets[this.currentHandIndex];
-    this.playerBets[this.currentHandIndex] *= 2;
+    // Double the bet using the service
+    const doubleBetAmount = -this.playerBets[this.currentHandIndex];
     
-    // Draw one more card with animation simplificada
-    this.dealingInProgress = true;
-    
-    // Add new card
-    this.playerHands[this.currentHandIndex].push(this.deck.pop()!);
-    this.cardBeingDealt = {
-      type: 'player', 
-      handIndex: this.currentHandIndex, 
-      cardIndex: this.playerHands[this.currentHandIndex].length - 1
-    };
-    
-    // Calculate new score
-    this.playerScores[this.currentHandIndex] = this.calculateScore(this.playerHands[this.currentHandIndex]);
-    
-    // Wait for animation to complete - tiempo reducido
-    setTimeout(() => {
-      this.dealingInProgress = false;
-      this.cardBeingDealt = null;
-      
-      // Check for bust
-      if (this.playerScores[this.currentHandIndex] > 21) {
-        if (this.playerHands.length > 1 && this.currentHandIndex < this.playerHands.length - 1) {
-          // If multiple hands and not the last one, move to next hand
-          this.completeCurrentHand('bust');
-        } else {
-          // If it's the last or only hand, end the game
-          this.endGame('bust');
-        }
-      } else {
-        // Automatically stand after doubling down
-        if (this.playerHands.length > 1 && this.currentHandIndex < this.playerHands.length - 1) {
-          this.completeCurrentHand('stand');
-        } else {
-          this.playerStood = true;
-          this.handCompleted = true;
+    this.saldoService.setSaldo(doubleBetAmount).pipe(take(1)).subscribe({
+      next: (response) => {
+        // Update local balance
+        this.playerBalance = response.nuevoSaldo;
+        
+        // Update the bet amount
+        this.playerBets[this.currentHandIndex] *= 2;
+        
+        // Draw one more card with animation simplificada
+        this.dealingInProgress = true;
+        
+        // Add new card
+        this.playerHands[this.currentHandIndex].push(this.deck.pop()!);
+        this.cardBeingDealt = {
+          type: 'player', 
+          handIndex: this.currentHandIndex, 
+          cardIndex: this.playerHands[this.currentHandIndex].length - 1
+        };
+        
+        // Calculate new score
+        this.playerScores[this.currentHandIndex] = this.calculateScore(this.playerHands[this.currentHandIndex]);
+        
+        // Wait for animation to complete - tiempo reducido
+        setTimeout(() => {
+          this.dealingInProgress = false;
+          this.cardBeingDealt = null;
           
-          // Reveal dealer's hidden card
-          this.showDealerCards = true;
-          
-          // Dealer draws cards
-          this.dealerTurn();
-        }
+          // Check for bust
+          if (this.playerScores[this.currentHandIndex] > 21) {
+            if (this.playerHands.length > 1 && this.currentHandIndex < this.playerHands.length - 1) {
+              // If multiple hands and not the last one, move to next hand
+              this.completeCurrentHand('bust');
+            } else {
+              // If it's the last or only hand, end the game
+              this.endGame('bust');
+            }
+          } else {
+            // Automatically stand after doubling down
+            if (this.playerHands.length > 1 && this.currentHandIndex < this.playerHands.length - 1) {
+              this.completeCurrentHand('stand');
+            } else {
+              this.playerStood = true;
+              this.handCompleted = true;
+              
+              // Reveal dealer's hidden card
+              this.showDealerCards = true;
+              
+              // Dealer draws cards
+              this.dealerTurn();
+            }
+          }
+        }, 300);
+      },
+      error: (error) => {
+        console.error('Error al doblar apuesta:', error);
+        alert('No se pudo doblar la apuesta: ' + (error.error?.message || 'Saldo insuficiente'));
       }
-    }, 300);
+    });
   }
 
   // Player splits
   playerSplit(): void {
     if (!this.gameInProgress || !this.canSplit || this.handCompleted) return;
     
-    // Deduct bet for the new hand
-    this.playerBalance -= this.playerBets[this.currentHandIndex];
+    // Deduct bet for the new hand using the service
+    const splitBetAmount = -this.playerBets[this.currentHandIndex];
     
-    // Create new hand
-    const newHandIndex = this.playerHands.length;
-    this.playerHands.push([]);
-    
-    // Move second card to new hand
-    this.playerHands[newHandIndex].push(this.playerHands[this.currentHandIndex].pop()!);
-    
-    // Deal new cards to both hands
-    this.playerHands[this.currentHandIndex].push(this.deck.pop()!);
-    this.playerHands[newHandIndex].push(this.deck.pop()!);
-    
-    // Set bet for new hand
-    this.playerBets.push(this.playerBets[this.currentHandIndex]);
-    
-    // Calculate scores
-    this.playerScores[this.currentHandIndex] = this.calculateScore(this.playerHands[this.currentHandIndex]);
-    this.playerScores.push(this.calculateScore(this.playerHands[newHandIndex]));
-    
-    // Check if can split again
-    const card1Value = this.getCardValue(this.playerHands[this.currentHandIndex][0]);
-    const card2Value = this.getCardValue(this.playerHands[this.currentHandIndex][1]);
-    
-    this.canSplit = (card1Value === card2Value && this.playerBalance >= this.playerBets[this.currentHandIndex]);
+    this.saldoService.setSaldo(splitBetAmount).pipe(take(1)).subscribe({
+      next: (response) => {
+        // Update local balance
+        this.playerBalance = response.nuevoSaldo;
+        
+        // Create new hand
+        const newHandIndex = this.playerHands.length;
+        this.playerHands.push([]);
+        
+        // Move second card to new hand
+        this.playerHands[newHandIndex].push(this.playerHands[this.currentHandIndex].pop()!);
+        
+        // Deal new cards to both hands
+        this.playerHands[this.currentHandIndex].push(this.deck.pop()!);
+        this.playerHands[newHandIndex].push(this.deck.pop()!);
+        
+        // Set bet for new hand
+        this.playerBets.push(this.playerBets[this.currentHandIndex]);
+        
+        // Calculate scores
+        this.playerScores[this.currentHandIndex] = this.calculateScore(this.playerHands[this.currentHandIndex]);
+        this.playerScores.push(this.calculateScore(this.playerHands[newHandIndex]));
+        
+        // Check if can split again
+        const card1Value = this.getCardValue(this.playerHands[this.currentHandIndex][0]);
+        const card2Value = this.getCardValue(this.playerHands[this.currentHandIndex][1]);
+        
+        this.canSplit = (card1Value === card2Value && this.playerBalance >= this.playerBets[this.currentHandIndex]);
+      },
+      error: (error) => {
+        console.error('Error al dividir mano:', error);
+        alert('No se pudo dividir la mano: ' + (error.error?.message || 'Saldo insuficiente'));
+      }
+    });
   }
 
   // Complete current hand and move to next
@@ -537,6 +610,9 @@ export class BlackjackService {
     this.gameFinished = true; // Mark the game as finished
     this.showDealerCards = true;
     
+    // Acumular las ganancias para actualizar el saldo en una sola llamada
+    let totalWinnings = 0;
+    
     // Process each hand
     for (let i = 0; i < this.playerHands.length; i++) {
       const handScore = this.playerScores[i];
@@ -550,21 +626,22 @@ export class BlackjackService {
         handResult = 'bust';
         this.playerLosses++;
         this.handResults[i] = 'bust';
+        // No ganancias para manos perdidas
       } else if (result === 'blackjack' && i === 0 && this.playerHands.length === 1) {
         // Blackjack only applies to initial hand and no splits
-        this.playerBalance += handBet * 2.5;
+        totalWinnings += handBet * 2.5; // Original bet + 1.5x win
         this.playerWins++;
         handResult = 'blackjack';
         this.handResults[i] = 'blackjack';
       } else if (this.dealerScore > 21) {
         // Dealer busted
-        this.playerBalance += handBet * 2;
+        totalWinnings += handBet * 2; // Original bet + 1x win
         this.playerWins++;
         handResult = 'win';
         this.handResults[i] = 'win';
       } else if (handScore > this.dealerScore) {
         // Player wins
-        this.playerBalance += handBet * 2;
+        totalWinnings += handBet * 2; // Original bet + 1x win
         this.playerWins++;
         handResult = 'win';
         this.handResults[i] = 'win';
@@ -573,15 +650,38 @@ export class BlackjackService {
         this.playerLosses++;
         handResult = 'lose';
         this.handResults[i] = 'lose';
+        // No ganancias para manos perdidas
       } else {
         // Push
-        this.playerBalance += handBet;
+        totalWinnings += handBet; // Return original bet
         this.playerPushes++;
         handResult = 'push';
         this.handResults[i] = 'push';
       }
     }
     
+    // Si hay ganancias, actualizar el saldo
+    if (totalWinnings > 0) {
+      this.saldoService.setSaldo(totalWinnings).pipe(take(1)).subscribe({
+        next: (response) => {
+          this.playerBalance = response.nuevoSaldo;
+          this.showGameResults(result);
+        },
+        error: (error) => {
+          console.error('Error al actualizar ganancias:', error);
+          alert('Error al procesar ganancias: ' + (error.error?.message || 'Error desconocido'));
+          // Mostrar resultado de todos modos
+          this.showGameResults(result);
+        }
+      });
+    } else {
+      // Si no hay ganancias, simplemente mostrar resultados
+      this.showGameResults(result);
+    }
+  }
+  
+  // Mostrar resultados del juego
+  showGameResults(result: string): void {
     // Display overall result message
     if (result === 'blackjack' && this.playerHands.length === 1) {
       this.showResultMessage('¡Blackjack!', 'win');
@@ -605,6 +705,8 @@ export class BlackjackService {
     // Check for game over
     if (this.playerBalance <= 0) {
       alert('¡Te has quedado sin dinero! Comenzando un nuevo juego con saldo inicial.');
+      // En lugar de establecer directamente el saldo, podríamos redirigir al usuario
+      // a una página de depósito o solicitar recarga
       this.playerBalance = 1000;
       this.startNewGame();
     }
@@ -638,7 +740,6 @@ export class BlackjackService {
   clearBet(): void {
     if (this.gameInProgress) return;
     
-    this.playerBalance += this.currentBet;
     this.currentBet = 0;
     this.currentBetChips = [];
   }
