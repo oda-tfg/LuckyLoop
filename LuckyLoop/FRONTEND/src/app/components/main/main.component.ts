@@ -18,7 +18,7 @@ export class MainComponent implements OnInit {
     {
       id: 1,
       name: 'BlackJack',
-      image: 'assets/images/games/blackjack.webp',
+      image: 'assets/images/blackjack.webp',
       category: 'Juego de Mesa',
       isHot: true,
       url: '/blackjack' //ruta del juego
@@ -26,7 +26,7 @@ export class MainComponent implements OnInit {
     {
       id: 2,
       name: 'Plinko',
-      image: 'assets/images/games/plinko.webp',
+      image: 'assets/images/plinko.webp',
       category: 'Juego de Azar',
       isHot: true,
       url: '/plinko/'
@@ -34,7 +34,7 @@ export class MainComponent implements OnInit {
     {
       id: 3,
       name: 'Ruleta',
-      image: 'assets/images/games/ruleta.webp',
+      image: 'assets/images/ruleta.webp',
       category: 'Juego de Mesa',
       isHot: false,
       url: '/ruleta/'
@@ -42,7 +42,7 @@ export class MainComponent implements OnInit {
     {
       id: 4,
       name: 'Programa y Gana',
-      image: 'assets/images/games/programaGana.webp',
+      image: 'assets/images/programaGana.webp',
       category: 'Juego de Programación',
       isHot: true
     }
