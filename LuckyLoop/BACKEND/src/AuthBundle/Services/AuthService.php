@@ -2,6 +2,7 @@
 
 namespace App\AuthBundle\Services;
 
+use App\Entity\PerfilEconomico;
 use App\Service\MailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -109,6 +110,11 @@ class AuthService {
         $usuario->setEmail($correoElectronico);
         $usuario->setPassword($contrasena);
         $usuario->setTelefono($telefono);
+
+        $perfilEconomico=new PerfilEconomico();
+        $perfilEconomico->setDineroDepositado(0);
+        $perfilEconomico->setDineroRetirado(0);
+        $perfilEconomico->setUsuario($usuario);
     
         $this->entityManager->persist($usuario);
         $this->entityManager->flush();

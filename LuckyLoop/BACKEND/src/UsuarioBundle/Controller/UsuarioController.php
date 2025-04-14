@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Controller;
+namespace App\UsuarioBundle\Controller;
 
+use App\Entity\PerfilEconomico;
 use App\Entity\Usuario;
 use App\Service\MailService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,7 +34,7 @@ final class UsuarioController extends AbstractController
         summary: 'Obtener el saldo actual de un usuario por ID',
         tags: ['Usuario'],
         parameters: [
-           
+
         ],
         responses: [
             new OA\Response(
@@ -60,7 +61,7 @@ final class UsuarioController extends AbstractController
     )]
     public function getSaldo(): JsonResponse
     {
-        $usuario=$this->getUser();
+        $usuario = $this->getUser();
 
         if (!$usuario) {
             return $this->json([
@@ -74,19 +75,18 @@ final class UsuarioController extends AbstractController
     }
 
 
-    #[Route('/api/usuario/restarSaldoApostado', name: 'restar_saldo', methods: ['POST'])]
     #[OA\Post(
-        path: '/api/usuario/restarSaldoApostado',
-        summary: 'Resta saldo a un usuario después de apostar',
+        path: '/api/usuario/updateSaldo',
+        summary: 'Resta o suma saldo a un usuario',
         tags: ['Usuario'],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
                 type: 'object',
-                required: ['id', 'dineroApostado'],
+                required: ['dinero'],
                 properties: [
-                    new OA\Property(property: 'id', type: 'integer', example: 5),
-                    new OA\Property(property: 'dineroApostado', type: 'number', format: 'float', example: 20.5)
+                    new OA\Property(property: 'dinero', type: 'integer', example: 50),
+                    new OA\Property(property: 'deposito', type: 'boolean', example: false)
                 ]
             )
         ),
@@ -112,52 +112,45 @@ final class UsuarioController extends AbstractController
             )
         ]
     )]
-
-
-
-    #[Route('/api/usuario/restarSaldoApostado', name: 'restar_saldo', methods: ['POST'])]
-    public function restarSaldoApostado(EntityManagerInterface $entityManager, Request $request): JsonResponse
+    #[Route('/api/usuario/updateSaldo', name: 'update_saldo', methods: ['POST'])]
+    public function restarSaldoApostado(EntityManagerInterface $entityManager, Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
-        // Validar que se envió el dinero a apostar
-        if (!isset($data['dineroApostado'])) {
-            return $this->json(['error' => 'El parámetro "dineroApostado" es requerido.'], 400);
+        if (!isset($data['dinero'])) {
+            return $this->json(['message' => 'El parámetro "dinero" es requerido.'], 400);
         }
 
-        $dineroApostado = $data['dineroApostado'];
-        
-        // Obtener el usuario autenticado directamente del token
+        $dinero = $data['dinero'];
         $usuario = $this->getUser();
 
-        if (!$usuario) {
-            return $this->json(['error' => 'Usuario no autenticado'], 401);
-        }
+        if ($data['deposito'] != true) {
+            //RESTAR SALDO
+            if ($dinero < 0) {
+                if ($usuario->getSaldoActual() < abs($dinero)) {
+                    return $this->json(['message' => 'No tienes tanto saldo.'], 400);
+                }
 
-        // Verificar que el usuario es instancia de la entidad Usuario
-        if (!$usuario instanceof Usuario) {
-            return $this->json(['error' => 'Tipo de usuario no válido'], 403);
-        }
+                $usuario->setSaldoActual($usuario->getSaldoActual() - abs($dinero));
+            } else {
+                //SUMAR SALDO
+                $usuario->setSaldoActual($usuario->getSaldoActual() + $dinero);
+            }
+        } else {
+            $usuario->setSaldoActual($usuario->getSaldoActual() + $dinero);
 
-        // Validar que el saldo no sea negativo después de la operación
-        if ($usuario->getSaldoActual() < $dineroApostado) {
-            return $this->json([
-                'error' => 'Saldo insuficiente',
-                'saldoActual' => $usuario->getSaldoActual()
-            ], 400);
+            //Insertar en dineroDepositado
+            $perfilEconomico = $entityManager->getRepository(PerfilEconomico::class)->findOneBy(['usuario' => $usuario]);
+            $perfilEconomico->setDineroDepositado($perfilEconomico->getDineroDepositado() + $dinero);
         }
-
-        // Realizar la operación
-        $nuevoSaldo = $usuario->getSaldoActual() - $dineroApostado;
-        $usuario->setSaldoActual($nuevoSaldo);
 
         $entityManager->persist($usuario);
         $entityManager->flush();
 
         return $this->json([
-            'message' => 'Saldo actualizado correctamente',
-            'nuevoSaldo' => $nuevoSaldo
+            'nuevoSaldo' => $usuario->getSaldoActual()
         ]);
+
     }
 
 }

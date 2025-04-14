@@ -16,4 +16,5 @@ return [
     Nelmio\CorsBundle\NelmioCorsBundle::class => ['all' => true],
     Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle::class => ['all' => true],
     App\AuthBundle\AuthBundle::class => ['all' => true],
+    App\UsuarioBundle\UsuarioBundle::class => ['all' => true],
 ];
