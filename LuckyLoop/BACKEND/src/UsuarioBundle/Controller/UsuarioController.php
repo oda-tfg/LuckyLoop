@@ -3,8 +3,6 @@
 namespace App\UsuarioBundle\Controller;
 
 use App\Entity\PerfilEconomico;
-use App\Entity\Usuario;
-use App\Service\MailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

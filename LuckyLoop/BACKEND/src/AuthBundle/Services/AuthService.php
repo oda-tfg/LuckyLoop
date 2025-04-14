@@ -117,6 +117,7 @@ class AuthService {
         $perfilEconomico->setUsuario($usuario);
     
         $this->entityManager->persist($usuario);
+        $this->entityManager->persist($perfilEconomico);
         $this->entityManager->flush();
     
         return new JsonResponse([
