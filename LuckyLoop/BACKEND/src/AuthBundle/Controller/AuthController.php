@@ -21,7 +21,7 @@ public function __construct(AuthService $authService) {
 }
 
 
-#[Route('/api/usuario/emailToken', name: 'generar_token', methods: ['POST'])]
+    #[Route('/api/usuario/emailToken', name: 'generar_token', methods: ['POST'])]
     #[OA\Post(
         path: '/api/usuario/emailToken',
         summary: 'Genera un token a un usuario si su email existe y le envia un email',

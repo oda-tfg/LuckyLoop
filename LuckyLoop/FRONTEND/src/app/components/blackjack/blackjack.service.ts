@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as _ from 'underscore';
 import { take } from 'rxjs/operators';
 import { SaldoService } from '../../services/saldo/saldo.service';
+import { PartidaService } from '../../services/partida/partida.service';
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +46,13 @@ export class BlackjackService {
   insuranceBet: number = 0;
   showInsuranceDialog: boolean = false;
 
-  constructor(private saldoService: SaldoService) { 
+  // ID del juego de blackjack (ajusta según tu base de datos)
+  private blackjackJuegoId: number = 1;
+
+  constructor(
+    private saldoService: SaldoService,
+    private partidaService: PartidaService
+  ) { 
     // Obtener saldo inicial del usuario
     this.loadUserBalance();
   }
@@ -612,11 +619,13 @@ export class BlackjackService {
     
     // Acumular las ganancias para actualizar el saldo en una sola llamada
     let totalWinnings = 0;
+    let totalBetAmount = 0;
     
     // Process each hand
     for (let i = 0; i < this.playerHands.length; i++) {
       const handScore = this.playerScores[i];
       const handBet = this.playerBets[i];
+      totalBetAmount += handBet;
       
       // Determine result for this hand
       let handResult;
@@ -659,6 +668,37 @@ export class BlackjackService {
         this.handResults[i] = 'push';
       }
     }
+    
+    // Determinar el resultado general para la base de datos
+    let resultadoPartida: string;
+    let beneficioPartida: number;
+    
+    // Convertir el resultado a formato que espera la API
+    if (result === 'blackjack' || result === 'win') {
+      resultadoPartida = 'victoria';
+      beneficioPartida = totalWinnings - totalBetAmount; // Ganancia neta
+    } else if (result === 'push') {
+      resultadoPartida = 'empate';
+      beneficioPartida = 0; // En empate, recuperamos la apuesta, beneficio 0
+    } else {
+      resultadoPartida = 'derrota';
+      beneficioPartida = -totalBetAmount; // Pérdida completa
+    }
+    
+    // Registrar la partida en la base de datos
+    this.partidaService.finPartida(
+      this.blackjackJuegoId,
+      beneficioPartida,
+      totalBetAmount,
+      resultadoPartida
+    ).pipe(take(1)).subscribe({
+      next: (response) => {
+        console.log('Partida registrada correctamente:', response);
+      },
+      error: (error) => {
+        console.error('Error al registrar la partida:', error);
+      }
+    });
     
     // Si hay ganancias, actualizar el saldo
     if (totalWinnings > 0) {

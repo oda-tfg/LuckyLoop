@@ -13,7 +13,7 @@
   <!-- Juegos Destacados -->
   <section class="games">
     <div class="container">
-      <h2>Juegos Destacados</h2>
+      <h2>Juegos</h2>
 
       <div class="games-grid">
         <div class="game-card" *ngFor="let game of featuredGames">
@@ -32,11 +32,6 @@
       </div>
     </div>
   </section>
-
-
-  <!-- Iframe del juego (solo visible en /blackjack) -->
-  <iframe *ngIf="showGame" src="assets/blackjack-game/index.html" class="game-iframe" 
-    title="Juego de Blackjack" allowfullscreen></iframe>
 
   <!-- Información adicional -->
   <section class="info">

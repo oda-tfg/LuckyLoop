@@ -29,6 +29,102 @@
   justify-content: space-between;
 }
 
+/* Estilos para el icono de perfil y el menú desplegable */
+.profile-icon-container {
+  position: relative;
+  flex: 0 0 auto;
+  margin-left: 15px;
+}
+
+.profile-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(10, 10, 25, 0.8);
+  border: 2px solid var(--neon-purple);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 0 8px rgba(81, 0, 255, 0.4);
+  z-index: 10;
+}
+
+.profile-icon i {
+  color: var(--text-white);
+  font-size: 20px;
+}
+
+.profile-icon:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 12px var(--neon-purple);
+  background-color: rgba(81, 0, 255, 0.2);
+}
+
+.profile-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: rgba(10, 10, 25, 0.95);
+  border: 1px solid var(--neon-purple);
+  border-radius: 8px;
+  width: 200px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.profile-menu.show-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.profile-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.profile-menu li {
+  border-bottom: 1px solid rgba(81, 0, 255, 0.2);
+}
+
+.profile-menu li:last-child {
+  border-bottom: none;
+}
+
+.profile-menu a {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  color: var(--text-white);
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.profile-menu a i {
+  margin-right: 10px;
+  font-size: 16px;
+  color: var(--neon-purple);
+  transition: all 0.2s;
+}
+
+.profile-menu a:hover {
+  background-color: rgba(81, 0, 255, 0.2);
+}
+
+.profile-menu a:hover i {
+  color: var(--neon-blue);
+  text-shadow: 0 0 5px var(--neon-blue);
+}
+
 .logo {
   flex: 0 0 auto;
   position: relative;
@@ -204,54 +300,6 @@
   left: 100%;
 }
 
-/* Responsive styles */
-@media (max-width: 768px) {
-  .header-content {
-    flex-wrap: wrap;
-  }
-  
-  .logo {
-    margin-bottom: 10px;
-  }
-  
-  .neon-logo {
-    font-size: 24px;
-  }
-  
-  .search-bar {
-    order: 3;
-    width: 100%;
-    margin: 10px 0 0;
-  }
-  
-  .login-button {
-    order: 2;
-  }
-}
-
-@media (max-width: 480px) {
-  .header-content {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .logo {
-    text-align: center;
-    margin-bottom: 15px;
-  }
-  
-  .neon-logo {
-    font-size: 22px;
-  }
-  
-  .login-button {
-    margin-top: 15px;
-  }
-  
-  .login-button button {
-    width: 100%;
-  }
-}
 /* Estilo mejorado para el saldo del usuario */
 .user-balance {
   flex: 0 0 auto;
@@ -277,54 +325,77 @@
   letter-spacing: 0.5px;
 }
 
-/* Estilos para los botones de icono */
-.action-buttons {
-  display: flex;
-  gap: 10px;
+/* Estilo personalizado para la opción de depositar en el menú */
+.profile-menu a i.fa-plus-circle {
+  color: #23ff00;
+  text-shadow: 0 0 5px #23ff00;
 }
 
-.icon-button {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: transparent;
-  border: 2px solid var(--neon-purple);
-  color: var(--text-white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 0 8px rgba(81, 0, 255, 0.4);
-  position: relative;
-  overflow: hidden;
+.profile-menu a:hover i.fa-plus-circle {
+  color: #23ff00;
+  text-shadow: 0 0 8px #23ff00;
 }
 
-.icon-button i {
-  font-size: 18px;
-}
-
-.icon-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 12px var(--neon-purple);
-}
-
-.deposit-btn {
-  border-color: #23ff00;
-}
-
-.deposit-btn:hover {
-  background-color: rgba(35, 255, 0, 0.2);
-  box-shadow: 0 0 12px #23ff00;
-}
-
-.logout-btn:hover {
-  background-color: rgba(81, 0, 255, 0.2);
-}
-
-/* Ajuste responsivo para los botones de iconos */
+/* Responsive styles */
 @media (max-width: 768px) {
-  .action-buttons {
+  .header-content {
+    flex-wrap: wrap;
+  }
+  
+  .logo {
+    margin-bottom: 10px;
+  }
+  
+  .neon-logo {
+    font-size: 24px;
+  }
+  
+  .search-bar {
+    order: 3;
+    width: 100%;
+    margin: 10px 0 0;
+  }
+  
+  .login-button {
     order: 2;
+  }
+
+  .profile-menu {
+    right: 0;
+    top: 45px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .logo {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  
+  .neon-logo {
+    font-size: 22px;
+  }
+  
+  .login-button {
+    margin-top: 15px;
+  }
+  
+  .login-button button {
+    width: 100%;
+  }
+
+  .profile-icon-container {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+  }
+  
+  .profile-menu {
+    right: 0;
   }
 }

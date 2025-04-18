@@ -17,4 +17,6 @@ return [
     Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle::class => ['all' => true],
     App\AuthBundle\AuthBundle::class => ['all' => true],
     App\UsuarioBundle\UsuarioBundle::class => ['all' => true],
+    App\EstadisticasBundle\EstadisticasBundle::class => ['all' => true],
+    App\PartidaBundle\PartidaBundle::class => ['all' => true],
 ];

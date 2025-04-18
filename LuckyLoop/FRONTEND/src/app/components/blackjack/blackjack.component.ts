@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BlackjackService } from './blackjack.service';
 import { SaldoService } from '../../services/saldo/saldo.service';
+import { PartidaService } from '../../services/partida/partida.service';
 
 @Component({
   selector: 'app-blackjack',
@@ -11,7 +12,11 @@ import { SaldoService } from '../../services/saldo/saldo.service';
 })
 export class BlackjackComponent implements OnInit {
   
-  constructor(public game: BlackjackService, private saldoService: SaldoService) {}
+  constructor(
+    public game: BlackjackService, 
+    private saldoService: SaldoService,
+    private partidaService: PartidaService
+  ) {}
 
   ngOnInit(): void {
     // Obtener el saldo actual del usuario antes de iniciar el juego

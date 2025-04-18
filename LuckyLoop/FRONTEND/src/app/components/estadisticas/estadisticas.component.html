@@ -1,0 +1,143 @@
+<div class="estadisticas-container">
+    <div class="estadisticas-header">
+      <h1 class="neon-text">ESTADÍSTICAS</h1>
+    </div>
+  
+    <div class="bento-grid">
+      <!-- Tarjeta de resumen principal -->
+      <div class="bento-card main-stats">
+        <div class="stats-content">
+          <div class="stat-item">
+            <h3>Numero de Partidas</h3>
+            <div class="stat-value">{{estadisticas.total_partidas || 0}}</div>
+            <div class="stat-details">
+              <div class="detail-item win">
+                <span class="icon">✓</span>
+                <span>{{estadisticas.partidas_ganadas || 0}}</span>
+              </div>
+              <div class="detail-item loss">
+                <span class="icon">✗</span>
+                <span>{{estadisticas.partidas_perdidas || 0}}</span>
+              </div>
+              <div class="detail-item draw" *ngIf="estadisticas.partidas_empatadas > 0">
+                <span class="icon">=</span>
+                <span>{{estadisticas.partidas_empatadas || 0}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Tarjeta de beneficio total -->
+      <div class="bento-card benefit">
+        <h3>BENEFICIO TOTAL</h3>
+        <div class="benefit-value" [ngClass]="{'positive': estadisticas.beneficio_total > 0, 'negative': estadisticas.beneficio_total < 0}">
+          {{estadisticas.beneficio_total | currency:'EUR':'symbol':'1.2-2'}}
+        </div>
+      </div>
+  
+      <!-- Tarjeta de dinero retirado/depositado -->
+      <div class="bento-card money-flow">
+        <div class="money-item">
+          <h3>Retirado</h3>
+          <div class="money-value">{{estadisticas.retirado | currency:'EUR':'symbol':'1.2-2'}}</div>
+        </div>
+        <div class="divider"></div>
+        <div class="money-item">
+          <h3>Depositado</h3>
+          <div class="money-value">{{estadisticas.depositado | currency:'EUR':'symbol':'1.2-2'}}</div>
+        </div>
+      </div>
+  
+      <!-- Tarjetas de juegos -->
+      <div class="juegos-grid">
+        <div class="bento-card game-item" *ngFor="let juego of estadisticas.juegos" (click)="seleccionarJuego(juego)">
+          <div class="game-icon">
+            <i class="fa fa-gamepad"></i>
+          </div>
+          <div class="game-name">{{juego.nombre}}</div>
+        </div>
+        
+        <!-- Mensaje si no hay juegos -->
+        <div class="no-games" *ngIf="!estadisticas.juegos || estadisticas.juegos.length === 0">
+          No hay juegos disponibles
+        </div>
+      </div>
+  
+      <!-- Tarjeta con estadísticas del juego seleccionado -->
+      <div class="bento-card chart" *ngIf="juegoSeleccionado">
+        <h3>Estadísticas: {{juegoSeleccionado.nombre}}</h3>
+        
+        <!-- Loader mientras se cargan los datos del juego -->
+        <div class="chart-container" *ngIf="cargandoEstadisticasJuego">
+          <div class="mini-loader"></div>
+          <p>Cargando estadísticas del juego...</p>
+        </div>
+        
+        <!-- Contenido de estadísticas del juego -->
+        <div class="game-stats-container" *ngIf="!cargandoEstadisticasJuego && estadisticasJuego && estadisticasJuego.total_partidas > 0">
+          <div class="game-stats-row">
+            <div class="game-stat-item">
+              <div class="stat-label">Total Partidas</div>
+              <div class="stat-value-lg">{{estadisticasJuego.total_partidas}}</div>
+            </div>
+            
+            <div class="game-stat-item">
+              <div class="stat-label">Beneficio</div>
+              <div class="stat-value-lg" [ngClass]="{'positive': estadisticasJuego.beneficio_total > 0, 'negative': estadisticasJuego.beneficio_total < 0}">
+                {{estadisticasJuego.beneficio_total | currency:'EUR':'symbol':'1.2-2'}}
+              </div>
+            </div>
+          </div>
+          
+          <div class="game-stats-progress">
+            <div class="progress-container">
+              <div class="progress-label">
+                <span>Victorias: {{estadisticasJuego.partidas_ganadas}}</span>
+                <span>{{(estadisticasJuego.partidas_ganadas / estadisticasJuego.total_partidas * 100) | number:'1.0-0'}}%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill win" [style.width.%]="estadisticasJuego.partidas_ganadas / estadisticasJuego.total_partidas * 100"></div>
+              </div>
+            </div>
+            
+            <div class="progress-container">
+              <div class="progress-label">
+                <span>Derrotas: {{estadisticasJuego.partidas_perdidas}}</span>
+                <span>{{(estadisticasJuego.partidas_perdidas / estadisticasJuego.total_partidas * 100) | number:'1.0-0'}}%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill loss" [style.width.%]="estadisticasJuego.partidas_perdidas / estadisticasJuego.total_partidas * 100"></div>
+              </div>
+            </div>
+            
+            <div class="progress-container" *ngIf="estadisticasJuego.partidas_empatadas > 0">
+              <div class="progress-label">
+                <span>Empates: {{estadisticasJuego.partidas_empatadas}}</span>
+                <span>{{(estadisticasJuego.partidas_empatadas / estadisticasJuego.total_partidas * 100) | number:'1.0-0'}}%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill draw" [style.width.%]="estadisticasJuego.partidas_empatadas / estadisticasJuego.total_partidas * 100"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Mensaje si no hay partidas para este juego -->
+        <div class="chart-container" *ngIf="!cargandoEstadisticasJuego && estadisticasJuego && estadisticasJuego.total_partidas === 0">
+          <p class="placeholder-text">No has jugado partidas de {{juegoSeleccionado.nombre}} todavía</p>
+        </div>
+        
+        <!-- Mensaje de error -->
+        <div class="chart-container" *ngIf="!cargandoEstadisticasJuego && !estadisticasJuego">
+          <p class="error-text">Error al cargar las estadísticas del juego</p>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Loader mientras se cargan los datos -->
+    <div class="loader-container" *ngIf="cargando">
+      <div class="neon-loader"></div>
+      <p>Cargando estadísticas...</p>
+    </div>
+  </div>

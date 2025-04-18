@@ -2,8 +2,7 @@
 
 namespace App\UsuarioBundle\Controller;
 
-use App\Entity\PerfilEconomico;
-use Doctrine\ORM\EntityManagerInterface;
+use App\UsuarioBundle\Service\UsuarioService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,12 +17,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 final class UsuarioController extends AbstractController
 {
-    #[Route('/usuario', name: 'app_usuario')]
-    public function index(): Response
-    {
-        return $this->render('usuario/index.html.twig', [
-            'controller_name' => 'UsuarioController',
-        ]);
+    private $usuarioService;
+    public function __construct(UsuarioService $usuarioService) {
+        $this->usuarioService=$usuarioService;
     }
 
     #[Route('/api/usuario/getSaldo', name: 'get_saldo', methods: ['GET'])]
@@ -59,17 +55,7 @@ final class UsuarioController extends AbstractController
     )]
     public function getSaldo(): JsonResponse
     {
-        $usuario = $this->getUser();
-
-        if (!$usuario) {
-            return $this->json([
-                'error' => 'Usuario no encontrado',
-            ], Response::HTTP_NOT_FOUND);
-        }
-
-        return $this->json([
-            'saldo' => $usuario->getSaldoActual()
-        ]);
+       return $this->usuarioService->getSaldo();
     }
 
 
@@ -111,43 +97,9 @@ final class UsuarioController extends AbstractController
         ]
     )]
     #[Route('/api/usuario/updateSaldo', name: 'update_saldo', methods: ['POST'])]
-    public function updateSaldo(EntityManagerInterface $entityManager, Request $request)
+    public function updateSaldo(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
-
-        if (!isset($data['dinero'])) {
-            return $this->json(['message' => 'El parámetro "dinero" es requerido.'], 400);
-        }
-
-        $dinero = $data['dinero'];
-        $usuario = $this->getUser();
-
-        if ($data['deposito'] != true) {
-            //RESTAR SALDO
-            if ($dinero < 0) {
-                if ($usuario->getSaldoActual() < abs($dinero)) {
-                    return $this->json(['message' => 'No tienes tanto saldo.'], 400);
-                }
-
-                $usuario->setSaldoActual($usuario->getSaldoActual() - abs($dinero));
-            } else {
-                //SUMAR SALDO
-                $usuario->setSaldoActual($usuario->getSaldoActual() + $dinero);
-            }
-        } else {
-            $usuario->setSaldoActual($usuario->getSaldoActual() + $dinero);
-
-            //Insertar en dineroDepositado
-            $perfilEconomico = $entityManager->getRepository(PerfilEconomico::class)->findOneBy(['usuario' => $usuario]);
-            $perfilEconomico->setDineroDepositado($perfilEconomico->getDineroDepositado() + $dinero);
-        }
-
-        $entityManager->persist($usuario);
-        $entityManager->flush();
-
-        return $this->json([
-            'nuevoSaldo' => $usuario->getSaldoActual()
-        ]);
+        return $this->usuarioService->updateSaldo($request);
 
     }
 

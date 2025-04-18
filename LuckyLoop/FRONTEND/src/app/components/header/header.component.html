@@ -27,14 +27,21 @@
         </div>
       </div>
 
-      <!-- Botones de acción cuando el usuario está logueado -->
-      <div class="action-buttons" *ngIf="isLoggedIn">
-        <button class="icon-button deposit-btn" (click)="goToDeposit()" title="Depositar">
-          <i class="fa fa-plus-circle"></i>
-        </button>
-        <button class="icon-button logout-btn" (click)="logout()" title="Cerrar Sesión">
-          <i class="fa fa-sign-out-alt"></i>
-        </button>
+      <!-- Icono de perfil (visible solo cuando está logueado) -->
+      <div class="profile-icon-container" *ngIf="isLoggedIn">
+        <div class="profile-icon" (click)="toggleProfileMenu()">
+          <i class="fa fa-user"></i>
+        </div>
+        
+        <!-- Menú desplegable del perfil -->
+        <div class="profile-menu" [class.show-menu]="showProfileMenu">
+          <ul>
+            <li><a (click)="goToDeposit()"><i class="fa fa-plus-circle"></i> Depositar</a></li>
+            <li><a (click)="goToStats()"><i class="fa fa-chart-bar"></i> Estadísticas</a></li>
+            <li><a (click)="goToChangeUsername()"><i class="fa fa-edit"></i> Cambiar nombre</a></li>
+            <li><a (click)="logout()"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a></li>
+          </ul>
+        </div>
       </div>
 
       <!-- Botón de inicio de sesión -->

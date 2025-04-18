@@ -6,6 +6,14 @@ use App\Repository\PartidaRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+// Definimos un enum para los posibles resultados de la partida
+enum ResultadoPartida: string
+{
+    case VICTORIA = 'victoria';
+    case DERROTA = 'derrota';
+    case EMPATE = 'empate';
+}
+
 #[ORM\Entity(repositoryClass: PartidaRepository::class)]
 class Partida
 {
@@ -17,13 +25,11 @@ class Partida
     #[ORM\Column]
     private ?float $dineroApostado = null;
 
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ["default" => "CURRENT_TIMESTAMP"])]
     private ?\DateTimeInterface $fechaJuego = null;
 
-
-    #[ORM\Column]
-    private ?float $resultado = null;
+    #[ORM\Column(type: "string", length: 10, enumType: ResultadoPartida::class)]
+    private ?ResultadoPartida $resultado = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -32,6 +38,9 @@ class Partida
     #[ORM\ManyToOne(inversedBy: 'partidas')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Juego $juego = null;
+
+    #[ORM\Column]
+    private ?float $beneficio = null;
 
     public function getId(): ?int
     {
@@ -62,12 +71,12 @@ class Partida
         return $this;
     }
 
-    public function getResultado(): ?float
+    public function getResultado(): ?ResultadoPartida
     {
         return $this->resultado;
     }
 
-    public function setResultado(float $resultado): static
+    public function setResultado(ResultadoPartida $resultado): static
     {
         $this->resultado = $resultado;
 
@@ -96,5 +105,32 @@ class Partida
         $this->juego = $juego;
 
         return $this;
+    }
+    
+    public function getBeneficio(): ?float
+    {
+        return $this->beneficio;
+    }
+    
+    public function setBeneficio(float $beneficio): static
+    {
+        $this->beneficio = $beneficio;
+        
+        return $this;
+    }
+    
+    public function isVictoria(): bool
+    {
+        return $this->resultado === ResultadoPartida::VICTORIA;
+    }
+    
+    public function isDerrota(): bool
+    {
+        return $this->resultado === ResultadoPartida::DERROTA;
+    }
+    
+    public function isEmpate(): bool
+    {
+        return $this->resultado === ResultadoPartida::EMPATE;
     }
 }
