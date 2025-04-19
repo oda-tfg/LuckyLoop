@@ -88,20 +88,39 @@
         </div>
         <div class="current-bet">
             <div class="bet-display">Apuesta: $<span id="currentBetAmount">{{game.currentBet}}</span></div>
-            <div class="current-bet-chips" id="currentBetChips">
-                <div *ngFor="let chip of game.currentBetChips; trackBy: trackByFn" 
-                     class="current-bet-chip chip-{{chip}}">
-                    ${{chip}}
-                </div>
+            <div class="current-bet-chips">
+                <!-- Visualización directa de fichas cuando hay pocas -->
+                <ng-container *ngIf="game.currentBetChips.length <= 5">
+                    <div *ngFor="let chip of game.currentBetChips; trackBy: trackByFn" 
+                        class="current-bet-chip chip-{{chip}}">
+                        ${{chip}}
+                    </div>
+                </ng-container>
+                
+                <!-- Visualización consolidada de fichas cuando hay muchas -->
+                <ng-container *ngIf="game.currentBetChips.length > 5">
+                    <div *ngFor="let chipGroup of getConsolidatedChips(); trackBy: trackByFn"
+                         class="current-bet-chip chip-{{chipGroup.denom}}"
+                         [attr.data-count]="chipGroup.count > 1 ? chipGroup.count : null">
+                        ${{chipGroup.denom}}
+                    </div>
+                </ng-container>
             </div>
-            <button class="btn btn-sm btn-secondary clear-bet" 
-                    [class.disabled]="isDisabled('clear')"
-                    (click)="clearBet()">
-                Borrar
-            </button>
+            <div>
+                <button class="btn btn-sm btn-secondary clear-bet" 
+                        [class.disabled]="isDisabled('clear')"
+                        (click)="clearBet()">
+                    Borrar
+                </button>
+                <button class="all-in-button" 
+                        [class.disabled]="isDisabled('chip') || game.playerBalance <= 0"
+                        (click)="allIn()">
+                    ALL IN
+                </button>
+            </div>
         </div>
         <div class="chips-container">
-            <div *ngFor="let value of [1, 2, 5, 10, 20, 50, 100]"
+            <div *ngFor="let value of [1, 2, 5, 10, 20, 50, 100, 500, 1000]"
                  class="chip chip-{{value}}" 
                  [class.disabled]="isDisabled('chip') || value > game.playerBalance || (value + game.currentBet) > game.playerBalance"
                  (click)="addChip(value)">

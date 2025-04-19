@@ -744,11 +744,7 @@ export class BlackjackService {
     
     // Check for game over
     if (this.playerBalance <= 0) {
-      alert('¡Te has quedado sin dinero! Comenzando un nuevo juego con saldo inicial.');
-      // En lugar de establecer directamente el saldo, podríamos redirigir al usuario
-      // a una página de depósito o solicitar recarga
-      this.playerBalance = 1000;
-      this.startNewGame();
+      alert('¡Te has quedado sin dinero!');
     }
   }
 

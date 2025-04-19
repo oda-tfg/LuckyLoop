@@ -11,12 +11,12 @@ import { PartidaService } from '../../services/partida/partida.service';
   standalone: false
 })
 export class BlackjackComponent implements OnInit {
-  
+
   constructor(
-    public game: BlackjackService, 
+    public game: BlackjackService,
     private saldoService: SaldoService,
     private partidaService: PartidaService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Obtener el saldo actual del usuario antes de iniciar el juego
@@ -40,12 +40,12 @@ export class BlackjackComponent implements OnInit {
       alert('Por favor, coloca una apuesta primero');
       return;
     }
-    
+
     if (this.game.currentBet > this.game.playerBalance) {
       alert('No tienes suficiente saldo para esta apuesta');
       return;
     }
-    
+
     this.game.dealCards();
   }
 
@@ -61,34 +61,34 @@ export class BlackjackComponent implements OnInit {
 
   playerDoubleDown(): void {
     if (!this.game.gameInProgress || !this.game.canDoubleDown || this.game.handCompleted) return;
-    
+
     if (this.game.playerBalance < this.game.playerBets[this.game.currentHandIndex]) {
       alert('No tienes suficiente saldo para doblar');
       return;
     }
-    
+
     this.game.playerDoubleDown();
   }
 
   playerSplit(): void {
     if (!this.game.gameInProgress || !this.game.canSplit || this.game.handCompleted) return;
-    
+
     if (this.game.playerBalance < this.game.playerBets[this.game.currentHandIndex]) {
       alert('No tienes suficiente saldo para dividir');
       return;
     }
-    
+
     this.game.playerSplit();
   }
 
   addChip(value: number): void {
     if (this.game.gameInProgress) return;
-    
+
     // Verificar si el jugador tiene suficiente saldo para agregar esta ficha
     if (value > this.game.playerBalance || (value + this.game.currentBet) > this.game.playerBalance) {
       return; // Simplemente no hacer nada en lugar de mostrar una alerta
     }
-    
+
     this.game.addChip(value);
   }
 
@@ -131,7 +131,7 @@ export class BlackjackComponent implements OnInit {
   takeInsurance(): void {
     this.game.takeInsurance();
   }
-  
+
   // Decline insurance
   declineInsurance(): void {
     this.game.declineInsurance();
@@ -143,8 +143,8 @@ export class BlackjackComponent implements OnInit {
     if (this.game.dealingInProgress || this.game.dealerPlayInProgress || this.game.shufflingDeck || this.game.showInsuranceDialog) {
       return true;
     }
-    
-    switch(button) {
+
+    switch (button) {
       case 'deal':
         return this.game.gameInProgress || this.game.gameFinished;
       case 'hit':
@@ -163,6 +163,65 @@ export class BlackjackComponent implements OnInit {
         return this.game.gameInProgress;
       default:
         return false;
+    }
+  }
+  /**
+ * Método para obtener las fichas consolidadas para visualización
+ * Agrupa fichas del mismo valor y las muestra con contador
+ */
+  getConsolidatedChips(): { denom: number, count: number }[] {
+    // Si no hay fichas, devolver array vacío
+    if (this.game.currentBetChips.length === 0) return [];
+
+    // Crear un mapa para contar fichas por denominación
+    const chipCounts = new Map<number, number>();
+
+    // Contar cada tipo de ficha
+    for (const chip of this.game.currentBetChips) {
+      const count = chipCounts.get(chip) || 0;
+      chipCounts.set(chip, count + 1);
+    }
+
+    // Convertir el mapa a un array de objetos {denom, count}
+    const result: { denom: number, count: number }[] = [];
+
+    // Agregar denominaciones ordenadas de mayor a menor
+    const denominations = [5000, 1000, 500, 100, 50, 20, 10, 5, 2, 1];
+
+    for (const denom of denominations) {
+      const count = chipCounts.get(denom);
+      if (count) {
+        result.push({ denom, count });
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Método para ejecutar All In (apostar todo el saldo)
+   */
+  allIn(): void {
+    if (this.game.gameInProgress || this.game.gameFinished || this.game.playerBalance <= 0) return;
+
+    // Limpiar apuesta actual
+    this.game.clearBet();
+
+    // Establecer la apuesta al saldo total del jugador
+    this.game.currentBet = this.game.playerBalance;
+
+    // Representar la apuesta de manera eficiente con las denominaciones más altas posibles
+    let remaining = this.game.playerBalance;
+    this.game.currentBetChips = [];
+
+    // Representar con denominaciones más altas primero
+    const denominations = [5000, 1000, 500, 100, 50, 20, 10, 5, 2, 1];
+
+    for (const denom of denominations) {
+      while (remaining >= denom) {
+        this.game.currentBetChips.push(denom);
+        remaining -= denom;
+      }
     }
   }
 }
