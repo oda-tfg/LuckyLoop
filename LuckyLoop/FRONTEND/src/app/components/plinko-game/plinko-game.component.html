@@ -1,4 +1,10 @@
 <div class="plinkoContainer" #plinkoContainer>
+    <div class="zone-labels">
+        <div *ngFor="let zone of zoneMultipliers" class="zone-label">
+            x{{ zone }}
+        </div>
+    </div>
+
     <div class="bet-controls">
         <button class="dropBallBtn" (click)="dropBall()">Jugar</button>
 

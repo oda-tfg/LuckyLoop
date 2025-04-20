@@ -1,8 +1,39 @@
 .plinkoContainer {
-
-  background-color: rgb(5, 10, 38);
-  position: absolute;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
+  background-color: rgb(5, 10, 38);
+}
+
+.zone-labels {
+  position: absolute;
+  bottom: 120px;
+  /* Ajustado para coincidir con createPrizeZones */
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  padding: 0;
+}
+
+.zone-label {
+  color: white;
+  font-weight: bold;
+  font-size: 0.9rem;
+  text-shadow: 1px 1px 2px black;
+  transform: translateX(-50%);
+  width: 0;
+}
+
+/* Añadir para alinear perfectamente las etiquetas */
+.zone-label:first-child {
+  transform: translateX(0);
+}
+
+.zone-label:last-child {
+  transform: translateX(-100%);
 }
 
 .bet-controls {
@@ -30,7 +61,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 0 10px rgba(81, 0, 255, 0.4),
-              0 0 20px rgba(81, 0, 255, 0.2);
+    0 0 20px rgba(81, 0, 255, 0.2);
   min-width: 120px;
   text-align: center;
 }
@@ -71,14 +102,13 @@
 
 @media (max-width: 768px) {
   .plinkoContainer {
-    width: 100%;
-    height: 500px;
+    height: 100vh;
   }
-  
+
   .bet-buttons {
     gap: 8px;
   }
-  
+
   .bet-btn {
     padding: 8px 12px;
     font-size: 0.9rem;

@@ -27,8 +27,8 @@ export class LoginComponent {
 
   login(): void {
     this.errorMessage = '';
-    console.log('Email:', this.email);
-    console.log('Password:', this.password);
+    console.log('email:', this.email);
+    console.log('password:', this.password);
 
     this.authService.login(this.email, this.password).subscribe({
       next: (response) => {

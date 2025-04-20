@@ -80,3 +80,14 @@
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* En tu archivo CSS global */
+.success-snackbar {
+  background: #4CAF50 !important; /* Verde */
+  color: white;
+}
+
+.error-snackbar {
+  background: #f44336 !important; /* Rojo */
+  color: white;
+}
