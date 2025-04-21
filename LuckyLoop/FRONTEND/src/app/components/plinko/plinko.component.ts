@@ -31,8 +31,8 @@ export class PlinkoComponent implements AfterViewInit {
   pinColor: string = '#ffffff';
   
   // Configuración de física para dificultar llegar a los extremos
-  gravity: number = 0.24;        // Mayor gravedad = menos tiempo para desplazamiento lateral
-  bounceReduction: number = 0.75; // Menor conservación de energía en rebotes
+  gravity: number = 0.2;        // Mayor gravedad = menos tiempo para desplazamiento lateral
+  bounceReduction: number = 0.8; // Menor conservación de energía en rebotes
   
   // Dimensiones del canvas
   canvasWidth: number = 0;

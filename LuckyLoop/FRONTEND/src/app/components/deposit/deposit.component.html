@@ -1,52 +1,86 @@
-<!-- deposit.component.html -->
 <div class="deposit-container">
-  <h2>Depositar Fondos</h2>
+  <!-- Botón para volver al menú principal -->
+  <a class="back-button" routerLink="/">
+    <span class="back-icon">←</span> Volver al menú
+  </a>
 
+  <!-- Selector de operación -->
+  <div class="operation-selector">
+    <button 
+      [class.active]="operationType === 'deposit'" 
+      (click)="setOperationType('deposit')"
+      class="operation-btn">
+      Depositar
+    </button>
+    <button 
+      [class.active]="operationType === 'withdraw'" 
+      (click)="setOperationType('withdraw')"
+      class="operation-btn">
+      Retirar
+    </button>
+  </div>
+
+  <!-- Sección Cantidad -->
   <div class="amount-section">
-    <label>Cantidad (EUR):</label>
-    <input 
-      type="number" 
-      [(ngModel)]="amount" 
-      min="1" 
-      step="1"
-    >
-  </div>
-
-  <div class="card-details">
-    <div>
-      <label>Número de tarjeta</label>
-      <input 
-        type="text" 
-        [(ngModel)]="cardNumber" 
-        placeholder="4242 4242 4242 4242"
-        disabled>
-    </div>
-    
-    <div class="card-expiry">
-      <label>MM / AA</label>
-      <input 
-        type="text" 
-        [(ngModel)]="expDate" 
-        placeholder="12/34"
-        disabled
+    <label>{{ operationType === 'deposit' ? 'CANTIDAD A DEPOSITAR (EUR)' : 'CANTIDAD A RETIRAR (EUR)' }}</label>
+    <div class="amount-input">
+      <input
+        type="number"
+        [(ngModel)]="amount"
+        min="1"
+        placeholder="0"
       >
-    </div>
-    
-    <div>
-      <label>CVC</label>
-      <input 
-        type="text" 
-        [(ngModel)]="cvc" 
-        placeholder="123"
-        disabled
-      >
+      <span class="currency">€</span>
     </div>
   </div>
+  
+  <!-- Tarjeta de Crédito (solo visible en depósito) -->
+  <div class="credit-card" *ngIf="operationType === 'deposit'">
+    <div class="card-header">
+      <div class="chip-container">
+        <div class="chip-glow"></div>
+        <div class="chip"></div>
+      </div>
+      <div class="logo">LUCKYLOOP</div>
+    </div>
+   
+    <!-- Elemento real de Stripe visible -->
+    <div id="card-element" class="card-element-container"></div>
+    
+    <!-- Mensaje de error de tarjeta -->
+    <div *ngIf="cardError" class="card-error">
+      {{ cardError }}
+    </div>
+   
+    <div class="card-glows">
+      <div class="glow blue"></div>
+      <div class="glow purple"></div>
+    </div>
+  </div>
+  
+  <!-- Formulario de retiro (solo visible en retiro) -->
+  <div class="withdraw-form" *ngIf="operationType === 'withdraw'">
+    
+    <div class="form-group">
+      <label>IBAN</label>
+      <input type="text" [(ngModel)]="withdrawData.iban" placeholder="ES...">
+    </div>
 
-  <button 
-    (click)="handleDeposit()"
-    [disabled]="loading"
+    <div *ngIf="withdrawError" class="withdraw-error">
+      {{ withdrawError }}
+    </div>
+  </div>
+  
+  <!-- Botón de acción -->
+  <button
+    class="action-btn"
+    (click)="handleAction()"
+    [disabled]="loading || (operationType === 'deposit' && !cardComplete) || (operationType === 'withdraw' && !isWithdrawFormValid())"
   >
-    {{ loading ? 'Procesando...' : 'Depositar ' + amount + '€' }}
+    <span class="btn-glows"></span>
+    <span class="btn-text">
+      {{ loading ? 'PROCESANDO...' : 
+         (operationType === 'deposit' ? 'DEPOSITAR ' : 'RETIRAR ') + amount + '€' }}
+    </span>
   </button>
 </div>
