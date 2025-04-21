@@ -1,0 +1,231 @@
+/* plinko.component.css */
+:host {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.plinko-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  background-color: #0a192f;
+  color: white;
+  font-family: 'Arial', sans-serif;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.plinko-controls {
+  width: 250px;
+  padding: 20px;
+  background-color: #0f2847;
+  z-index: 10;
+  overflow-y: auto;
+}
+
+.plinko-game {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.plinko-game canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.mode-selector {
+  display: flex;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mode-selector button {
+  flex: 1;
+  background-color: #192d4c;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.mode-selector button.selected {
+  background-color: #3a5682;
+}
+
+.mode-selector button:hover:not(.selected) {
+  background-color: #253e6b;
+}
+
+.control-group {
+  margin-bottom: 15px;
+}
+
+.control-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #ccc;
+}
+
+.control-group input,
+.control-group select {
+  width: 100%;
+  padding: 10px;
+  background-color: #192d4c;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+}
+
+.control-group select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+  padding-right: 30px;
+}
+
+.amount-input {
+  display: flex;
+  align-items: center;
+}
+
+.amount-input input {
+  flex: 1;
+  border-radius: 5px 0 0 5px;
+}
+
+.amount-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.amount-buttons button {
+  height: 20px;
+  width: 30px;
+  background-color: #ffbf00;
+  color: black;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.amount-buttons button:first-child {
+  border-radius: 0 5px 0 0;
+}
+
+.amount-buttons button:last-child {
+  border-radius: 0 0 5px 0;
+}
+
+.amount-buttons button:hover {
+  background-color: #ffd34e;
+}
+
+.play-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #00ff2a;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.play-button:hover {
+  background-color: #22ff46;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.play-button:active {
+  background-color: #00cc21;
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.balance-display {
+  background-color: #192d4c;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.balance-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #00ff2a;
+}
+
+.balance-label {
+  font-size: 14px;
+  color: #ccc;
+  margin-bottom: 5px;
+}
+
+.win-indicator {
+  position: absolute;
+  padding: 8px 12px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #00ff2a;
+  border-radius: 5px;
+  font-weight: bold;
+  z-index: 100;
+  pointer-events: none;
+  transition: opacity 1s;
+  opacity: 0;
+}
+
+.win-indicator.show {
+  opacity: 1;
+}
+
+.win-indicator.lose {
+  color: #ff3a3a;
+}
+
+@media (max-width: 768px) {
+  .plinko-container {
+    flex-direction: column;
+  }
+  
+  .plinko-controls {
+    width: 100%;
+    max-height: 40%;
+    padding: 10px;
+  }
+  
+  .balance-display {
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+  
+  .balance-value {
+    font-size: 20px;
+  }
+}

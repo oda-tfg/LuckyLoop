@@ -1,0 +1,63 @@
+<div class="betting-container">
+    <div class="balance">Saldo: ${{ gameState?.balance || 0 }}</div>
+    
+    <div class="chip-rack">
+      <div *ngFor="let chip of availableChips" 
+           class="chip" 
+           [style.background-color]="chip.color"
+           [class.selected]="selectedChip?.id === chip.id"
+           (click)="selectChip(chip)">
+        ${{ chip.value }}
+      </div>
+    </div>
+    
+    <div class="betting-table" [class.disabled]="gameState?.isSpinning">
+      <!-- Números 0 -->
+      <div class="number zero" (click)="placeBet('straight', [0])">0</div>
+      
+      <!-- Números 1-36 -->
+      <div class="numbers-grid">
+        <ng-container *ngFor="let row of [1, 2, 3]">
+          <ng-container *ngFor="let col of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]">
+            <div class="number" 
+                 [class.red]="isRedNumber(getNumberFromPosition(row, col))"
+                 (click)="placeBet('straight', [getNumberFromPosition(row, col)])">
+              {{ getNumberFromPosition(row, col) }}
+              
+              <div class="bet-chips" *ngIf="hasBetOnNumber(getNumberFromPosition(row, col))">
+                <div *ngFor="let bet of getBetsForNumber(getNumberFromPosition(row, col))" 
+                     class="bet-chip" 
+                     [style.background-color]="bet.chips[0].color">
+                  ${{ bet.totalAmount }}
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+      
+      <!-- Apuestas de columna -->
+      <div class="column-bets">
+        <div class="column-bet" (click)="placeBet('column', getColumnNumbers(1))">2:1</div>
+        <div class="column-bet" (click)="placeBet('column', getColumnNumbers(2))">2:1</div>
+        <div class="column-bet" (click)="placeBet('column', getColumnNumbers(3))">2:1</div>
+      </div>
+      
+      <!-- Apuestas de docena -->
+      <div class="dozen-bets">
+        <div class="dozen-bet" (click)="placeBet('dozen', [1])">1st 12</div>
+        <div class="dozen-bet" (click)="placeBet('dozen', [13])">2nd 12</div>
+        <div class="dozen-bet" (click)="placeBet('dozen', [25])">3rd 12</div>
+      </div>
+      
+      <!-- Apuestas externas -->
+      <div class="outside-bets">
+        <div class="outside-bet" (click)="placeBet('low', [])">1-18</div>
+        <div class="outside-bet" (click)="placeBet('even', [])">PAR</div>
+        <div class="outside-bet red" (click)="placeBet('red', [])">ROJO</div>
+        <div class="outside-bet black" (click)="placeBet('black', [])">NEGRO</div>
+        <div class="outside-bet" (click)="placeBet('odd', [])">IMPAR</div>
+        <div class="outside-bet" (click)="placeBet('high', [])">19-36</div>
+      </div>
+    </div>
+  </div>

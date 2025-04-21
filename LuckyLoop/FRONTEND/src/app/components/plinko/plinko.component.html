@@ -1,0 +1,50 @@
+<!-- plinko.component.html -->
+<div class="plinko-container">
+  <div class="plinko-controls">
+    <div class="balance-display">
+      <div class="balance-label">Saldo</div>
+      <div class="balance-value">{{ balance.toFixed(2) }}</div>
+    </div>
+    
+    <div class="mode-selector">
+      <button 
+        [class.selected]="mode === 'Manual'" 
+        (click)="setMode('Manual')">
+        Manual
+      </button>
+      <button 
+        [class.selected]="mode === 'Auto'" 
+        (click)="setMode('Auto')">
+        Auto
+      </button>
+    </div>
+    
+    <div class="control-group">
+      <label>Cantidad</label>
+      <div class="amount-input">
+        <input 
+          type="number" 
+          min="0" 
+          step="0.01" 
+          [(ngModel)]="amount"
+          (change)="setAmount(amount)">
+        <div class="amount-buttons">
+          <button (click)="setHalfAmount()" class="half-btn">½</button>
+          <button (click)="setDoubleAmount()" class="double-btn">2×</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Se eliminó el selector de riesgo -->
+    
+    <button 
+      class="play-button" 
+      (click)="play()">
+      Jugar
+    </button>
+  </div>
+  
+  <div class="plinko-game">
+    <canvas #plinkoCanvas></canvas>
+  </div>
+</div>

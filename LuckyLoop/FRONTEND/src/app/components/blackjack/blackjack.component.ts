@@ -198,9 +198,6 @@ export class BlackjackComponent implements OnInit {
     return result;
   }
 
-  /**
-   * Método para ejecutar All In (apostar todo el saldo)
-   */
   allIn(): void {
     if (this.game.gameInProgress || this.game.gameFinished || this.game.playerBalance <= 0) return;
 

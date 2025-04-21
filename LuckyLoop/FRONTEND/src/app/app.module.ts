@@ -10,7 +10,6 @@ import { NavComponent } from './components/nav/nav.component';
 import { MainComponent } from './components/main/main.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { DepositComponent } from './components/deposit/deposit.component';
-import { RuletaComponent } from './components/ruleta/ruleta.component';
 import { FullLayoutComponent } from './components/layouts/full-layout/full-layout.component';
 import { RouterModule } from '@angular/router';
 import { RegistroComponent } from './components/auth/registro/registro.component';
@@ -19,9 +18,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './components/auth/login/login.component';
 import { RecuperarPasswordComponent } from './components/recuperar-password/recuperar-password.component';
 import { CambiarPasswordComponent } from './components/cambiar-password/cambiar-password.component';
-import { PlinkoGameComponent } from './components/plinko-game/plinko-game.component';
+import { PlinkoComponent} from './components/plinko/plinko.component';
 import { BlackjackComponent } from './components/blackjack/blackjack.component';
 import { EstadisticasComponent } from './components/estadisticas/estadisticas.component';
+import { RouletteWheelComponent } from './components/roulette-wheel/roulette-wheel.component';
+import { BettingTableComponent } from './components/roulette-table/roulette-table.component';
+import { RoulettePageComponent } from './components/roulette-page/roulette-page.component';
 
 
 @NgModule({
@@ -32,15 +34,17 @@ import { EstadisticasComponent } from './components/estadisticas/estadisticas.co
     MainComponent,
     FooterComponent,
     DepositComponent,
-    RuletaComponent,
     FullLayoutComponent,
     RegistroComponent,
     LoginComponent,
     RecuperarPasswordComponent,
     CambiarPasswordComponent,
-    PlinkoGameComponent,
+    PlinkoComponent,
     BlackjackComponent,
-    EstadisticasComponent
+    EstadisticasComponent,
+    RouletteWheelComponent,
+    BettingTableComponent,
+    RoulettePageComponent
   ],
   imports: [
     BrowserModule,
