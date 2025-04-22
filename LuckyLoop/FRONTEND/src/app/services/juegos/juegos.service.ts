@@ -19,26 +19,17 @@ export class JuegosService {
 
   constructor(private http: HttpClient) { }
 
-  private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('auth_token');
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    });
-  }
 
-  
-getAllJuegos(): Observable<Juego[]> {
-  // Para pruebas sin autenticación
-  return this.http.get<any>(`${this.apiUrl}/getJuegos`)
-    .pipe(
-      map(response => {
-        console.log('Respuesta API juegos:', response);
-        if (response && response.status === 'success' && response.data) {
-          return response.data;
-        }
-        return [];
-      })
-    );
-}
+  getAllJuegos(): Observable<Juego[]> {
+    // Para pruebas sin autenticación
+    return this.http.get<any>(`${this.apiUrl}/getJuegos`)
+      .pipe(
+        map(response => {
+          if (response && response.status === 'success' && response.data) {
+            return response.data;
+          }
+          return [];
+        })
+      );
+  }
 }
