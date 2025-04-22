@@ -38,7 +38,7 @@ class JuegoService
                 'image' => 'assets/images/' . strtolower(str_replace(' ', '', $juego->getNombre())) . '.webp',
                 'category' => 'Categoría de juego',
                 'isHot' => true,
-                'url' => '/'.$juego->getNombre()
+                'url' => '/' . strtolower(str_replace(' ', '', $juego->getNombre()))
             ];
         }
         
