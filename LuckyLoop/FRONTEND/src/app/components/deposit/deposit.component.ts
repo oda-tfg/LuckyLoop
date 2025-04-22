@@ -125,7 +125,7 @@ export class DepositComponent implements OnInit {
       if (error) throw error;
       
       // 3. Actualizar saldo local
-      this.saldoService.setSaldo(this.amount, true).subscribe({
+      this.saldoService.setSaldo(this.amount, true, false).subscribe({
         next: (response) => {
           alert(`✅ Depósito exitoso, Nuevo saldo: €${response.nuevoSaldo}`);
           this.loading = false;
@@ -153,7 +153,7 @@ export class DepositComponent implements OnInit {
         throw new Error(`Saldo insuficiente. Tu saldo actual es €${saldoResponse.saldo}`);
       }
   
-      this.saldoService.setSaldo(-this.amount, false).subscribe({
+      this.saldoService.setSaldo(this.amount, false, true).subscribe({
         next: (response) => {
           alert(`✅ Solicitud de retiro procesada\nNuevo saldo: €${response.nuevoSaldo}`);
           this.loading = false;
@@ -161,7 +161,7 @@ export class DepositComponent implements OnInit {
           this.withdrawData = {
             iban: ''
           };
-          this.amount = 50;
+          this.amount = 0;
         },
         error: (err) => {
           throw new Error(err.error?.message || 'Error procesando la solicitud de retiro');
