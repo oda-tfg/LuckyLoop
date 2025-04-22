@@ -25,6 +25,7 @@ import { CambiarNombreComponent } from './components/cambiar-nombre/cambiar-nomb
 
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,6 +43,7 @@ import { CambiarNombreComponent } from './components/cambiar-nombre/cambiar-nomb
     BlackjackComponent,
     EstadisticasComponent,
     CambiarNombreComponent,
+
   ],
   imports: [
     BrowserModule,
