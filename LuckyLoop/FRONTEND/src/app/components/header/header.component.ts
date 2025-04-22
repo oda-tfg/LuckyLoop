@@ -1,6 +1,9 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { SaldoService } from '../../services/saldo/saldo.service';
+import { JuegosService } from '../../services/juegos/juegos.service';
+
+
 
 @Component({
   selector: 'app-header',
@@ -12,10 +15,17 @@ export class HeaderComponent implements OnInit {
   isLoggedIn: boolean = false;
   userBalance: number = 0;
   showProfileMenu: boolean = false;
+  //busqueda//
+  @Input() featuredGames: any[] = []; // Recibe la lista de juegos del componente padre
+  @Output() searchChanged: EventEmitter<string> = new EventEmitter<string>(); // Emite el término de búsqueda
+  @Output() searchTermChanged = new EventEmitter<string>();
+  searchResults: any[] = []; // Para almacenar los resultados de la búsqueda
+  searchTerm: string = '';
 
   constructor(
     private router: Router,
-    private saldoService: SaldoService
+    private saldoService: SaldoService,
+    private juegosService: JuegosService
   ) {}
   
   ngOnInit(): void {
@@ -49,14 +59,22 @@ export class HeaderComponent implements OnInit {
     });
   }
   
-  // Método para manejar la búsqueda
+  //Método para la búsqueda
   onSearch(searchTerm: string): void {
-    console.log('Búsqueda:', searchTerm);
-    // Aquí implementarías la lógica de búsqueda
+    this.searchTerm = searchTerm.toLowerCase();
+
+    // Emitir el término al componente padre
+    this.searchTermChanged.emit(this.searchTerm);
+    this.searchResults = this.featuredGames.filter(game =>
+      game.name.toLowerCase().includes(this.searchTerm)
+    );
+
+    console.log('Búsqueda:', this.searchTerm, 'Resultados:', this.searchResults);
   }
 
-  // Alternar la visibilidad del menú de perfil
-  toggleProfileMenu(): void {
+  //Alternar la visibilidad del menú de perfil
+  toggleProfileMenu(event: MouseEvent): void {
+    event.stopPropagation(); //me hace abrir el desplegable: Omar
     this.showProfileMenu = !this.showProfileMenu;
   }
 

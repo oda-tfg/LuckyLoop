@@ -10,15 +10,19 @@
 
       <!-- Barra de búsqueda -->
       <div class="search-bar">
-        <input 
-          type="text" 
-          placeholder="Buscar juegos" 
+        <input
+          type="text"
+          placeholder="Buscar juegos"
           #searchInput
-          (keyup.enter)="onSearch(searchInput.value)">
+          (keyup)="onSearch(searchInput.value)">
         <button class="search-button" (click)="onSearch(searchInput.value)">
           <i class="fa fa-search"></i>
         </button>
       </div>
+      
+      <!-- <ul *ngIf="searchResults.length > 0" class="search-results-list">
+        <li *ngFor="let result of searchResults">{{ result.name }}</li>
+      </ul> -->
 
       <!-- Saldo del usuario (visible solo cuando está logueado) -->
       <div class="user-balance" *ngIf="isLoggedIn">
@@ -29,7 +33,7 @@
 
       <!-- Icono de perfil (visible solo cuando está logueado) -->
       <div class="profile-icon-container" *ngIf="isLoggedIn">
-        <div class="profile-icon" (click)="toggleProfileMenu()">
+        <div class="profile-icon" (click)="toggleProfileMenu($event)">
           <i class="fa fa-user"></i>
         </div>
         

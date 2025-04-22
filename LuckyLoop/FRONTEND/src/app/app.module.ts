@@ -21,9 +21,8 @@ import { CambiarPasswordComponent } from './components/cambiar-password/cambiar-
 import { PlinkoComponent} from './components/plinko/plinko.component';
 import { BlackjackComponent } from './components/blackjack/blackjack.component';
 import { EstadisticasComponent } from './components/estadisticas/estadisticas.component';
-import { RouletteWheelComponent } from './components/roulette-wheel/roulette-wheel.component';
-import { BettingTableComponent } from './components/roulette-table/roulette-table.component';
-import { RoulettePageComponent } from './components/roulette-page/roulette-page.component';
+import { CambiarNombreComponent } from './components/cambiar-nombre/cambiar-nombre.component';
+
 
 
 @NgModule({
@@ -42,9 +41,7 @@ import { RoulettePageComponent } from './components/roulette-page/roulette-page.
     PlinkoComponent,
     BlackjackComponent,
     EstadisticasComponent,
-    RouletteWheelComponent,
-    BettingTableComponent,
-    RoulettePageComponent
+    CambiarNombreComponent,
   ],
   imports: [
     BrowserModule,

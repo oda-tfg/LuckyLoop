@@ -103,4 +103,30 @@ final class UsuarioController extends AbstractController
 
     }
 
+    //ruta para api/doc
+    #[Route('/api/usuario/cambiarNombre', name: 'cambiar_nombre', methods: ['POST'])]
+    #[OA\Post(
+        path: '/api/usuario/cambiarNombre',
+        summary: 'Cambiar el nombre del usuario',
+        tags: ['Usuario'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'nombre', type: 'string', example: 'NuevoNombre')
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: 'Nombre actualizado correctamente'),
+            new OA\Response(response: 400, description: 'Error en los datos'),
+            new OA\Response(response: 404, description: 'Usuario no encontrado')
+        ]
+    )]
+
+    public function cambiarNombre(Request $request): JsonResponse
+    {
+        return $this->usuarioService->cambiarNombre($request);
+    }
+
 }

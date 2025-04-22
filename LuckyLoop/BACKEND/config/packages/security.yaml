@@ -47,6 +47,7 @@ security:
         - { path: ^/api/usuario/comprobarToken, roles: PUBLIC_ACCESS }
         - { path: ^/api/usuario/emailToken, roles: PUBLIC_ACCESS }
         - { path: ^/api/usuario/cambiarPassword, roles: PUBLIC_ACCESS }
+        - { path: ^/api/getJuegos, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/estadisticas, roles: ROLE_MANAGER }
