@@ -15,7 +15,7 @@ export interface Juego {
   providedIn: 'root'
 })
 export class JuegosService {
-  private apiUrl = 'http://localhost:8000/api'; // URL base, sin /api añadido aquí
+  private apiUrl = 'https://localhost:8000/api'; // URL base, sin /api añadido aquí
 
   constructor(private http: HttpClient) { }
 
