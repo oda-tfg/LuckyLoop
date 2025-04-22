@@ -31,7 +31,7 @@ export class PlinkoComponent implements AfterViewInit {
   pinColor: string = '#ffffff';
   
   // Configuración de física para dificultar llegar a los extremos
-  gravity: number = 0.2;        // Mayor gravedad = menos tiempo para desplazamiento lateral
+  gravity: number = 0.05;     // Gravedad reducida (antes era 0.2)
   bounceReduction: number = 0.8; // Menor conservación de energía en rebotes
   
   // Dimensiones del canvas
@@ -104,30 +104,12 @@ export class PlinkoComponent implements AfterViewInit {
       const startX = (this.canvasWidth - rowWidth) / 2 + horizontalSpacing / 2;
       
       for (let i = 0; i < pinCount; i++) {
-        // Añadimos más pines en los laterales de las filas inferiores para dificultar llegar a extremos
-        if (row > this.rows / 2) {
-          this.pins.push({
-            x: startX + i * horizontalSpacing,
-            y: 100 + row * verticalSpacing,
-            radius: this.pinRadius
-          });
-          
-          // En filas más bajas, añadimos pines adicionales en los extremos
-          if ((i === 0 || i === pinCount - 1) && row > this.rows * 0.7) {
-            const offsetX = (i === 0) ? -horizontalSpacing * 0.3 : horizontalSpacing * 0.3;
-            this.pins.push({
-              x: startX + i * horizontalSpacing + offsetX,
-              y: 100 + row * verticalSpacing - verticalSpacing * 0.3,
-              radius: this.pinRadius
-            });
-          }
-        } else {
-          this.pins.push({
-            x: startX + i * horizontalSpacing,
-            y: 100 + row * verticalSpacing,
-            radius: this.pinRadius
-          });
-        }
+        // Eliminamos la lógica que añadía pines adicionales en los extremos
+        this.pins.push({
+          x: startX + i * horizontalSpacing,
+          y: 100 + row * verticalSpacing,
+          radius: this.pinRadius
+        });
       }
     }
   }
@@ -257,7 +239,7 @@ export class PlinkoComponent implements AfterViewInit {
   update(): void {
     // Actualizar posiciones de las bolas
     this.balls.forEach((ball, index) => {
-      // Aplicar gravedad
+      // Aplicar gravedad - ahora es 0, por lo que no tendrá efecto
       ball.vy += this.gravity;
       
       // Actualizar posición
@@ -374,11 +356,12 @@ export class PlinkoComponent implements AfterViewInit {
     const startX = this.canvasWidth / 2;
     const startY = 50;
     
+    // Con poca gravedad, aún necesitamos una velocidad inicial pequeña en Y
     this.balls.push({
       x: startX,
       y: startY,
       vx: 0,
-      vy: 0,
+      vy: 1, // Velocidad inicial vertical reducida ya que ahora tenemos algo de gravedad
       hasHitBucket: false
     });
     

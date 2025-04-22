@@ -35,46 +35,6 @@ export class MainComponent implements OnInit {
       });
     }
 
-  // Datos para los juegos destacados
-  /* featuredGames = [
-    {
-      id: 1,
-      name: 'BlackJack',
-      image: 'assets/images/blackjack.webp',
-      category: 'Juego de Mesa',
-      isHot: true,
-      url: '/blackjack' //ruta del juego
-    },
-    {
-      id: 2,
-      name: 'Plinko',
-      image: 'assets/images/plinko.webp',
-      category: 'Juego de Azar',
-      isHot: true,
-      url: '/plinko/'
-    },
-    {
-      id: 3,
-      name: 'Ruleta',
-      image: 'assets/images/ruleta.webp',
-      category: 'Juego de Mesa',
-      isHot: false,
-      url: '/ruleta/'
-    },
-    {
-      id: 4,
-      name: 'Programa y Gana',
-      image: 'assets/images/programaGana.webp',
-      category: 'Juego de Programación',
-      isHot: true
-    }
-  ]; */
-
-  
-  /* ngOnInit(): void {
-    this.filteredGames = [...this.featuredGames]; // Inicialmente, muestra todos los juegos
-  } */
-
   //método para llamar desde el componente padre (donde esté el header)
   updateSearchTerm(term: string): void {
     this.searchTerm = term.toLowerCase();
