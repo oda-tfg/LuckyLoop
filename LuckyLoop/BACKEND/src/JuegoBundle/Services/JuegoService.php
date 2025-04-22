@@ -2,65 +2,43 @@
 
 namespace App\JuegoBundle\Services;
 
+use App\Entity\Juego;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class JuegoService
 {
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
-     * Devuelve lista de juegos y coger id y nombre
+     * Devuelve lista de juegos desde la base de datos.
      * @return JsonResponse
      */
     public function getJuegos(): JsonResponse
     {
-        //lista de juegos
-        $juegos = [
-            [
-                'id' => 1,
-                'name' => 'BlackJack',
-                'image' => 'assets/images/blackjack.webp',
-                'category' => 'Juego de Mesa',
-                'isHot' => true,
-                'url' => '/blackjack'
-            ],
-            [
-                'id' => 2,
-                'name' => 'Plinko',
-                'image' => 'assets/images/plinko.webp',
-                'category' => 'Juego de Azar',
-                'isHot' => true,
-                'url' => '/plinko'
-            ],
-            [
-                'id' => 3,
-                'name' => 'Ruleta',
-                'image' => 'assets/images/ruleta.webp',
-                'category' => 'Juego de Mesa',
-                'isHot' => false,
-                'url' => '/ruleta'
-            ],
-            [
-                'id' => 4,
-                'name' => 'Programa y Gana',
-                'image' => 'assets/images/programaGana.webp',
-                'category' => 'Juego de Programación',
-                'isHot' => true,
-                'url' => null
-            ]
-        ];
+        //obtener juegos de la BD
+        $juegos = $this->entityManager->getRepository(Juego::class)->findAll();
         
         if (empty($juegos)) {
             return new JsonResponse(['message' => 'No se encontraron juegos'], Response::HTTP_NOT_FOUND);
         }
         
-        //coger id, nombre e imagen
+        //datos de los juegos
         $responseData = [];
         foreach ($juegos as $juego) {
             $responseData[] = [
-                'id' => $juego['id'],
-                'name' => $juego['name'],
-                'image' => $juego['image'],
-                'url' => $juego['url']
+                'id' => $juego->getId(),
+                'name' => $juego->getNombre(),
+                'image' => 'assets/images/' . strtolower(str_replace(' ', '', $juego->getNombre())) . '.webp',
+                'category' => 'Categoría de juego',
+                'isHot' => true,
+                'url' => '/'.$juego->getNombre()
             ];
         }
         
