@@ -32,30 +32,30 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $roles = [];
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 30)]
     private ?string $nombre = null;
 
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(length: 50, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column(length: 9, unique: true)]
     private ?string $telefono = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 20)]
     private ?string $password = null;
 
     #[ORM\Column(type: "float", nullable: true, options: ["default" => 0])]
     private ?float $saldoActual = null;
 
-    #[ORM\Column(type: "datetime", nullable: true, options: ["default" => "CURRENT_TIMESTAMP"])]
+    #[ORM\Column(type: "datetime", nullable: true)]
     private ?\DateTimeInterface $fechaRegistro = null;
 
     #[ORM\ManyToOne(inversedBy: 'usuarios')]
     #[ORM\JoinColumn(nullable: true)]
     private ?Recompensa $nivel = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 50, nullable: true)]
     private ?string $tokenPassword = null;
     public function getId(): ?int
     {
