@@ -27,7 +27,7 @@ class UsuarioService {
         $dinero = $data['dinero'];
         $usuario = $this->security->getUser();
 
-        if ($data['deposito'] != true) {
+        if ($data['deposito'] != true && $data['retirada'] != true) {
             //RESTAR SALDO
             if ($dinero < 0) {
                 if ($usuario->getSaldoActual() < abs($dinero)) {
@@ -39,12 +39,19 @@ class UsuarioService {
                 //SUMAR SALDO
                 $usuario->setSaldoActual($usuario->getSaldoActual() + $dinero);
             }
-        } else {
+        } elseif ($data['deposito'] = true && $data['retirada'] != true) {
             $usuario->setSaldoActual($usuario->getSaldoActual() + $dinero);
 
             //Insertar en dineroDepositado
             $perfilEconomico = $this->entityManager->getRepository(PerfilEconomico::class)->findOneBy(['usuario' => $usuario]);
             $perfilEconomico->setDineroDepositado($perfilEconomico->getDineroDepositado() + $dinero);
+
+        } else{
+            $usuario->setSaldoActual($usuario->getSaldoActual() - $dinero);
+
+            //Insertar en dineroRetirado
+            $perfilEconomico = $this->entityManager->getRepository(PerfilEconomico::class)->findOneBy(['usuario' => $usuario]);
+            $perfilEconomico->setDineroRetirado($perfilEconomico->getDineroRetirado() + $dinero);
         }
 
         $this->entityManager->persist($usuario);

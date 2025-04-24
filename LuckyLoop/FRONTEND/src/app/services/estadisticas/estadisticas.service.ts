@@ -31,7 +31,7 @@ export interface EstadisticasJuegoResponse {
   providedIn: 'root'
 })
 export class EstadisticasService {
-  private apiUrl = 'http://localhost:8000/api';
+  private apiUrl = 'https://localhost:8000/api';
 
   constructor(private http: HttpClient) { }
 

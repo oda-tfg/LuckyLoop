@@ -16,7 +16,7 @@ class Juego
     private ?int $id = null;
 
     
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(length: 50, unique: true)]
     private ?string $nombre = null;
 
     #[ORM\Column(type: 'integer', nullable: true, options: ['default' => 1])]

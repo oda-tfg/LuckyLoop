@@ -1,7 +1,7 @@
-// plinko.component.ts
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild, AfterViewInit, HostListener } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, HostListener, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { SaldoService } from './../../services/saldo/saldo.service';
 
 @Component({
   selector: 'app-plinko',
@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './plinko.component.html',
   styleUrls: ['./plinko.component.css']
 })
-export class PlinkoComponent implements AfterViewInit {
+export class PlinkoComponent implements AfterViewInit, OnInit {
   @ViewChild('plinkoCanvas') plinkoCanvas!: ElementRef<HTMLCanvasElement>;
   
   // Configuración del juego
@@ -50,6 +50,25 @@ export class PlinkoComponent implements AfterViewInit {
   private pins: Pin[] = [];
   private buckets: Bucket[] = [];
   private animationFrameId: number = 0;
+  
+  constructor(private saldoService: SaldoService) {}
+  
+  ngOnInit(): void {
+    // Cargar el saldo real del usuario desde la base de datos
+    this.loadUserBalance();
+  }
+  
+  // Cargar el saldo del usuario desde la base de datos
+  loadUserBalance(): void {
+    this.saldoService.getSaldo().subscribe({
+      next: (response) => {
+        this.balance = response.saldo;
+      },
+      error: (error) => {
+        console.error('Error al obtener el saldo del usuario:', error);
+      }
+    });
+  }
   
   ngAfterViewInit(): void {
     const canvas = this.plinkoCanvas.nativeElement;
@@ -104,7 +123,6 @@ export class PlinkoComponent implements AfterViewInit {
       const startX = (this.canvasWidth - rowWidth) / 2 + horizontalSpacing / 2;
       
       for (let i = 0; i < pinCount; i++) {
-        // Eliminamos la lógica que añadía pines adicionales en los extremos
         this.pins.push({
           x: startX + i * horizontalSpacing,
           y: 100 + row * verticalSpacing,
@@ -239,7 +257,7 @@ export class PlinkoComponent implements AfterViewInit {
   update(): void {
     // Actualizar posiciones de las bolas
     this.balls.forEach((ball, index) => {
-      // Aplicar gravedad - ahora es 0, por lo que no tendrá efecto
+      // Aplicar gravedad
       ball.vy += this.gravity;
       
       // Actualizar posición
@@ -272,7 +290,6 @@ export class PlinkoComponent implements AfterViewInit {
           ball.vy *= this.bounceReduction;
           
           // Aleatoriedad más controlada para las filas inferiores
-          // Menor random factor = menos probabilidades de movimientos laterales extremos
           const randomFactor = Math.min(0.5, (this.canvasHeight - ball.y) / this.canvasHeight);
           ball.vx += (Math.random() - 0.5) * 0.6 * randomFactor;
         }
@@ -289,8 +306,12 @@ export class PlinkoComponent implements AfterViewInit {
             this.lastWinAmount = winAmount;
             this.isWin = bucket.multiplier >= 1;
             
-            // Actualizar saldo
+            // Actualizar saldo local
             this.balance += winAmount;
+            
+            // Actualizar saldo en la base de datos
+            // Si el multiplicador es >= 1, es una ganancia, de lo contrario, es una pérdida
+            this.updateBalanceInDatabase(winAmount);
             
             // Mostrar indicador de ganancia
             this.showWinIndicator = true;
@@ -327,6 +348,18 @@ export class PlinkoComponent implements AfterViewInit {
     });
   }
   
+  // Método para actualizar el saldo en la base de datos
+  updateBalanceInDatabase(winAmount: number): void {
+    this.saldoService.setSaldo(winAmount).subscribe({
+      next: (response) => {
+        console.log('Saldo actualizado correctamente:', response);
+      },
+      error: (error) => {
+        console.error('Error al actualizar el saldo:', error);
+      }
+    });
+  }
+  
   animate(): void {
     this.update();
     this.draw();
@@ -351,6 +384,16 @@ export class PlinkoComponent implements AfterViewInit {
     
     // Deducir cantidad de la apuesta del saldo
     this.balance -= this.amount;
+    
+    // Actualizar el saldo en la base de datos (deducción de la apuesta)
+    this.saldoService.setSaldo(-this.amount).subscribe({
+      next: (response) => {
+        console.log('Saldo actualizado (apuesta deducida):', response);
+      },
+      error: (error) => {
+        console.error('Error al actualizar el saldo (apuesta):', error);
+      }
+    });
     
     // Crear una nueva bola en la parte superior central
     const startX = this.canvasWidth / 2;
@@ -391,8 +434,6 @@ export class PlinkoComponent implements AfterViewInit {
   setDoubleAmount(): void {
     this.amount = this.amount * 2;
   }
-  
-  // Ya no hay función setRisk porque eliminamos las opciones de riesgo
 }
 
 interface Ball {

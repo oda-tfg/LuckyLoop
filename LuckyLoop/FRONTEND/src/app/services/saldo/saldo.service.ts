@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
     providedIn: 'root'
 })
 export class SaldoService {
-    private apiUrl = 'http://localhost:8000/api'
+    private apiUrl = 'https://localhost:8000/api'
 
     constructor(
         private http: HttpClient
@@ -21,7 +21,7 @@ export class SaldoService {
         return this.http.get(`${this.apiUrl}/usuario/getSaldo`, { headers });
     }
 
-    setSaldo(dinero: number,deposito:boolean=false ): Observable<any> {
+    setSaldo(dinero: number,deposito:boolean=false, retirada:boolean=false ): Observable<any> {
         const token = localStorage.getItem('auth_token');
         const headers = new HttpHeaders({
             'Authorization': `Bearer ${token}`,
@@ -30,7 +30,8 @@ export class SaldoService {
         
         const body = {
             dinero: dinero,
-            deposito:deposito
+            deposito:deposito,
+            retirada:retirada
         };
         
         return this.http.post(`${this.apiUrl}/usuario/updateSaldo`, body, { headers });
