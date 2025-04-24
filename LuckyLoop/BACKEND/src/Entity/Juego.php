@@ -25,6 +25,9 @@ class Juego
     #[ORM\Column]
     private ?int $apuestaMaxima = null;
 
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    private ?string $categoria = null;
+
     /**
      * @var Collection<int, Partida>
      */
@@ -74,6 +77,18 @@ class Juego
     {
         $this->apuestaMaxima = $apuestaMaxima;
 
+        return $this;
+    }
+
+    public function getCategoria(): ?string
+    {
+        return $this->categoria;
+    }
+    
+    public function setCategoria(?string $categoria): self
+    {
+        $this->categoria = $categoria;
+        
         return $this;
     }
 

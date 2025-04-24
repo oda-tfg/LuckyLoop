@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, Subject, map } from 'rxjs';
 
 export interface Juego {
   id: number;
@@ -16,6 +16,10 @@ export interface Juego {
 })
 export class JuegosService {
   private apiUrl = 'http://localhost:8000/api'; // URL base, sin /api añadido aquí
+  private selectedCategorySubject = new Subject<string>();
+
+  //Observable al que se pueden suscribir otros componentes
+  selectedCategory$ = this.selectedCategorySubject.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -32,4 +36,7 @@ export class JuegosService {
         })
       );
   }
+  
+  
+
 }

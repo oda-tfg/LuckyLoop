@@ -1,16 +1,33 @@
 <nav class="nav-container" [class.mobile-open]="mobileMenuOpen">
-    <div class="mobile-toggle" (click)="toggleMobileMenu()">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-  
-    <ul class="nav-menu">
-      <li *ngFor="let item of menuItems">
-        <a [routerLink]="item.route" routerLinkActive="active">
-          <i class="fa" [ngClass]="'fa-' + item.icon"></i>
-          <span>{{ item.title }}</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
+  <div class="mobile-toggle" (click)="toggleMobileMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <ul class="nav-menu">
+    <!-- Elemento Inicio -->
+    <li>
+      <a [routerLink]="'/home'" routerLinkActive="active">
+        <i class="fa fa-home"></i>
+        <span>Inicio</span>
+      </a>
+    </li>
+    
+    <!-- Elementos de Categorías (dinámicos) -->
+    <li *ngFor="let item of categoriaItems">
+      <a [routerLink]="item.route" routerLinkActive="active">
+        <i class="fa" [ngClass]="'fa-' + item.icon"></i>
+        <span>{{ item.title }}</span>
+      </a>
+    </li>
+    
+    <!-- Elemento Torneos -->
+    <li>
+      <a [routerLink]="'/tournaments'" routerLinkActive="active">
+        <i class="fa fa-trophy"></i>
+        <span>Torneos</span>
+      </a>
+    </li>
+  </ul>
+</nav>

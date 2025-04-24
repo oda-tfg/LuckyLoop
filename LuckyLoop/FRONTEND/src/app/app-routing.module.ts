@@ -26,6 +26,8 @@ const routes: Routes = [
   { path: 'cambiarPassword', component: CambiarPasswordComponent },
   { path: 'estadisticas', component: EstadisticasComponent },
   { path: 'cambiar-nombre', component: CambiarNombreComponent },
+  { path: 'categoria/:categoria', component: MainComponent }, //ruta pra filtrar categoria
+  //{ path: 'tournaments', component: TournamentComponent },
   { path: '**', redirectTo: 'home' },
 ];
 

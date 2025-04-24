@@ -24,19 +24,19 @@ class JuegoService
     {
         //obtener juegos de la BD
         $juegos = $this->entityManager->getRepository(Juego::class)->findAll();
-        
+
         if (empty($juegos)) {
             return new JsonResponse(['message' => 'No se encontraron juegos'], Response::HTTP_NOT_FOUND);
         }
-        
+
         //Paso 1: contar partidas de cada juego
         foreach ($juegos as $juego) {
             $cantidadPartidas = count($juego->getPartidas());
             $juego->cantidadPartidas = $cantidadPartidas;
         }
-        
+
         //Paso 2: ordenar los juegos de mayor a menor
-        usort($juegos, function($a, $b) {
+        usort($juegos, function ($a, $b) {
             return $b->cantidadPartidas - $a->cantidadPartidas;
         });
 
@@ -49,7 +49,7 @@ class JuegoService
                 'id' => $juego->getId(),
                 'name' => $juego->getNombre(),
                 'image' => 'assets/images/' . strtolower(str_replace(' ', '', $juego->getNombre())) . '.webp',
-                //'category' => 'Categoría de juego',
+                'category' => $juego->getCategoria(),
                 'isHot' => $isHot,
                 'url' => '/' . strtolower(str_replace(' ', '', $juego->getNombre()))
             ];
@@ -58,6 +58,30 @@ class JuegoService
         return new JsonResponse([
             'status' => 'success',
             'data' => $responseData
+        ], Response::HTTP_OK);
+    }
+
+    //devolver las categorias
+    public function getCategorias(): JsonResponse
+    {
+        $juegos = $this->entityManager->getRepository(Juego::class)->findAll();
+
+        if (empty($juegos)) {
+            return new JsonResponse(['message' => 'No se encontraron juegos'], Response::HTTP_NOT_FOUND);
+        }
+
+        $categorias = [];
+
+        foreach ($juegos as $juego) {
+            $categoria = $juego->getCategoria();
+            if (!in_array($categoria, $categorias)) {
+                $categorias[] = $categoria;
+            }
+        }
+
+        return new JsonResponse([
+            'status' => 'success',
+            'categorias' => $categorias
         ], Response::HTTP_OK);
     }
 }
