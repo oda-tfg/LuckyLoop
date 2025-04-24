@@ -11,6 +11,7 @@ import { CambiarPasswordComponent } from './components/cambiar-password/cambiar-
 import { BlackjackComponent } from './components/blackjack/blackjack.component';
 import { EstadisticasComponent } from './components/estadisticas/estadisticas.component';
 import { CambiarNombreComponent } from './components/cambiar-nombre/cambiar-nombre.component';
+import { ProgramaYGanaComponent } from './components/programa-y-gana/programa-y-gana.component';
 
 
 // app-routing.module.ts
@@ -24,9 +25,10 @@ const routes: Routes = [
   { path: 'registro', component: RegistroComponent },
   { path: 'recuperar-password', component: RecuperarPasswordComponent },
   { path: 'cambiarPassword', component: CambiarPasswordComponent },
+  {path: 'programaygana', component: ProgramaYGanaComponent},
   { path: 'estadisticas', component: EstadisticasComponent },
   { path: 'cambiar-nombre', component: CambiarNombreComponent },
-  { path: 'categoria/:categoria', component: MainComponent }, //ruta pra filtrar categoria
+  { path: 'categoria/:categoria', component: MainComponent }, 
   //{ path: 'tournaments', component: TournamentComponent },
   { path: '**', redirectTo: 'home' },
 ];
