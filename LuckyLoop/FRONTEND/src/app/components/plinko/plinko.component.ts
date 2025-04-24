@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild, AfterViewInit, HostListener, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SaldoService } from './../../services/saldo/saldo.service';
+import { BloquearZoom } from './../../services/bloquearZoomYScroll/bloquearZoomYScroll.service';
 
 @Component({
   selector: 'app-plinko',
@@ -51,13 +52,19 @@ export class PlinkoComponent implements AfterViewInit, OnInit {
   private buckets: Bucket[] = [];
   private animationFrameId: number = 0;
   
-  constructor(private saldoService: SaldoService) {}
+  constructor(private saldoService: SaldoService , private bloquearZoomService: BloquearZoom) {}
   
   ngOnInit(): void {
-    // Cargar el saldo real del usuario desde la base de datos
+
     this.loadUserBalance();
+    this.bloquearZoomService.lockDisplaySettings(100);
   }
   
+  ngOnDestroy(): void {
+
+    this.bloquearZoomService.unlockDisplaySettings();
+  }
+
   // Cargar el saldo del usuario desde la base de datos
   loadUserBalance(): void {
     this.saldoService.getSaldo().subscribe({
@@ -434,7 +441,11 @@ export class PlinkoComponent implements AfterViewInit, OnInit {
   setDoubleAmount(): void {
     this.amount = this.amount * 2;
   }
+
+
 }
+
+
 
 interface Ball {
   x: number;

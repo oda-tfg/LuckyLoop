@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { BlackjackService } from './blackjack.service';
 import { SaldoService } from '../../services/saldo/saldo.service';
 import { PartidaService } from '../../services/partida/partida.service';
+import { BloquearZoom } from './../../services/bloquearZoomYScroll/bloquearZoomYScroll.service';
+
 
 @Component({
   selector: 'app-blackjack',
@@ -15,7 +17,8 @@ export class BlackjackComponent implements OnInit {
   constructor(
     public game: BlackjackService,
     private saldoService: SaldoService,
-    private partidaService: PartidaService
+    private partidaService: PartidaService,
+    private bloquearZoomService: BloquearZoom
   ) { }
 
   ngOnInit(): void {
@@ -33,7 +36,14 @@ export class BlackjackComponent implements OnInit {
         this.game.startNewGame();
       }
     });
+    this.bloquearZoomService.lockDisplaySettings(100);
   }
+
+  ngOnDestroy(): void {
+
+    this.bloquearZoomService.unlockDisplaySettings();
+  }
+
 
   dealCards(): void {
     if (this.game.currentBet <= 0) {

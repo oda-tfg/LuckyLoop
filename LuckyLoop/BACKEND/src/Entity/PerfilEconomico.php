@@ -20,8 +20,9 @@ class PerfilEconomico
     private ?float $dineroRetirado = null;
     
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
+    // En App\Entity\PerfilEconomico, modifica la anotación:
+    #[ORM\OneToOne(cascade: ['persist'])]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?Usuario $usuario = null;
 
     public function getId(): ?int
