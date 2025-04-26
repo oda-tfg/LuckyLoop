@@ -4,8 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 // Importar correctamente
-import { CodemirrorModule } from '@ctrl/ngx-codemirror';
-
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { NavComponent } from './components/nav/nav.component';
@@ -47,9 +45,7 @@ import { AuthService } from './services/auth/auth.service';
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    HttpClientModule,
-    CodemirrorModule  // ← Importación correcta
-  ],
+    HttpClientModule  ],
   providers: [
     AuthService
   ],
