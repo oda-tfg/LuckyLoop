@@ -21,7 +21,6 @@ import { PlinkoComponent } from './components/plinko/plinko.component';
 import { BlackjackComponent } from './components/blackjack/blackjack.component';
 import { EstadisticasComponent } from './components/estadisticas/estadisticas.component';
 import { CambiarNombreComponent } from './components/cambiar-nombre/cambiar-nombre.component';
-import { ProgramaYGanaComponent } from './components/programa-y-gana/programa-y-gana.component';
 
 import { AuthService } from './services/auth/auth.service';
 
@@ -41,9 +40,8 @@ import { AuthService } from './services/auth/auth.service';
     PlinkoComponent,
     BlackjackComponent,
     EstadisticasComponent,
-    CambiarNombreComponent,
-    ProgramaYGanaComponent
-  ],
+    CambiarNombreComponent 
+   ],
   imports: [
     BrowserModule,
     FormsModule,
