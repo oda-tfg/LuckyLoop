@@ -14,6 +14,7 @@ export class RecuperarPasswordComponent {
   isSubmitting: boolean = false;
 
   constructor(
+
     private authService: AuthService
   ) {}
 
