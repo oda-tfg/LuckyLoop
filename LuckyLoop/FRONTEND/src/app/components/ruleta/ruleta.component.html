@@ -1,0 +1,64 @@
+<a class="back-button" routerLink="/">
+  <span class="back-icon">←</span> Volver al menú
+</a>
+<div class="layout-container">
+  <!-- Ruleta -->
+  <div class="ruleta-container">
+    <div class="ruleta" id="ruleta">
+      <!-- Los puntos blancos se generan dinámicamente en el componente -->
+      <div *ngFor="let punto of puntos" class="punto" [style.left.px]="punto.x" [style.top.px]="punto.y"></div>
+    </div>
+    <div class="centro"></div>
+    <div class="marcador-container">
+      <div class="numero-resultado">{{ resultadoTexto }}</div>
+      <div class="marcador"></div>
+    </div>
+  </div>
+
+  <!-- Mesa de apuestas -->
+  <div class="mesa-container">
+    <div class="mesa-numeros">
+      <!-- Celda del 0 -->
+      <div class="celda celda-0" (click)="colocarApuesta('0')">0</div>
+
+      <!-- Celdas de números del 1 al 36 -->
+      <ng-container *ngFor="let numero of numerosTablero">
+        <div class="celda" [ngClass]="{'celda-rojo': esRojo(numero), 'celda-negro': !esRojo(numero)}"
+          [attr.data-numero]="numero" (click)="colocarApuesta(numero.toString())">
+          {{ numero }}
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="apuestas-simples">
+      <div class="apuesta-simple apuesta-docena" (click)="colocarApuesta('1-12')">1ª DOCENA</div>
+      <div class="apuesta-simple apuesta-docena" (click)="colocarApuesta('13-24')">2ª DOCENA</div>
+      <div class="apuesta-simple apuesta-docena" (click)="colocarApuesta('25-36')">3ª DOCENA</div>
+      <div class="apuesta-simple" (click)="colocarApuesta('1-18')">1-18</div>
+      <div class="apuesta-simple" (click)="colocarApuesta('par')">PAR</div>
+      <div class="apuesta-simple" (click)="colocarApuesta('negro')">NEGRO</div>
+      <div class="apuesta-simple" (click)="colocarApuesta('rojo')">ROJO</div>
+      <div class="apuesta-simple" (click)="colocarApuesta('impar')">IMPAR</div>
+      <div class="apuesta-simple" (click)="colocarApuesta('19-36')">19-36</div>
+    </div>
+
+    <div class="fichas-container">
+      <div class="ficha ficha-1" [ngClass]="{'ficha-seleccionada': fichaSeleccionada === 1}"
+        (click)="seleccionarFicha(1)">1</div>
+      <div class="ficha ficha-5" [ngClass]="{'ficha-seleccionada': fichaSeleccionada === 5}"
+        (click)="seleccionarFicha(5)">5</div>
+      <div class="ficha ficha-10" [ngClass]="{'ficha-seleccionada': fichaSeleccionada === 10}"
+        (click)="seleccionarFicha(10)">10</div>
+      <div class="ficha ficha-25" [ngClass]="{'ficha-seleccionada': fichaSeleccionada === 25}"
+        (click)="seleccionarFicha(25)">25</div>
+      <div class="ficha ficha-100" [ngClass]="{'ficha-seleccionada': fichaSeleccionada === 100}"
+        (click)="seleccionarFicha(100)">100</div>
+    </div>
+
+    <div class="controles">
+      <button class="control-btn" [disabled]="girando" (click)="borrarApuestas()">BORRAR APUESTAS</button>
+      <div class="saldo">Saldo: {{ saldo }}</div>
+      <button class="control-btn" [disabled]="girando" (click)="apostar()">APOSTAR</button>
+    </div>
+  </div>
+</div>

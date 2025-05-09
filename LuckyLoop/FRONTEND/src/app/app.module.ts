@@ -17,10 +17,12 @@ import { RecuperarPasswordComponent } from './components/recuperar-password/recu
 import { CambiarPasswordComponent } from './components/cambiar-password/cambiar-password.component';
 import { PlinkoComponent } from './components/plinko/plinko.component';
 import { BlackjackComponent } from './components/blackjack/blackjack.component';
+import { RuletaComponent } from './components/ruleta/ruleta.component';
 import { EstadisticasComponent } from './components/estadisticas/estadisticas.component';
 import { CambiarNombreComponent } from './components/cambiar-nombre/cambiar-nombre.component';
 
 import { AuthService } from './services/auth/auth.service';
+
 
 @NgModule({
   declarations: [
@@ -38,7 +40,8 @@ import { AuthService } from './services/auth/auth.service';
     PlinkoComponent,
     BlackjackComponent,
     EstadisticasComponent,
-    CambiarNombreComponent 
+    CambiarNombreComponent,
+    RuletaComponent 
    ],
   imports: [
     BrowserModule,

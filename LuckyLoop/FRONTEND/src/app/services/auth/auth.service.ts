@@ -32,4 +32,4 @@ export class AuthService {
     registrar(nombreUsuario: string, contrasena: string, repetirContrasena: string, telefono: string, correoElectronico: string) {
         return this.http.post(`${this.apiUrl}/usuario/registrar`, { nombreUsuario, contrasena, repetirContrasena, telefono, correoElectronico })
     }
-}   
+}

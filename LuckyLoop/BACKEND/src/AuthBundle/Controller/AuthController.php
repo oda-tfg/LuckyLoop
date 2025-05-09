@@ -147,6 +147,7 @@ public function __construct(AuthService $authService) {
     {
         return $this->authService->cambiarPassword($request);
     }
+    
     #[Route('/api/usuario/registrar', name: 'registrar-usuario', methods: ['POST'])]
     #[OA\Post(
         path: '/api/usuario/registrar',

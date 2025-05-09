@@ -12,7 +12,7 @@ export interface CategoriaResponse {
 })
 export class NavService {
 
-  private apiUrl = 'https://localhost:8000/api/getCategorias';
+  private apiUrl = 'http://localhost:8000/api/getCategorias';
 
   constructor(private http: HttpClient) { }
 
