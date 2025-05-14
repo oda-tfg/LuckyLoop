@@ -42,7 +42,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 9, unique: true)]
     private ?string $telefono = null;
 
-    #[ORM\Column(length: 20)]
+    #[ORM\Column(length: 80)]
     private ?string $password = null;
 
     #[ORM\Column(type: "float", nullable: true, options: ["default" => 0])]
