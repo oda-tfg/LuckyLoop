@@ -3,23 +3,21 @@
   <a class="back-button" routerLink="/">
     <span class="back-icon">←</span> Volver al menú
   </a>
-
   <!-- Selector de operación -->
   <div class="operation-selector">
-    <button 
-      [class.active]="operationType === 'deposit'" 
+    <button
+      [class.active]="operationType === 'deposit'"
       (click)="setOperationType('deposit')"
       class="operation-btn">
       Depositar
     </button>
-    <button 
-      [class.active]="operationType === 'withdraw'" 
+    <button
+      [class.active]="operationType === 'withdraw'"
       (click)="setOperationType('withdraw')"
       class="operation-btn">
       Retirar
     </button>
   </div>
-
   <!-- Sección Cantidad -->
   <div class="amount-section">
     <label>{{ operationType === 'deposit' ? 'CANTIDAD A DEPOSITAR (EUR)' : 'CANTIDAD A RETIRAR (EUR)' }}</label>
@@ -33,7 +31,7 @@
       <span class="currency">€</span>
     </div>
   </div>
-  
+ 
   <!-- Tarjeta de Crédito (solo visible en depósito) -->
   <div class="credit-card" *ngIf="operationType === 'deposit'">
     <div class="card-header">
@@ -46,7 +44,7 @@
    
     <!-- Elemento real de Stripe visible -->
     <div id="card-element" class="card-element-container"></div>
-    
+   
     <!-- Mensaje de error de tarjeta -->
     <div *ngIf="cardError" class="card-error">
       {{ cardError }}
@@ -57,20 +55,24 @@
       <div class="glow purple"></div>
     </div>
   </div>
-  
+ 
   <!-- Formulario de retiro (solo visible en retiro) -->
   <div class="withdraw-form" *ngIf="operationType === 'withdraw'">
-    
     <div class="form-group">
-      <label>IBAN</label>
-      <input type="text" [(ngModel)]="withdrawData.iban" placeholder="ES...">
+      <label>NÚMERO DE TARJETA</label>
+      <input 
+        type="text" 
+        [(ngModel)]="withdrawData.cardNumber" 
+        placeholder="Ingresa 16 dígitos"
+        maxlength="16"
+        pattern="[0-9]*"
+        inputmode="numeric">
     </div>
-
     <div *ngIf="withdrawError" class="withdraw-error">
       {{ withdrawError }}
     </div>
   </div>
-  
+ 
   <!-- Botón de acción -->
   <button
     class="action-btn"
@@ -79,7 +81,7 @@
   >
     <span class="btn-glows"></span>
     <span class="btn-text">
-      {{ loading ? 'PROCESANDO...' : 
+      {{ loading ? 'PROCESANDO...' :
          (operationType === 'deposit' ? 'DEPOSITAR ' : 'RETIRAR ') + amount + '€' }}
     </span>
   </button>

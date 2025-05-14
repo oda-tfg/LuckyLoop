@@ -20,7 +20,7 @@ export class DepositComponent implements OnInit {
   withdrawError: string = '';
   
   withdrawData = {
-    iban: ''
+    cardNumber: ''
   };
 
   constructor(private saldoService: SaldoService) {}
@@ -80,9 +80,9 @@ export class DepositComponent implements OnInit {
   }
   
   isWithdrawFormValid(): boolean {
-    return (
-      this.withdrawData.iban.trim().length > 10
-    );
+    // Validar que el número de tarjeta tenga exactamente 16 dígitos y solo contenga números
+    const cardNumberPattern = /^\d{16}$/;
+    return cardNumberPattern.test(this.withdrawData.cardNumber);
   }
 
   async handleAction() {
@@ -142,7 +142,7 @@ export class DepositComponent implements OnInit {
   
   async handleWithdraw() {
     if (!this.isWithdrawFormValid()) {
-      this.withdrawError = 'Por favor, completa todos los campos correctamente';
+      this.withdrawError = 'Por favor, introduce un número de tarjeta válido de 16 dígitos';
       return;
     }
   
@@ -159,7 +159,7 @@ export class DepositComponent implements OnInit {
           this.loading = false;
   
           this.withdrawData = {
-            iban: ''
+            cardNumber: ''
           };
           this.amount = 0;
         },
@@ -172,7 +172,6 @@ export class DepositComponent implements OnInit {
       this.loading = false;
     }
   }
-  
   
   // Generar referencia única para el retiro
   generateReference(): string {
