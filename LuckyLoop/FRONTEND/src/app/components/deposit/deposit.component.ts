@@ -102,7 +102,7 @@ export class DepositComponent implements OnInit {
     this.loading = true;
     try {
       // 1. Crear Payment Intent
-      const paymentIntentResponse = await fetch('https://localhost:8000/create-payment-intent', {
+      const paymentIntentResponse = await fetch('http://localhost:8000/create-payment-intent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
