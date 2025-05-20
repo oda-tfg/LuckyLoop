@@ -5,6 +5,9 @@
       <button class="tab" [class.active]="mode === 'Automático'" (click)="setMode('Automático')">Automático</button>
       <div class="user-indicator">
         <span>↑ Tú</span>
+        <a class="back-button" routerLink="/">
+          <span class="back-icon">←</span> Volver al menú
+        </a>
       </div>
     </div>
   </div>

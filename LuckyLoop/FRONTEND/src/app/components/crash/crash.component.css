@@ -29,6 +29,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  width: 100%;
 }
 
 .tab {
@@ -54,6 +55,9 @@
   font-size: 14px;
   color: #00ff94;
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 800px; /* para separar "tú" del botón */
 }
 
 /* MAIN CONTENT */
@@ -511,6 +515,28 @@
 ::-webkit-scrollbar-thumb {
   background: #00ff94;
   border-radius: 10px;
+}
+
+/*volver atras*/
+.back-button {
+  display: flex;
+  align-items: center;
+  color: var(--text-light);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--neon-blue);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background: rgba(0, 81, 255, 0.1);
+  color: var(--text-white);
+}
+
+.back-icon {
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
 }
 
 /* Responsive */
