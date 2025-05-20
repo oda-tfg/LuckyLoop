@@ -12,6 +12,7 @@ import { BlackjackComponent } from './components/blackjack/blackjack.component';
 import { EstadisticasComponent } from './components/estadisticas/estadisticas.component';
 import { CambiarNombreComponent } from './components/cambiar-nombre/cambiar-nombre.component';
 import { RuletaComponent } from './components/ruleta/ruleta.component';
+import { CrashComponent } from './components/crash/crash.component';
 
 
 // app-routing.module.ts
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'plinko', component: PlinkoComponent},
   { path: 'blackjack', component:BlackjackComponent},
   { path: 'ruleta', component:RuletaComponent},
+  { path: 'crash', component:CrashComponent },
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },
   { path: 'recuperar-password', component: RecuperarPasswordComponent },

@@ -1,0 +1,160 @@
+<div class="crash-container">
+  <div class="crash-header">
+    <div class="tabs">
+      <button class="tab" [class.active]="mode === 'Manual'" (click)="setMode('Manual')">Manual</button>
+      <button class="tab" [class.active]="mode === 'Automático'" (click)="setMode('Automático')">Automático</button>
+      <div class="user-indicator">
+        <span>↑ Tú</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-content">
+    <div class="betting-panel">
+      <div class="bet-row">
+        <div class="bet-label">Monto de Apuesta</div>
+        <div class="bet-value">{{betAmount === 0 ? '0,00' : formatNumber(betAmount)}} €</div>
+      </div>
+      
+      <div class="bet-input-row">
+        <input 
+          type="text" 
+          class="bet-input" 
+          [(ngModel)]="betAmount" 
+          [disabled]="isPlaying" 
+          placeholder="0.00000000"
+        >
+        <div class="bet-controls">
+          <button class="bet-control-btn" (click)="halfBet()" [disabled]="isPlaying">½</button>
+          <button class="bet-control-btn" (click)="doubleBet()" [disabled]="isPlaying">2×</button>
+        </div>
+      </div>
+      
+      <div class="bet-row" *ngIf="mode === 'Automático'">
+        <div class="bet-label">Retirarse a los</div>
+        <div class="cashout-inputs">
+          <input 
+            type="number" 
+            class="cashout-input" 
+            [(ngModel)]="cashoutAt" 
+            [disabled]="isPlaying" 
+            min="1.01" 
+            step="0.01"
+          >
+          <div class="cashout-controls">
+            <button class="cashout-control-btn" (click)="updateCashoutAt(cashoutAt - 0.01)" [disabled]="isPlaying || cashoutAt <= 1.01">▼</button>
+            <button class="cashout-control-btn" (click)="updateCashoutAt(cashoutAt + 0.01)" [disabled]="isPlaying">▲</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bet-row">
+        <div class="bet-label">Recibe al Ganar</div>
+        <div class="bet-value">{{formatNumber(potentialWin)}} €</div>
+      </div>
+      
+      <div class="bet-input-row" style="margin-top: 0;">
+        <input 
+          type="text" 
+          class="bet-input" 
+          [value]="potentialWin === 0 ? '0.00000000' : formatNumber(potentialWin)" 
+          disabled
+        >
+      </div>
+      
+      <!-- Contenedor para ambos botones -->
+      <div class="bet-buttons-container">
+        <!-- Botón de Apuesta - visible cuando no estamos jugando -->
+        <button 
+          class="bet-button bet-place" 
+          *ngIf="!isPlaying"
+          [disabled]="betAmount <= 0 || playerBalance < betAmount" 
+          (click)="placeBet()"
+        >
+          Apuesta
+        </button>
+
+        <!-- Botón de Vender - visible durante el juego -->
+        <button 
+          class="bet-button bet-cashout" 
+          *ngIf="isPlaying && !hasCrashed"
+          (click)="cashout()"
+        >
+          Vender x{{formatNumber(multiplier)}}
+        </button>
+      </div>
+      
+      <!-- Mensaje de victoria -->
+      <div class="win-message" *ngIf="hasWon">
+        ¡Has ganado {{formatNumber(lastWinAmount)}} €!
+      </div>
+      
+      <div class="balance-info">
+        <div class="balance-label">Balance:</div>
+        <div class="balance-amount">{{formatNumber(playerBalance)}} €</div>
+      </div>
+    </div>
+    
+    <div class="chart-container">
+      <div class="multiplier-display" [class.crashed]="hasCrashed">
+        <span>{{formatNumber(multiplier)}}×</span>
+      </div>
+      
+      <div class="chart">
+        <!-- Ejes Y -->
+        <div class="y-axis">
+          <div class="y-tick" *ngFor="let mult of multiplierPoints">
+            <div class="y-tick-line"></div>
+            <span class="y-tick-label">{{mult}}×</span>
+          </div>
+        </div>
+        
+        <!-- Gráfico SVG -->
+        <div class="chart-svg-container">
+          <svg [attr.width]="svgWidth" [attr.height]="svgHeight" preserveAspectRatio="none" #chartCanvas>
+            <!-- Área del gráfico -->
+            <path [attr.d]="getAreaPathData()" class="chart-area" [attr.fill]="chartColor" opacity="0.8" />
+            
+            <!-- Línea del gráfico -->
+            <path [attr.d]="getPathData()" class="chart-line" [attr.stroke]="lineColor" stroke-width="2" fill="none" />
+            
+            <!-- Punto final -->
+            <circle 
+              *ngIf="chartPoints.length > 0" 
+              [attr.cx]="padding.left + (chartPoints[chartPoints.length-1].x / maxTime) * (svgWidth - padding.left - padding.right)" 
+              [attr.cy]="svgHeight - padding.bottom - ((chartPoints[chartPoints.length-1].y / 30) * (svgHeight - padding.top - padding.bottom))" 
+              r="5" 
+              fill="white"
+            />
+          </svg>
+        </div>
+        
+        <!-- Ejes X -->
+        <div class="x-axis">
+          <div class="x-tick" *ngFor="let time of timePoints" [style.left]="(time / maxTime * 100) + '%'">
+            <span class="x-tick-label">{{time}}s</span>
+          </div>
+          <div class="x-tick total-tick">
+            <span class="x-tick-label">Total {{maxTime}}s</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="crash-status" *ngIf="hasCrashed">
+        <div class="crash-text">¡CRASH a {{formatNumber(crashMultiplier)}}×!</div>
+      </div>
+      
+      <div class="players-list">
+        <div class="player" *ngFor="let player of otherPlayers">
+          <span class="player-icon">🎮</span>
+          <span class="player-name">{{player.name}}</span>
+          <span class="player-amount" [class.positive]="player.amount > 0">{{player.amount > 0 ? '€' + formatNumber(player.amount) : formatNumber(player.amount)}}</span>
+        </div>
+      </div>
+      
+      <div class="network-status">
+        Network Status <span class="status-indicator"></span>
+      </div>
+    </div>
+  </div>
+</div>

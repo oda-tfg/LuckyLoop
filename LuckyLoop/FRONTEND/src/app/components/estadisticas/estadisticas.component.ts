@@ -107,4 +107,6 @@ export class EstadisticasComponent implements OnInit {
     if (this.estadisticas.total_partidas === 0) return 0;
     return (this.estadisticas.partidas_perdidas / this.estadisticas.total_partidas) * 100;
   }
+
+  
 }
