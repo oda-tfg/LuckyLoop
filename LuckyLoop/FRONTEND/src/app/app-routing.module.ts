@@ -13,6 +13,8 @@ import { EstadisticasComponent } from './components/estadisticas/estadisticas.co
 import { CambiarNombreComponent } from './components/cambiar-nombre/cambiar-nombre.component';
 import { RuletaComponent } from './components/ruleta/ruleta.component';
 import { CrashComponent } from './components/crash/crash.component';
+import { MinasComponent } from './components/minas/minas.component';
+import { RankingComponent } from './ranking/ranking.component';
 
 
 // app-routing.module.ts
@@ -24,6 +26,7 @@ const routes: Routes = [
   { path: 'blackjack', component:BlackjackComponent},
   { path: 'ruleta', component:RuletaComponent},
   { path: 'crash', component:CrashComponent },
+  { path: 'minas', component:MinasComponent },
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },
   { path: 'recuperar-password', component: RecuperarPasswordComponent },
@@ -31,7 +34,7 @@ const routes: Routes = [
   { path: 'estadisticas', component: EstadisticasComponent },
   { path: 'cambiar-nombre', component: CambiarNombreComponent },
   { path: 'categoria/:categoria', component: MainComponent }, 
-  //{ path: 'tournaments', component: TournamentComponent },
+  { path: 'ranking', component: RankingComponent },
   { path: '**', redirectTo: 'home' },
 ];
 

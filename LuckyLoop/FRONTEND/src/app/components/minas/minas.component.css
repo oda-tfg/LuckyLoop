@@ -1,0 +1,419 @@
+:root {
+  --text-white: #ffffff;
+  --text-light: rgba(255, 255, 255, 0.85);
+  --text-lighter: rgba(255, 255, 255, 0.65);
+  
+  --neon-blue: #0051ff;
+  --neon-blue-glow: 0 0 1px #0051ff;
+  --neon-purple: #5100ff;
+  --neon-purple-glow: 0 0 1px #5100ff;
+  --neon-green: #23ff00;
+  --neon-green-glow: 0 0 1px #23ff00;
+}
+
+.minas-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 50%, #16213e 100%);
+  color: var(--text-white);
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.game-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 20px;
+}
+
+.balance-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.balance-label {
+  font-size: 14px;
+  color: var(--text-lighter);
+}
+
+.balance-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--neon-blue);
+  text-shadow: var(--neon-blue-glow);
+}
+
+.bet-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+}
+
+.bet-input {
+  width: 100px;
+  height: 40px;
+  text-align: center;
+  border: 2px solid var(--neon-blue);
+  border-radius: 4px;
+  background-color: rgba(0, 81, 255, 0.1);
+  color: var(--text-white);
+  font-size: 18px;
+  margin: 0 5px;
+  box-shadow: var(--neon-blue-glow);
+}
+
+.bet-input:focus {
+  outline: none;
+  box-shadow: var(--neon-blue-glow);
+}
+
+.action-btn {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--neon-purple);
+  border-radius: 4px;
+  background-color: rgba(81, 0, 255, 0.2);
+  color: var(--text-white);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: var(--neon-purple-glow);
+}
+
+.action-btn:hover {
+  background-color: rgba(81, 0, 255, 0.4);
+  box-shadow: var(--neon-purple-glow);
+}
+
+.half-btn {
+  background-color: rgba(81, 0, 255, 0.3);
+  border-color: var(--neon-purple);
+}
+
+.double-btn {
+  background-color: rgba(81, 0, 255, 0.3);
+  border-color: var(--neon-purple);
+}
+
+.multiplier-info {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.current-multiplier, .potential-win {
+  font-size: 18px;
+  color: var(--text-light);
+}
+
+.current-multiplier strong, .potential-win strong {
+  color: var(--neon-green);
+  text-shadow: var(--neon-green-glow);
+}
+
+.grid-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 20px 0;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  gap: 8px;
+  width: 100%;
+  aspect-ratio: 1/1;
+}
+
+.grid-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+}
+
+.grid-cell {
+  position: relative;
+  background-color: rgba(0, 81, 255, 0.1);
+  border: 2px solid rgba(0, 81, 255, 0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1/1;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 1px rgba(0, 81, 255, 0.2);
+}
+
+.grid-cell:not(.revealed):hover, .grid-cell.hovered {
+  background-color: rgba(0, 81, 255, 0.2);
+  border-color: var(--neon-blue);
+  transform: scale(1.05);
+  box-shadow: var(--neon-blue-glow);
+}
+
+.grid-cell.revealed {
+  cursor: default;
+}
+
+.grid-cell.safe {
+  background-color: rgba(35, 255, 0, 0.3);
+  border-color: var(--neon-green);
+  box-shadow: var(--neon-green-glow);
+}
+
+.grid-cell.mine {
+  background-color: rgba(81, 0, 255, 0.5);
+  border-color: var(--neon-purple);
+  box-shadow: var(--neon-purple-glow);
+}
+
+.grid-cell.explosion {
+  animation: explosion 0.5s ease-out;
+}
+
+@keyframes explosion {
+  0% {
+    transform: scale(1);
+    background-color: rgba(81, 0, 255, 0.5);
+    box-shadow: var(--neon-purple-glow);
+  }
+  50% {
+    transform: scale(1.2);
+    background-color: rgba(81, 0, 255, 0.8);
+    box-shadow: var(--neon-purple-glow);
+  }
+  100% {
+    transform: scale(1);
+    background-color: rgba(81, 0, 255, 0.5);
+    box-shadow: var(--neon-purple-glow);
+  }
+}
+
+.cell-content {
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.mine-icon, .gem-icon {
+  font-size: 24px;
+}
+
+.mine-icon {
+  color: var(--neon-purple);
+  text-shadow: var(--neon-purple-glow);
+}
+
+.gem-icon {
+  color: var(--neon-green);
+  text-shadow: var(--neon-green-glow);
+}
+
+.result-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 24px;
+  font-weight: bold;
+  z-index: 10;
+  animation: fadeIn 0.3s ease-out;
+  text-align: center;
+}
+
+.result-indicator.win {
+  background-color: rgba(35, 255, 0, 0.9);
+  color: var(--text-white);
+  border: 2px solid var(--neon-green);
+  box-shadow: var(--neon-green-glow);
+}
+
+.result-indicator.lose {
+  background-color: rgba(81, 0, 255, 0.9);
+  color: var(--text-white);
+  border: 2px solid var(--neon-purple);
+  box-shadow: var(--neon-purple-glow);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.game-controls {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  width: 100%;
+  max-width: 500px;
+}
+
+.control-btn {
+  padding: 12px 24px;
+  border: 2px solid;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 150px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.start-btn {
+  background-color: rgba(0, 81, 255, 0.3);
+  color: var(--text-white);
+  border-color: var(--neon-blue);
+  box-shadow: var(--neon-blue-glow);
+}
+
+.start-btn:hover:not(:disabled) {
+  background-color: rgba(0, 81, 255, 0.5);
+  box-shadow: var(--neon-blue-glow);
+}
+
+.start-btn:disabled {
+  background-color: #333;
+  border-color: #666;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.cashout-btn {
+  background-color: rgba(35, 255, 0, 0.3);
+  color: var(--text-white);
+  border-color: var(--neon-green);
+  box-shadow: var(--neon-green-glow);
+}
+
+.cashout-btn:hover:not(:disabled) {
+  background-color: rgba(35, 255, 0, 0.5);
+  box-shadow: var(--neon-green-glow);
+}
+
+.restart-btn {
+  background-color: rgba(81, 0, 255, 0.3);
+  color: var(--text-white);
+  border-color: var(--neon-purple);
+  box-shadow: var(--neon-purple-glow);
+}
+
+.restart-btn:hover:not(:disabled) {
+  background-color: rgba(81, 0, 255, 0.5);
+  box-shadow: var(--neon-purple-glow);
+}
+
+.control-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.control-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.multiplier-table {
+  margin-top: 30px;
+  width: 100%;
+  max-width: 500px;
+  background-color: rgba(0, 81, 255, 0.05);
+  border: 2px solid rgba(0, 81, 255, 0.3);
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 0 2px rgba(0, 81, 255, 0.2);
+}
+
+.multiplier-table h3 {
+  text-align: center;
+  margin-top: 0;
+  color: var(--neon-blue);
+  text-shadow: var(--neon-blue-glow);
+}
+
+.multiplier-rows {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.multiplier-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+  background-color: rgba(0, 81, 255, 0.1);
+  border: 1px solid rgba(0, 81, 255, 0.2);
+  border-radius: 4px;
+}
+
+.mult-value {
+  font-weight: bold;
+  color: var(--neon-green);
+  text-shadow: var(--neon-green-glow);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .multiplier-rows {
+    grid-template-columns: 1fr;
+  }
+  
+  .game-info {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .balance-info, .bet-controls {
+    margin-bottom: 15px;
+    align-items: center;
+  }
+}
+
+.back-button {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  color: var(--text-light);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--neon-blue);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background: rgba(0, 81, 255, 0.1);
+  color: var(--text-white);
+}
+
+.back-icon {
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+}

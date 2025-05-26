@@ -1,17 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PlinkoComponent } from './plinko.component';
 
-describe('PlinkoGameComponent', () => {
-  let component: PlinkoComponent;
-  let fixture: ComponentFixture<PlinkoComponent>;
+import { RankingComponent } from './ranking.component';
+
+describe('RankingComponent', () => {
+  let component: RankingComponent;
+  let fixture: ComponentFixture<RankingComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PlinkoComponent]
+      declarations: [RankingComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PlinkoComponent);
+    fixture = TestBed.createComponent(RankingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

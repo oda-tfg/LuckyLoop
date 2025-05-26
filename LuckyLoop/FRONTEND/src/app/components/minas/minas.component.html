@@ -1,0 +1,87 @@
+<div class="minas-container">
+  <div class="game-info">
+    <a class="back-button" routerLink="/">
+      <span class="back-icon">←</span> Volver al menú
+    </a>
+    <div class="balance-info">
+      <span class="balance-label">Saldo:</span>
+      <span class="balance-value">{{balance.toFixed(2)}}</span>
+    </div>
+    <div class="bet-controls">
+      <div class="input-group">
+        <button class="action-btn half-btn" (click)="halfBet()">1/2</button>
+        <input type="number" step="0.01" min="0" [max]="balance" 
+               [(ngModel)]="betAmount" class="bet-input" placeholder="Apuesta">
+        <button class="action-btn double-btn" (click)="doubleBet()">2x</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="multiplier-info">
+    <div class="current-multiplier">
+      <span>Multiplicador: <strong>{{currentMultiplier.toFixed(2)}}x</strong></span>
+    </div>
+    <div class="potential-win" *ngIf="gameActive">
+      <span>Ganancia potencial: <strong>{{potentialWin.toFixed(2)}}</strong></span>
+    </div>
+  </div>
+
+  <div class="grid-container">
+    <!-- Indicador de resultado (victoria/derrota) -->
+    <div class="result-indicator {{resultClass}}" *ngIf="showResultIndicator">
+      <span>{{resultMessage}}</span>
+    </div>
+
+    <!-- Cuadrícula del juego -->
+    <div class="game-grid">
+      <div class="grid-row" *ngFor="let row of grid; let i = index">
+        <div class="grid-cell" 
+             *ngFor="let cell of row; let j = index"
+             [class.revealed]="cell.isRevealed" 
+             [class.mine]="cell.isRevealed && cell.hasMine"
+             [class.safe]="cell.isRevealed && !cell.hasMine"
+             [class.hovered]="cell.isHovered && !cell.isRevealed && !gameOver"
+             [class.explosion]="explosionCell && explosionCell.row === i && explosionCell.col === j"
+             (click)="onCellClick(i, j)"
+             (mouseover)="onCellHover(i, j, true)"
+             (mouseout)="onCellHover(i, j, false)">
+          <div class="cell-content">
+            <span *ngIf="cell.isRevealed && cell.hasMine" class="mine-icon">💣</span>
+            <span *ngIf="cell.isRevealed && !cell.hasMine" class="gem-icon">💎</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="game-controls">
+    <button class="control-btn start-btn" 
+            *ngIf="!gameActive && !gameOver" 
+            [disabled]="betAmount <= 0 || betAmount > balance"
+            (click)="onCellClick(0, 0)">
+      Iniciar Juego
+    </button>
+    
+    <button class="control-btn cashout-btn" 
+            *ngIf="gameActive && !gameOver && revealedCells > 0" 
+            (click)="cashOut()">
+      Cobrar ({{(betAmount * currentMultiplier).toFixed(2)}})
+    </button>
+    
+    <button class="control-btn restart-btn" 
+            *ngIf="gameOver" 
+            (click)="restartGame()">
+      Jugar de nuevo
+    </button>
+  </div>
+
+  <!-- <div class="multiplier-table">
+    <h3>Tabla de Multiplicadores</h3>
+    <div class="multiplier-rows">
+      <div class="multiplier-row" *ngFor="let entry of multipliers | keyvalue">
+        <span class="cells-count">{{entry.key}} casillas:</span>
+        <span class="mult-value">x{{entry.value.toFixed(2)}}</span>
+      </div>
+    </div>
+  </div> -->
+</div>

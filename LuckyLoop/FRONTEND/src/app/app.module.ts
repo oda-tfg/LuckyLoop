@@ -24,6 +24,8 @@ import { EstadisticasComponent } from './components/estadisticas/estadisticas.co
 import { CambiarNombreComponent } from './components/cambiar-nombre/cambiar-nombre.component';
 
 import { AuthService } from './services/auth/auth.service';
+import { MinasComponent } from './components/minas/minas.component';
+import { RankingComponent } from './ranking/ranking.component';
 
 
 @NgModule({
@@ -44,7 +46,9 @@ import { AuthService } from './services/auth/auth.service';
     EstadisticasComponent,
     CambiarNombreComponent,
     RuletaComponent,
-    CrashComponent 
+    CrashComponent,
+    MinasComponent,
+    RankingComponent 
    ],
   imports: [
     BrowserModule,

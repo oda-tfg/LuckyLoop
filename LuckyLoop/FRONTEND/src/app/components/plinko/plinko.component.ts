@@ -124,7 +124,7 @@ export class PlinkoComponent implements AfterViewInit, OnInit {
     const verticalSpacing = (this.canvasHeight * 0.7) / (this.rows + 1);
     
     // Crear patrón triangular de pines
-    for (let row = 0; row < this.rows; row++) {
+    for (let row = 2; row < this.rows; row++) {
       const pinCount = row + 1;
       const rowWidth = pinCount * horizontalSpacing;
       const startX = (this.canvasWidth - rowWidth) / 2 + horizontalSpacing / 2;
