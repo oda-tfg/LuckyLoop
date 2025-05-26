@@ -1,4 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { take } from 'rxjs/operators';
+import { SaldoService } from '../../services/saldo/saldo.service';
+import { PartidaService } from '../../services/partida/partida.service';
 
 interface Player {
   name: string;
@@ -18,7 +21,7 @@ export class CrashComponent implements OnInit, OnDestroy {
   mode: string = 'Manual';
   betAmount: number = 0;
   cashoutAt: number = 2.00;
-  playerBalance: number = 1000.00;
+  playerBalance: number = 0; // Ahora se carga desde el servicio
   potentialWin: number = 0;
   
   // Estado del juego
@@ -52,9 +55,16 @@ export class CrashComponent implements OnInit, OnDestroy {
   // Intervalo para actualizar la animación
   private gameInterval: any;
   
-  constructor() { }
+  // ID del juego de crash (ajusta según tu base de datos)
+  private crashJuegoId: number = 2; // Asumiendo que crash tiene ID 2
+
+  constructor(
+    private saldoService: SaldoService,
+    private partidaService: PartidaService
+  ) { }
 
   ngOnInit(): void {
+    this.loadUserBalance();
     this.resetGame();
     this.calculatePotentialWin();
   }
@@ -64,6 +74,22 @@ export class CrashComponent implements OnInit, OnDestroy {
       clearInterval(this.gameInterval);
     }
   }
+
+  // Cargar el saldo del usuario desde el servicio
+  loadUserBalance(): void {
+    // Obtener el saldo actual del usuario
+    this.saldoService.getSaldo().pipe(take(1)).subscribe({
+      next: (response) => {
+        this.playerBalance = response.saldo || 0;
+      },
+      error: (error) => {
+        console.error('Error al cargar saldo:', error);
+        // En caso de error, mantener saldo en 0 y mostrar mensaje
+        this.playerBalance = 0;
+        alert('Error al cargar el saldo. Por favor, recarga la página.');
+      }
+    });
+  }
   
   // Métodos para controles de apuesta
   setMode(mode: string): void {
@@ -71,7 +97,7 @@ export class CrashComponent implements OnInit, OnDestroy {
   }
   
   halfBet(): void {
-    this.betAmount = this.betAmount / 2;
+    this.betAmount = Math.floor(this.betAmount / 2);
     this.calculatePotentialWin();
   }
   
@@ -96,16 +122,33 @@ export class CrashComponent implements OnInit, OnDestroy {
   
   // Métodos para el juego
   placeBet(): void {
-    if (this.betAmount <= 0 || this.betAmount > this.playerBalance) {
+    if (this.betAmount <= 0 || this.betAmount > this.playerBalance || this.isPlaying) {
       return;
     }
     
-    this.playerBalance -= this.betAmount;
-    this.isPlaying = true;
-    this.hasCrashed = false;
-    this.hasWon = false;
-    this.multiplier = 1.00;
-    this.startGame();
+    // Actualizar el saldo restando la apuesta
+    this.saldoService.setSaldo(-this.betAmount).pipe(take(1)).subscribe({
+      next: (response) => {
+        // Actualizar el saldo local con la respuesta del servidor
+        this.playerBalance = response.nuevoSaldo;
+        
+        // Iniciar el juego
+        this.isPlaying = true;
+        this.hasCrashed = false;
+        this.hasWon = false;
+        this.multiplier = 1.00;
+        this.startGame();
+      },
+      error: (error) => {
+        // Mostrar mensaje si hay error
+        console.error('Error al actualizar saldo:', error);
+        if (error.error && error.error.message) {
+          alert(error.error.message);
+        } else {
+          alert('No se pudo realizar la apuesta. Saldo insuficiente o error de conexión.');
+        }
+      }
+    });
   }
   
   cashout(): void {
@@ -116,7 +159,23 @@ export class CrashComponent implements OnInit, OnDestroy {
     this.isPlaying = false;
     this.hasWon = true;
     this.lastWinAmount = this.betAmount * this.multiplier;
-    this.playerBalance += this.lastWinAmount;
+    
+    // Calcular ganancia neta
+    const beneficioNeto = this.lastWinAmount - this.betAmount;
+    
+    // Actualizar saldo con las ganancias
+    this.saldoService.setSaldo(this.lastWinAmount).pipe(take(1)).subscribe({
+      next: (response) => {
+        this.playerBalance = response.nuevoSaldo;
+        
+        // Registrar la partida como victoria
+        this.registrarPartida('victoria', beneficioNeto);
+      },
+      error: (error) => {
+        console.error('Error al actualizar ganancias:', error);
+        alert('Error al procesar ganancias: ' + (error.error?.message || 'Error desconocido'));
+      }
+    });
     
     if (this.gameInterval) {
       clearInterval(this.gameInterval);
@@ -164,8 +223,31 @@ export class CrashComponent implements OnInit, OnDestroy {
     this.isPlaying = false;
     this.crashMultiplier = crashAt;
     
+    // Si el juego terminó en crash y el jugador no hizo cashout, es una derrota
+    if (!this.hasWon) {
+      // Registrar la partida como derrota
+      this.registrarPartida('derrota', -this.betAmount);
+    }
+    
     // Simular otros jugadores haciendo cashout
     this.simulateOtherPlayers();
+  }
+
+  // Registrar partida en la base de datos
+  registrarPartida(resultado: string, beneficio: number): void {
+    this.partidaService.finPartida(
+      this.crashJuegoId,
+      beneficio,
+      this.betAmount,
+      resultado
+    ).pipe(take(1)).subscribe({
+      next: (response) => {
+        console.log('Partida de Crash registrada correctamente:', response);
+      },
+      error: (error) => {
+        console.error('Error al registrar la partida de Crash:', error);
+      }
+    });
   }
   
   resetGame(): void {
@@ -173,6 +255,7 @@ export class CrashComponent implements OnInit, OnDestroy {
     this.multiplier = 1.00;
     this.hasCrashed = false;
     this.hasWon = false;
+    this.lastWinAmount = 0;
   }
   
   // Métodos de utilidad para formateo
@@ -183,7 +266,15 @@ export class CrashComponent implements OnInit, OnDestroy {
   // Métodos para generar datos aleatorios
   generateCrashTime(): number {
     // Simulación de un tiempo aleatorio para el crash
-    return 1 + Math.random() * 15; // Entre 1 y 16 segundos
+    // Usamos una distribución que favorece crashes más tempranos
+    const random = Math.random();
+    if (random < 0.3) {
+      return 1 + Math.random() * 2; // 30% de crashes entre 1-3 segundos
+    } else if (random < 0.6) {
+      return 3 + Math.random() * 5; // 30% de crashes entre 3-8 segundos
+    } else {
+      return 8 + Math.random() * 12; // 40% de crashes entre 8-20 segundos
+    }
   }
   
   simulateOtherPlayers(): void {
@@ -235,12 +326,4 @@ export class CrashComponent implements OnInit, OnDestroy {
     
     return `${pathData} L ${lastX},${this.svgHeight - this.padding.bottom} L ${this.padding.left},${this.svgHeight - this.padding.bottom} Z`;
   }
-
-  /* datos del juego en la BD */
-  
-
-
-
-
-
 }
