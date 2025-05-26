@@ -18,10 +18,13 @@ import { CambiarPasswordComponent } from './components/cambiar-password/cambiar-
 import { PlinkoComponent } from './components/plinko/plinko.component';
 import { BlackjackComponent } from './components/blackjack/blackjack.component';
 import { RuletaComponent } from './components/ruleta/ruleta.component';
+import { CrashComponent } from './components/crash/crash.component';
+
 import { EstadisticasComponent } from './components/estadisticas/estadisticas.component';
 import { CambiarNombreComponent } from './components/cambiar-nombre/cambiar-nombre.component';
 
 import { AuthService } from './services/auth/auth.service';
+import { MinasComponent } from './components/minas/minas.component';
 
 
 @NgModule({
@@ -41,7 +44,9 @@ import { AuthService } from './services/auth/auth.service';
     BlackjackComponent,
     EstadisticasComponent,
     CambiarNombreComponent,
-    RuletaComponent 
+    RuletaComponent,
+    CrashComponent,
+    MinasComponent 
    ],
   imports: [
     BrowserModule,

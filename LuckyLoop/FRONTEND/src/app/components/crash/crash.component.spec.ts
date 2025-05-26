@@ -1,17 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PlinkoComponent } from './plinko.component';
 
-describe('PlinkoGameComponent', () => {
-  let component: PlinkoComponent;
-  let fixture: ComponentFixture<PlinkoComponent>;
+import { CrashComponent } from './crash.component';
+
+describe('CrashComponent', () => {
+  let component: CrashComponent;
+  let fixture: ComponentFixture<CrashComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PlinkoComponent]
+      declarations: [CrashComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PlinkoComponent);
+    fixture = TestBed.createComponent(CrashComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,34 +1,32 @@
 :root {
-
     --bg-dark: #0a0a12;
     --bg-darker: #050508;
     --bg-lighter: #12121f;
   
-
     --text-white: #ffffff;
     --text-light: rgba(255, 255, 255, 0.85);
     --text-lighter: rgba(255, 255, 255, 0.65);
   
-
+    /* Efectos neon más sutiles (reducidos a un solo nivel de sombra) */
     --neon-blue: #0051ff;
-    --neon-blue-glow: 0 0 10px #0051ff, 0 0 20px #0051ff, 0 0 30px #0051ff;
+    --neon-blue-glow: 0 0 5px #0051ff;
     --neon-purple: #5100ff;
-    --neon-purple-glow: 0 0 10px #5100ff, 0 0 20px #5100ff, 0 0 30px #5100ff;
+    --neon-purple-glow: 0 0 5px #5100ff;
     --neon-green: #23ff00;
-    --neon-green-glow: 0 0 10px #23ff00, 0 0 20px #23ff00, 0 0 30px #23ff00;
+    --neon-green-glow: 0 0 5px #23ff00;
     --neon-pink: #ff00e6;
-    --neon-pink-glow: 0 0 10px #ff00e6, 0 0 20px #ff00e6, 0 0 30px #ff00e6;
+    --neon-pink-glow: 0 0 5px #ff00e6;
     --neon-red: #ff0051;
-    --neon-red-glow: 0 0 10px #ff0051, 0 0 20px #ff0051, 0 0 30px #ff0051;
+    --neon-red-glow: 0 0 5px #ff0051;
     --neon-yellow: #ffee00;
-    --neon-yellow-glow: 0 0 10px #ffee00, 0 0 20px #ffee00, 0 0 30px #ffee00;
+    --neon-yellow-glow: 0 0 5px #ffee00;
   
-
+    /* Gradientes (sin cambios) */
     --gradient-neon-blue-purple: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
     --gradient-neon-green-blue: linear-gradient(90deg, var(--neon-green), var(--neon-blue));
     --gradient-neon-pink-purple: linear-gradient(90deg, var(--neon-pink), var(--neon-purple));
   
-
+    /* Espaciado (sin cambios) */
     --spacing-xs: 5px;
     --spacing-sm: 10px;
     --spacing-md: 15px;
@@ -36,17 +34,17 @@
     --spacing-xl: 30px;
     --spacing-xxl: 40px;
   
-
+    /* Bordes (sin cambios) */
     --border-radius-sm: 4px;
     --border-radius-md: 8px;
     --border-radius-lg: 12px;
     --border-radius-xl: 20px;
   
-
-    --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    --box-shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.7);
+    /* Sombras generales más sutiles */
+    --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    --box-shadow-lg: 0 5px 15px rgba(0, 0, 0, 0.4);
   
-
+    /* Tipografía (sin cambios) */
     --font-size-xs: 12px;
     --font-size-sm: 14px;
     --font-size-md: 16px;
@@ -55,8 +53,8 @@
     --font-size-xxl: 24px;
     --font-size-display: 42px;
   
- 
+    /* Z-index (sin cambios) */
     --z-index-header: 1000;
     --z-index-nav: 900;
     --z-index-modal: 1100;
-  }
+}
