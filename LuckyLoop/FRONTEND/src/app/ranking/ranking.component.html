@@ -1,0 +1,102 @@
+<div class="ranking-container">
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Cargando ranking...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error && !loading" class="error">
+    <p>{{ error }}</p>
+    <button (click)="cargarRanking()">Reintentar</button>
+  </div>
+
+  <!-- Contenido principal -->
+  <div *ngIf="!loading && !error" class="ranking-content">
+    <h1 class="titulo">🏆 Ranking de Beneficios</h1>
+
+    <!-- Podio Top 3 -->
+    <div class="podio-container">
+      <div class="podio">
+        <!-- Segundo lugar -->
+        <div class="podio-item segundo" *ngIf="topTres[1]" (click)="seleccionarUsuario(topTres[1])">
+          <div class="medalla plata">🥈</div>
+          <div class="podio-contenido">
+            <h3>{{ topTres[1].usuario }}</h3>
+            <p class="beneficio" [class.negativo]="topTres[1].beneficio < 0">
+              {{ formatearBeneficio(topTres[1].beneficio) }}
+            </p>
+          </div>
+          <div class="podio-base plata-base">
+            <span class="posicion">2</span>
+          </div>
+        </div>
+
+        <!-- Primer lugar -->
+        <div class="podio-item primero" *ngIf="topTres[0]" (click)="seleccionarUsuario(topTres[0])">
+          <div class="medalla oro">🥇</div>
+          <div class="podio-contenido">
+            <h3>{{ topTres[0].usuario }}</h3>
+            <p class="beneficio" [class.negativo]="topTres[0].beneficio < 0">
+              {{ formatearBeneficio(topTres[0].beneficio) }}
+            </p>
+          </div>
+          <div class="podio-base oro-base">
+            <span class="posicion">1</span>
+          </div>
+        </div>
+
+        <!-- Tercer lugar -->
+        <div class="podio-item tercero" *ngIf="topTres[2]" (click)="seleccionarUsuario(topTres[2])">
+          <div class="medalla bronce">🥉</div>
+          <div class="podio-contenido">
+            <h3>{{ topTres[2].usuario }}</h3>
+            <p class="beneficio" [class.negativo]="topTres[2].beneficio < 0">
+              {{ formatearBeneficio(topTres[2].beneficio) }}
+            </p>
+          </div>
+          <div class="podio-base bronce-base">
+            <span class="posicion">3</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resto de usuarios -->
+    <div class="resto-usuarios" *ngIf="restoUsuarios.length > 0">
+      <h2>Otros participantes</h2>
+      <div class="lista-usuarios">
+        <div class="usuario-item" *ngFor="let usuario of restoUsuarios" 
+             (click)="seleccionarUsuario(usuario)">
+          <span class="posicion-numero">{{ getPosicion(usuario) }}</span>
+          <span class="nombre">{{ usuario.usuario }}</span>
+          <span class="beneficio" [class.negativo]="usuario.beneficio < 0">
+            {{ formatearBeneficio(usuario.beneficio) }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de detalle -->
+  <div class="modal-overlay" *ngIf="usuarioSeleccionado" (click)="cerrarDetalle()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="cerrar" (click)="cerrarDetalle()">×</button>
+      <div class="detalle-usuario">
+        <div class="posicion-grande">
+          <span class="numero">{{ getPosicion(usuarioSeleccionado) }}</span>
+          <span class="ordinal">{{ getPosicion(usuarioSeleccionado) === 1 ? 'er' : 'º' }}</span>
+        </div>
+        <h2>{{ usuarioSeleccionado.usuario }}</h2>
+        <div class="beneficio-grande" [class.negativo]="usuarioSeleccionado.beneficio < 0">
+          {{ formatearBeneficio(usuarioSeleccionado.beneficio) }}
+        </div>
+        <div class="medalla-grande" *ngIf="getPosicion(usuarioSeleccionado) <= 3">
+          <span *ngIf="getPosicion(usuarioSeleccionado) === 1">🥇</span>
+          <span *ngIf="getPosicion(usuarioSeleccionado) === 2">🥈</span>
+          <span *ngIf="getPosicion(usuarioSeleccionado) === 3">🥉</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

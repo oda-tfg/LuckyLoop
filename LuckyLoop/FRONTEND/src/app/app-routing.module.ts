@@ -14,6 +14,7 @@ import { CambiarNombreComponent } from './components/cambiar-nombre/cambiar-nomb
 import { RuletaComponent } from './components/ruleta/ruleta.component';
 import { CrashComponent } from './components/crash/crash.component';
 import { MinasComponent } from './components/minas/minas.component';
+import { RankingComponent } from './ranking/ranking.component';
 
 
 // app-routing.module.ts
@@ -33,7 +34,7 @@ const routes: Routes = [
   { path: 'estadisticas', component: EstadisticasComponent },
   { path: 'cambiar-nombre', component: CambiarNombreComponent },
   { path: 'categoria/:categoria', component: MainComponent }, 
-  //{ path: 'tournaments', component: TournamentComponent },
+  { path: 'ranking', component: RankingComponent },
   { path: '**', redirectTo: 'home' },
 ];
 

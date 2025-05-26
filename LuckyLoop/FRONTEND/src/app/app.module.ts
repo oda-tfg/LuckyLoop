@@ -25,6 +25,7 @@ import { CambiarNombreComponent } from './components/cambiar-nombre/cambiar-nomb
 
 import { AuthService } from './services/auth/auth.service';
 import { MinasComponent } from './components/minas/minas.component';
+import { RankingComponent } from './ranking/ranking.component';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { MinasComponent } from './components/minas/minas.component';
     CambiarNombreComponent,
     RuletaComponent,
     CrashComponent,
-    MinasComponent 
+    MinasComponent,
+    RankingComponent 
    ],
   imports: [
     BrowserModule,
