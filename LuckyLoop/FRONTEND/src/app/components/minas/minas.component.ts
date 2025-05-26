@@ -28,7 +28,7 @@ export class MinasComponent implements OnInit, OnDestroy {
   
   // Tabla de multiplicadores según celdas reveladas
   multipliers: {[key: number]: number} = {
-    1: 0.90,
+    1: 0.70,
     2: 1.20,
     3: 1.35,
     4: 1.50,
