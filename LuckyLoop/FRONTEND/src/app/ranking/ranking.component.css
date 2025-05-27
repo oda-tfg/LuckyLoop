@@ -626,3 +626,26 @@
     }
   }
 }
+/*volver atras*/
+.back-button {
+  display: flex;
+  align-items: center;
+  color: var(--text-light);
+  text-decoration: none;
+  width: 10rem;
+  height: 3rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--neon-blue);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background: rgba(0, 81, 255, 0.1);
+  color: var(--text-white);
+}
+
+.back-icon {
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+}
