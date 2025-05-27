@@ -20,4 +20,5 @@ return [
     App\EstadisticasBundle\EstadisticasBundle::class => ['all' => true],
     App\PartidaBundle\PartidaBundle::class => ['all' => true],
     App\RankingBundle\RankingBundle::class => ['all' => true],
+    App\ManagerBundle\ManagerBundle::class => ['all' => true],
 ];
