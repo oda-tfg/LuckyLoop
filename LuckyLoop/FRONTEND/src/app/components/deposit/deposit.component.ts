@@ -102,7 +102,7 @@ export class DepositComponent implements OnInit {
     this.loading = true;
     try {
       // 1. Crear Payment Intent
-      const paymentIntentResponse = await fetch('http://localhost:8000/create-payment-intent', {
+      const paymentIntentResponse = await fetch('https://localhost:8000/create-payment-intent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -127,7 +127,7 @@ export class DepositComponent implements OnInit {
       // 3. Actualizar saldo local
       this.saldoService.setSaldo(this.amount, true, false).subscribe({
         next: (response) => {
-          alert(`✅ Depósito exitoso, Nuevo saldo: €${response.nuevoSaldo}`);
+          alert(`Depósito exitoso, Nuevo saldo: €${response.nuevoSaldo}`);
           this.loading = false;
         },
         error: (err) => {
@@ -135,7 +135,7 @@ export class DepositComponent implements OnInit {
         }
       });
     } catch (error: any) {
-      alert(`❌ Error al depositar`);
+      alert(`Error al depositar`);
       this.loading = false;
     }
   }
@@ -155,7 +155,7 @@ export class DepositComponent implements OnInit {
   
       this.saldoService.setSaldo(this.amount, false, true).subscribe({
         next: (response) => {
-          alert(`✅ Solicitud de retiro procesada\nNuevo saldo: €${response.nuevoSaldo}`);
+          alert(`Solicitud de retiro procesada\nNuevo saldo: €${response.nuevoSaldo}`);
           this.loading = false;
   
           this.withdrawData = {

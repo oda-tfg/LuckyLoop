@@ -11,7 +11,7 @@ export interface Usuario {
   providedIn: 'root'
 })
 export class RankingService {
-  private apiUrl = 'http://localhost:8000/api'; // URL base del API
+  private apiUrl = 'https://localhost:8000/api'; // URL base del API
 
   constructor(private http: HttpClient) { }
 

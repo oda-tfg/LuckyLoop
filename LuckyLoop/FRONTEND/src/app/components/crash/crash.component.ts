@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/co
 import { take } from 'rxjs/operators';
 import { SaldoService } from '../../services/saldo/saldo.service';
 import { PartidaService } from '../../services/partida/partida.service';
+import { JuegosService, Juego } from './../../services/juegos/juegos.service';
+import { ActivatedRoute } from '@angular/router';
 
 interface Player {
   name: string;
@@ -56,23 +58,50 @@ export class CrashComponent implements OnInit, OnDestroy {
   private gameInterval: any;
   
   // ID del juego de crash (ajusta según tu base de datos)
-  private crashJuegoId: number = 2; // Asumiendo que crash tiene ID 2
+  private crashJuegoId: number = 0; // Asumiendo que crash tiene ID 2
 
   constructor(
     private saldoService: SaldoService,
-    private partidaService: PartidaService
+    private partidaService: PartidaService,
+    private juegosService: JuegosService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     this.loadUserBalance();
     this.resetGame();
     this.calculatePotentialWin();
+    this.loadJuegoId();
   }
+
+
+
   
   ngOnDestroy(): void {
     if (this.gameInterval) {
       clearInterval(this.gameInterval);
     }
+  }
+
+
+
+  loadJuegoId(): void {
+    const currentPath = this.route.snapshot.routeConfig?.path || '';
+
+    this.juegosService.getAllJuegos().pipe(take(1)).subscribe({
+      next: (juegos) => {
+        const juego = juegos.find(j => j.url?.replace('/', '') === currentPath);
+        if (juego) {
+          this.crashJuegoId = juego.id;
+          console.log('ID dinámico asignado al juego:', this.crashJuegoId);
+        } else {
+          console.warn('No se encontró el ID del juego para la ruta:', currentPath);
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener la lista de juegos:', error);
+      }
+    });
   }
 
   // Cargar el saldo del usuario desde el servicio
