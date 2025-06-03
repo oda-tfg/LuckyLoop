@@ -24,7 +24,7 @@ export class RuletaComponent implements OnInit {
   numerosTablero: number[] = [];
   fichaSeleccionada: number = 1;
   apuestas: { [key: string]: number } = {};
-  saldo: number = 1000;
+  saldo: number = 0; //cambio de balance inicial al usuario no registrado
 
   // Números de la ruleta en orden (como en una ruleta europea)
   numerosRuleta: number[] = [
