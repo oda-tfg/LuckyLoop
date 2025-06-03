@@ -147,9 +147,8 @@ export class BlackjackComponent implements OnInit {
     this.game.declineInsurance();
   }
 
-  // Method to check if button should be disabled
+  // metodo para verificar si esta block
   isDisabled(button: string): boolean {
-    // During animations, disable all gameplay buttons
     if (this.game.dealingInProgress || this.game.dealerPlayInProgress || this.game.shufflingDeck || this.game.showInsuranceDialog) {
       return true;
     }

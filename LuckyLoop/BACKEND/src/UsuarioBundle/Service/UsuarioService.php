@@ -78,35 +78,35 @@ class UsuarioService {
 
     
     public function cambiarNombre(Request $request): JsonResponse
-{
-    //buscar usuario
-    $usuario = $this->security->getUser();
+    {
+        //buscar usuario
+        $usuario = $this->security->getUser();
 
-    $data = json_decode($request->getContent(), true);
-    $nuevoNombre = $data['nombre'] ?? null;
+        $data = json_decode($request->getContent(), true);
+        $nuevoNombre = $data['nombre'] ?? null;
 
-    if (!$nuevoNombre || trim($nuevoNombre) === '') {
+        if (!$nuevoNombre || trim($nuevoNombre) === '') {
+            return new JsonResponse([
+                'error' => 'El campo de nombre no puede estar vacío. Por favor, ingrese un nombre válido.'
+            ], 400);
+        }
+
+        if ($usuario->getNombre() == $nuevoNombre) {
+            return new JsonResponse([
+                'error' => 'El nombre proporcionado es idéntico al actual. Por favor, elija un nombre diferente.'
+            ], 400);
+        }
+
+        //cambiar nombre
+        $usuario->setNombre($nuevoNombre);
+        $this->entityManager->persist($usuario);
+        $this->entityManager->flush();
+
         return new JsonResponse([
-            'error' => 'El campo de nombre no puede estar vacío. Por favor, ingrese un nombre válido.'
-        ], 400);
+            'mensaje' => '¡Nombre actualizado con éxito! Su nuevo nombre de usuario ha sido guardado.',
+            'nuevoNombre' => $nuevoNombre,
+            'codigo' => 200,
+            'fechaActualizacion' => (new \DateTime())->format('Y-m-d H:i:s')
+        ]);
     }
-
-    if ($usuario->getNombre() == $nuevoNombre) {
-        return new JsonResponse([
-            'error' => 'El nombre proporcionado es idéntico al actual. Por favor, elija un nombre diferente.'
-        ], 400);
-    }
-
-    //cambiar nombre
-    $usuario->setNombre($nuevoNombre);
-    $this->entityManager->persist($usuario);
-    $this->entityManager->flush();
-
-    return new JsonResponse([
-        'mensaje' => '¡Nombre actualizado con éxito! Su nuevo nombre de usuario ha sido guardado.',
-        'nuevoNombre' => $nuevoNombre,
-        'codigo' => 200,
-        'fechaActualizacion' => (new \DateTime())->format('Y-m-d H:i:s')
-    ]);
-}
 }

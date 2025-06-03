@@ -22,7 +22,7 @@ export class MinasComponent implements OnInit, OnDestroy {
   gameWon = false;
   
   // Configuración de apuestas
-  balance: number = 1000.00; // Saldo inicial
+  balance: number = 0; // Saldo inicial del uusario NO registrado
   betAmount: number = 0.00; // Cantidad apostada
   currentMultiplier: number = 1.00; // Multiplicador actual
   

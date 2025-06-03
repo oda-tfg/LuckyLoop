@@ -17,7 +17,7 @@ export class BlackjackService {
   dealerScore: number = 0;
   currentBet: number = 0;
   playerBets: number[] = [0]; // Bets for each hand
-  playerBalance: number = 1000;
+  playerBalance: number = 0; //cambio de balance del usuario para que empiece n 0e
   gameInProgress: boolean = false;
   gameFinished: boolean = false; // New property to track when a game is completed
   playerWins: number = 0;
