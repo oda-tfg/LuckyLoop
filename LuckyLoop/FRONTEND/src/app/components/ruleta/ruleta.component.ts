@@ -1,6 +1,10 @@
 import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
 import { SaldoService } from './../../services/saldo/saldo.service';
 import { BloquearZoom } from './../../services/bloquearZoomYScroll/bloquearZoomYScroll.service';
+import { PartidaService } from './../../services/partida/partida.service';
+import { JuegosService, Juego } from './../../services/juegos/juegos.service';
+import { ActivatedRoute } from '@angular/router';
+import { take } from 'rxjs/operators';
 
 interface Punto {
   x: number;
@@ -24,7 +28,7 @@ export class RuletaComponent implements OnInit {
   numerosTablero: number[] = [];
   fichaSeleccionada: number = 1;
   apuestas: { [key: string]: number } = {};
-  saldo: number = 0; //cambio de balance inicial al usuario no registrado
+  saldo: number = 0;
 
   // Números de la ruleta en orden (como en una ruleta europea)
   numerosRuleta: number[] = [
@@ -32,14 +36,29 @@ export class RuletaComponent implements OnInit {
     5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26
   ];
 
+  // Id juego ruleta - Se obtendrá dinámicamente
+  private ruletaJuegoId: number = 0;
+
   // Números rojos en la ruleta europea para determinar colores
   numerosRojos: number[] = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
 
+  // Variables para tracking de la partida actual
+  private totalApostadoPartida: number = 0;
+  private partidaEnCurso: boolean = false;
+
+  // Para mostrar mensaje de victoria/derrota
+  showResultIndicator: boolean = false;
+  resultMessage: string = '';
+  resultClass: string = '';
+
   constructor(
-    private renderer: Renderer2, 
+    private renderer: Renderer2,
     private el: ElementRef,
     private saldoService: SaldoService,
-    private bloquearZoomService: BloquearZoom
+    private bloquearZoomService: BloquearZoom,
+    private partidaService: PartidaService,
+    private juegosService: JuegosService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
@@ -47,10 +66,31 @@ export class RuletaComponent implements OnInit {
     this.generarNumerosTablero();
     this.loadUserBalance();
     this.bloquearZoomService.lockDisplaySettings(100);
+    this.loadJuegoId();
   }
 
   ngOnDestroy(): void {
     this.bloquearZoomService.unlockDisplaySettings();
+  }
+
+  // Cargar el ID del juego dinámicamente basado en la ruta actual
+  loadJuegoId(): void {
+    const currentPath = this.route.snapshot.routeConfig?.path || '';
+
+    this.juegosService.getAllJuegos().pipe(take(1)).subscribe({
+      next: (juegos) => {
+        const juego = juegos.find(j => j.url?.replace('/', '') === currentPath);
+        if (juego) {
+          this.ruletaJuegoId = juego.id;
+          console.log('ID dinámico asignado al juego:', this.ruletaJuegoId);
+        } else {
+          console.warn('No se encontró el ID del juego para la ruta:', currentPath);
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener la lista de juegos:', error);
+      }
+    });
   }
 
   // Cargar el saldo del usuario desde la base de datos
@@ -67,8 +107,9 @@ export class RuletaComponent implements OnInit {
 
   // Método para actualizar el saldo en la base de datos
   updateBalanceInDatabase(amount: number): void {
-    this.saldoService.setSaldo(amount).subscribe({
+    this.saldoService.setSaldo(amount).pipe(take(1)).subscribe({
       next: (response) => {
+        this.saldo = response.nuevoSaldo;
         console.log('Saldo actualizado correctamente:', response);
       },
       error: (error) => {
@@ -126,20 +167,36 @@ export class RuletaComponent implements OnInit {
       return;
     }
 
-    // Restar el valor de la apuesta del saldo
-    this.saldo -= this.fichaSeleccionada;
-    
-    // Actualizar el saldo en la base de datos (deducción de la apuesta)
-    this.updateBalanceInDatabase(-this.fichaSeleccionada);
-
-    // Registrar la apuesta
-    if (!this.apuestas[apuesta]) {
-      this.apuestas[apuesta] = 0;
+    // Iniciar partida si no está en curso
+    if (!this.partidaEnCurso) {
+      this.partidaEnCurso = true;
+      this.totalApostadoPartida = 0;
     }
-    this.apuestas[apuesta] += this.fichaSeleccionada;
 
-    // Mostrar la ficha visualmente
-    this.mostrarFichaApuesta(apuesta);
+    // Restar el valor de la apuesta del saldo usando el servicio
+    this.saldoService.setSaldo(-this.fichaSeleccionada).pipe(take(1)).subscribe({
+      next: (response) => {
+        this.saldo = response.nuevoSaldo;
+        
+        // Registrar la apuesta
+        if (!this.apuestas[apuesta]) {
+          this.apuestas[apuesta] = 0;
+        }
+        this.apuestas[apuesta] += this.fichaSeleccionada;
+        this.totalApostadoPartida += this.fichaSeleccionada;
+
+        // Mostrar la ficha visualmente
+        this.mostrarFichaApuesta(apuesta);
+      },
+      error: (error) => {
+        console.error('Error al actualizar saldo:', error);
+        if (error.error && error.error.message) {
+          alert(error.error.message);
+        } else {
+          alert('No se pudo actualizar el saldo. Inténtalo de nuevo.');
+        }
+      }
+    });
   }
 
   // Función para mostrar visualmente una ficha en el tablero
@@ -303,25 +360,53 @@ export class RuletaComponent implements OnInit {
       }
     }
 
-    // Actualizar saldo con las ganancias
-    this.saldo += ganancias;
-    
-    // Actualizar el saldo en la base de datos (añadir ganancias)
+    // Determinar resultado de la partida
+    const beneficioPartida = ganancias - this.totalApostadoPartida;
+    const resultadoPartida = beneficioPartida > 0 ? 'victoria' : 'derrota';
+
+    // Actualizar saldo con las ganancias si las hay
     if (ganancias > 0) {
       this.updateBalanceInDatabase(ganancias);
+      this.showResultMessage(`¡Ganaste! +${ganancias.toFixed(2)}`, 'win');
+    } else {
+      this.showResultMessage(`Perdiste ${this.totalApostadoPartida.toFixed(2)}`, 'lose');
     }
 
-    // Mostrar mensaje de ganancias si hubo
-    if (ganancias > 0) {
-      alert(`¡Has ganado ${ganancias}!`); //CAMBIAR POR MENSAJE EN PANTALLA ENCIMA DE RULETA!!
-    }
+    // Registrar la partida en la base de datos
+    this.partidaService.finPartida(
+      this.ruletaJuegoId,
+      beneficioPartida,
+      this.totalApostadoPartida,
+      resultadoPartida
+    ).pipe(take(1)).subscribe({
+      next: (response) => {
+        console.log('Partida de ruleta registrada correctamente:', response);
+      },
+      error: (error) => {
+        console.error('Error al registrar la partida de ruleta:', error);
+      }
+    });
 
     // Limpiar las fichas visualmente
     const fichas = document.querySelectorAll('.ficha-apuesta');
     fichas.forEach(ficha => ficha.remove());
 
-    // Reiniciar el objeto de apuestas
+    // Reiniciar variables de partida
     this.apuestas = {};
+    this.partidaEnCurso = false;
+    this.totalApostadoPartida = 0;
+  }
+
+  // Mostrar mensaje de resultado
+  showResultMessage(message: string, type: 'win' | 'lose'): void {
+    this.resultMessage = message;
+    this.resultClass = type;
+    this.showResultIndicator = true;
+
+    // Ocultar después de 3 segundos
+    setTimeout(() => {
+      this.showResultIndicator = false;
+    }, 3000);
   }
 
   // Función para borrar todas las apuestas
@@ -334,10 +419,7 @@ export class RuletaComponent implements OnInit {
       totalApuestas += this.apuestas[key];
     }
 
-    // Aumentar el saldo con el total de las apuestas
-    this.saldo += totalApuestas;
-    
-    // Actualizar el saldo en la base de datos (devolver las apuestas)
+    // Aumentar el saldo con el total de las apuestas usando el servicio
     if (totalApuestas > 0) {
       this.updateBalanceInDatabase(totalApuestas);
     }
@@ -346,8 +428,10 @@ export class RuletaComponent implements OnInit {
     const fichas = document.querySelectorAll('.ficha-apuesta');
     fichas.forEach(ficha => ficha.remove());
 
-    // Reiniciar el objeto de apuestas
+    // Reiniciar variables
     this.apuestas = {};
+    this.partidaEnCurso = false;
+    this.totalApostadoPartida = 0;
   }
 
   // Función para el botón de apostar
