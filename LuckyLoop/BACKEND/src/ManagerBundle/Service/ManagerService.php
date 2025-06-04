@@ -2,22 +2,32 @@
 
 namespace App\ManagerBundle\Service;
 
+use App\EstadisticasBundle\Services\EstadisticasService;
+
 class ManagerService{
 
-    public function __construct() {
-        $this->var = $var;
+    private EstadisticasService $estadisticasService;
+
+    public function __construct(EstadisticasService $estadisticasService) {
+        $this->estadisticasService=$estadisticasService;
     }
 
     public function getEstadisticas(): array
     {
-        // Aquí iría la lógica para obtener las estadísticas del juego.
-        // Por ejemplo, podrías consultar una base de datos o realizar cálculos.
-        
-        // Retornamos un ejemplo de estadísticas.
-        return [
-            'total_jugadores' => 100,
-            'partidas_jugadas' => 250,
-            'mejor_puntuacion' => 5000,
-        ];
+        //Dinero ganado y usuario
+        $graficas['dineroUsuario']=$this->getGraficaDineroUsuario(); //PALOTES
+
+        //Dinero apostado y fechas por partida
+        $graficas['apostadoFechas']=$this->getApostadoFechas(); //GRÁFICA NORMAL
+
+        //Beneficio y fecha por partida
+        $graficas['beneficioFechas']=$this->getBeneficioFechas(); //ESTILO PALOTES
+
+        //Numero de persona en positivo y nuemero de personas en negativo
+        $graficas['numPersonasNegativoPositivo']=$this->getNumeroPositivoNegativo(); //GRAFICA ESTILO GALLETA
+    }
+
+    private function getGraficaDineroUsuario(){
+        $this->estadisticasService->getEstadisticas();
     }
 }
