@@ -82,6 +82,10 @@
         }
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.62.1"
+        "dbrekelmans/bdi": "^1.4",
+        "phpunit/phpunit": "^11.5",
+        "symfony/maker-bundle": "^1.62.1",
+        "symfony/panther": "^2.2",
+        "symfony/phpunit-bridge": "^7.3"
     }
 }

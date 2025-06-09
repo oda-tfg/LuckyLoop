@@ -156,3 +156,28 @@ button[type="submit"]:disabled {
   color: #0046e0;
   text-shadow: none;
 }
+
+/*boton volver atras*/
+.back-button {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    display: flex;
+    align-items: center;
+    color: var(--text-light);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--neon-blue);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+  
+  .back-button:hover {
+    background: rgba(0, 81, 255, 0.1);
+    color: var(--text-white);
+  }
+  
+  .back-icon {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+  }
