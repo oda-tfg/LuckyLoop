@@ -1,0 +1,89 @@
+<div class="estadisticas-container">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="casino-loader">
+      <div class="chip chip-1"></div>
+      <div class="chip chip-2"></div>
+      <div class="chip chip-3"></div>
+    </div>
+    <p class="loading-text">Cargando estadísticas...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-state">
+    <div class="error-icon">⚠️</div>
+    <h3>Error al cargar las estadísticas</h3>
+    <p>No se pudieron obtener los datos del servidor</p>
+    <button class="retry-button" (click)="retry()">
+      <span class="retry-icon">🔄</span>
+      Reintentar
+    </button>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!loading && !error" class="estadisticas-content">
+    <header class="estadisticas-header">
+      <h1 class="titulo-neon">
+        <span class="neon-text">ESTADÍSTICAS</span>
+        <span class="casino-text">LUCKYLOOP</span>
+      </h1>
+    </header>
+
+    <!-- Grid Bento Layout -->
+    <div class="bento-grid">
+      <!-- Beneficio por Usuario - Grande Izquierda -->
+      <div class="bento-item bento-large">
+        <div class="card-header">
+          <h2 class="card-title">
+            <span class="card-icon">📊</span>
+            Beneficio por Usuario
+          </h2>
+        </div>
+        <div class="chart-container">
+          <canvas id="dineroUsuarioChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Dinero Apostado por Fecha - Arriba Derecha -->
+      <div class="bento-item bento-medium-top">
+        <div class="card-header">
+          <h2 class="card-title">
+            <span class="card-icon">📈</span>
+            Evolución de Apuestas
+          </h2>
+        </div>
+        <div class="chart-container">
+          <canvas id="apostadoFechasChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Beneficio por Fecha - Abajo Izquierda -->
+      <div class="bento-item bento-bottom-left">
+        <div class="card-header">
+          <h2 class="card-title">
+            <span class="card-icon">💰</span>
+            Beneficios Diarios
+          </h2>
+        </div>
+        <div class="chart-container">
+          <canvas id="beneficioFechasChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Usuarios Positivo/Negativo - Abajo Derecha -->
+      <div class="bento-item bento-bottom-right">
+        <div class="card-header">
+          <h2 class="card-title">
+            <span class="card-icon">🎯</span>
+            Balance de Usuarios
+          </h2>
+        </div>
+        <div class="chart-container">
+          <div class="donut-container">
+            <canvas id="positivoNegativoChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

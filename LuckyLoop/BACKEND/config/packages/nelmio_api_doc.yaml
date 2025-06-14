@@ -58,7 +58,7 @@ nelmio_api_doc:
                                                         type: array
                                                         items:
                                                             type: string
-                                                        example: ["ROLE_USER"]
+                                                        example: ["ROLE_USER", "ROLE_MANAGER"]
                                             expires_at:
                                                 type: integer
                                                 example: 1617638400

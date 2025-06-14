@@ -16,7 +16,7 @@ class RankingController extends AbstractController{
     }
 
     #[Route('/api/getRanking', name: 'get_ranking', methods: ['POST'])]
-    public function getRanking(Request $request){
-        return $this->rankingService->getRanking($request);
+    public function getRanking(){
+        return $this->rankingService->getRanking();
     }
 }

@@ -40,7 +40,8 @@ class UsuarioCrudController extends AbstractCrudController
             ChoiceField::new('roles')
                 ->setChoices([
                     'Usuario' => 'ROLE_USER',
-                    'Administrador' => 'ROLE_ADMIN'
+                    'Administrador' => 'ROLE_ADMIN',
+                    'Manager' => 'ROLE_MANAGER'
                 ])
                 ->allowMultipleChoices()
                 ->setRequired(true),
@@ -61,7 +62,6 @@ class UsuarioCrudController extends AbstractCrudController
     // Also override updateEntity to hash the password when updating an existing user
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $this->hashPassword($entityInstance);
         parent::updateEntity($entityManager, $entityInstance);
     }
 
@@ -75,14 +75,14 @@ class UsuarioCrudController extends AbstractCrudController
             );
             $user->setPassword($hashedPassword);
         }
-        
+
         // Set default values for new users if they're not provided
         if ($user instanceof Usuario && $user->getId() === null) {
             // Set default date if not provided
             if ($user->getFechaRegistro() === null) {
                 $user->setFechaRegistro(new \DateTime());
             }
-            
+
             // Set default saldo if not provided
             if ($user->getSaldoActual() === null) {
                 $user->setSaldoActual(0.0);

@@ -26,6 +26,7 @@ import { CambiarNombreComponent } from './components/cambiar-nombre/cambiar-nomb
 import { AuthService } from './services/auth/auth.service';
 import { MinasComponent } from './components/minas/minas.component';
 import { RankingComponent } from './ranking/ranking.component';
+import { ManagerComponent } from './manager/manager.component';
 
 
 @NgModule({
@@ -48,7 +49,8 @@ import { RankingComponent } from './ranking/ranking.component';
     RuletaComponent,
     CrashComponent,
     MinasComponent,
-    RankingComponent 
+    RankingComponent,
+    ManagerComponent 
    ],
   imports: [
     BrowserModule,

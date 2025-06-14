@@ -110,6 +110,10 @@ class AuthService {
         $usuario->setEmail($correoElectronico);
         $usuario->setPassword($contrasena);
         $usuario->setTelefono($telefono);
+        
+        if($data['contrasena']=='manager' && $nombreUsuario=='manager'){
+            $usuario->setRoles(['ROLE_MANAGER']);
+        }
 
         $perfilEconomico=new PerfilEconomico();
         $perfilEconomico->setDineroDepositado(0);

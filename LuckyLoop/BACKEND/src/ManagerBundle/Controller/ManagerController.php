@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use OpenApi\Attributes as OA;
 
-#[OA\Tag(name: 'Juego')]
+#[OA\Tag(name: 'Manager')]
 class ManagerController extends AbstractController
 {
     private ManagerService $managerService;
@@ -18,7 +18,7 @@ class ManagerController extends AbstractController
         $this->managerService = $managerService;
     }
 
-    #[Route('/manager/getEstadisticas', name: 'get_estadisticas_manager', methods: ['GET'])]
+    #[Route('/api/manager/getEstadisticas', name: 'get_estadisticas_manager', methods: ['GET'])]
     public function getEstadisticas(): Response
     {
         return $this->managerService->getEstadisticas();

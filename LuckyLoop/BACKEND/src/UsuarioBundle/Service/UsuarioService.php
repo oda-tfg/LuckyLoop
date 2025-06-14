@@ -8,16 +8,19 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\SecurityBundle\Security;
 
-class UsuarioService {
+class UsuarioService
+{
     private EntityManagerInterface $entityManager;
     private Security $security;
-    
-    public function __construct(EntityManagerInterface $entityManager, Security $security) {
+
+    public function __construct(EntityManagerInterface $entityManager, Security $security)
+    {
         $this->entityManager = $entityManager;
         $this->security = $security;
     }
 
-    public function updateSaldo(Request $request): JsonResponse {
+    public function updateSaldo(Request $request): JsonResponse
+    {
         $data = json_decode($request->getContent(), true);
 
         if (!isset($data['dinero'])) {
@@ -44,9 +47,18 @@ class UsuarioService {
 
             //Insertar en dineroDepositado
             $perfilEconomico = $this->entityManager->getRepository(PerfilEconomico::class)->findOneBy(['usuario' => $usuario]);
-            $perfilEconomico->setDineroDepositado($perfilEconomico->getDineroDepositado() + $dinero);
 
-        } else{
+            if (!isset($perfilEconomico)) {
+                $perfilEconomico = new PerfilEconomico();
+                $perfilEconomico->setUsuario($usuario);
+                $perfilEconomico->setDineroRetirado(0);
+                $perfilEconomico->setDineroDepositado(0);
+            }
+
+            $perfilEconomico->setDineroDepositado($perfilEconomico->getDineroDepositado() + $dinero);
+        $this->entityManager->persist($perfilEconomico);
+
+        } else {
             $usuario->setSaldoActual($usuario->getSaldoActual() - $dinero);
 
             //Insertar en dineroRetirado
@@ -62,7 +74,8 @@ class UsuarioService {
         ]);
     }
 
-    public function getSaldo(){
+    public function getSaldo()
+    {
         $usuario = $this->security->getUser();
 
         if (!$usuario) {
@@ -76,7 +89,7 @@ class UsuarioService {
         ]);
     }
 
-    
+
     public function cambiarNombre(Request $request): JsonResponse
     {
         //buscar usuario
