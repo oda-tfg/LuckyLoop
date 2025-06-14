@@ -1,0 +1,556 @@
+/* tictactoe.component.css */
+:host {
+  display: block;
+  color: var(--text-white, #ffffff);
+  font-family: 'Roboto', sans-serif;
+}
+
+.tictactoe-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 60px auto 20px;
+  padding: 20px;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+}
+
+.tictactoe-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.neon-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #00ffff;
+  text-shadow: 
+    0 0 5px #00ffff,
+    0 0 10px #00ffff,
+    0 0 20px #00ffff,
+    0 0 40px #0051ff;
+  animation: textFlicker 3s infinite alternate;
+  margin: 0;
+}
+
+@keyframes textFlicker {
+  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+    opacity: 1;
+    text-shadow: 
+      0 0 5px #00ffff,
+      0 0 10px #00ffff,
+      0 0 20px #00ffff,
+      0 0 40px #0051ff;
+  }
+  20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+    opacity: 0.8;
+    text-shadow: none;
+  }
+}
+
+/* Bento Grid Layout */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto;
+  gap: 15px;
+  grid-template-areas:
+    "prize prize prize prize"
+    "score score score score"
+    "board board board board"
+    "status status button button";
+  flex: 1;
+}
+
+.bento-card {
+  background: rgba(10, 10, 25, 0.8);
+  border: 1px solid rgba(81, 0, 255, 0.3);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(81, 0, 255, 0.3);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.bento-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg, 
+    transparent, 
+    rgba(81, 0, 255, 0.1), 
+    transparent
+  );
+  transition: all 0.8s ease;
+  z-index: -1;
+}
+
+.bento-card:hover::before {
+  left: 100%;
+}
+
+.bento-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 20px rgba(81, 0, 255, 0.4);
+  border-color: rgba(81, 0, 255, 0.6);
+}
+
+/* Score Board */
+.score-board {
+  grid-area: score;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.score-item {
+  text-align: center;
+  flex: 1;
+}
+
+.score-item h3 {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.score-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.player-score .score-value {
+  color: #23ff00;
+  text-shadow: 0 0 10px rgba(35, 255, 0, 0.5);
+}
+
+.draws-score .score-value {
+  color: #ffaa00;
+  text-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+}
+
+.ai-score .score-value {
+  color: #ff3a3a;
+  text-shadow: 0 0 10px rgba(255, 58, 58, 0.5);
+}
+
+/* Game Board */
+.game-board {
+  grid-area: board;
+  padding: 30px;
+}
+
+.board-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 12px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.cell {
+  width: 100%;
+  aspect-ratio: 1;
+  background: rgba(5, 5, 15, 0.6);
+  border: 2px solid rgba(81, 0, 255, 0.4);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  font-weight: bold;
+  cursor: default;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.cell.clickable {
+  cursor: pointer;
+}
+
+.cell.clickable:hover {
+  background: rgba(81, 0, 255, 0.2);
+  border-color: rgba(81, 0, 255, 0.8);
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(81, 0, 255, 0.6);
+}
+
+.cell.player-x {
+  color: #23ff00;
+  text-shadow: 0 0 20px rgba(35, 255, 0, 0.8);
+}
+
+.cell.player-o {
+  color: #ff3a3a;
+  text-shadow: 0 0 20px rgba(255, 58, 58, 0.8);
+}
+
+.cell.winning-cell {
+  background: rgba(255, 223, 0, 0.2) !important;
+  border-color: #FFD700 !important;
+  animation: pulse 1s infinite;
+}
+
+.cell.ai-move::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 58, 58, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: ripple 0.6s ease-out;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(255, 223, 0, 0.5);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(255, 223, 0, 0.8);
+  }
+}
+
+@keyframes ripple {
+  to {
+    width: 120%;
+    height: 120%;
+    opacity: 0;
+  }
+}
+
+/* Game Status */
+.game-status {
+  grid-area: status;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.game-status.winner {
+  border-color: rgba(35, 255, 0, 0.5);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 20px rgba(35, 255, 0, 0.5);
+}
+
+.game-status.draw {
+  border-color: rgba(255, 170, 0, 0.5);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 170, 0, 0.5);
+}
+
+.message {
+  font-size: 1.5rem;
+  margin: 0;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Button Area */
+.button-area {
+  grid-area: button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.new-game-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 40px;
+  background: rgba(81, 0, 255, 0.1);
+  border: 2px solid rgba(81, 0, 255, 0.6);
+  border-radius: 50px;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(81, 0, 255, 0.3);
+}
+
+.new-game-btn:hover {
+  background: rgba(81, 0, 255, 0.2);
+  border-color: rgba(81, 0, 255, 0.8);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 25px rgba(81, 0, 255, 0.5);
+}
+
+.new-game-btn:active {
+  transform: translateY(0);
+}
+
+/* Back Button */
+.back-button {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  color: var(--text-light);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--neon-blue);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background: rgba(0, 81, 255, 0.1);
+  color: var(--text-white);
+}
+
+.back-icon {
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(81, 0, 255, 0.6),
+    transparent
+  );
+  margin: 15px 0;
+}
+
+/* Cell content animation */
+.cell span {
+  display: block;
+  animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0) rotate(180deg);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+
+/* Loader for thinking state */
+.mini-loader {
+  width: 30px;
+  height: 30px;
+  border: 3px solid transparent;
+  border-top: 3px solid var(--neon-purple, #5100ff);
+  border-right: 3px solid var(--neon-blue, #0051ff);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  box-shadow: 0 0 10px rgba(81, 0, 255, 0.6);
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Estilos para VS */
+.vs-text {
+  color: #ff0000;
+  text-shadow: 
+    0 0 5px #ff0000,
+    0 0 10px #ff0000,
+    0 0 20px #ff0000,
+    0 0 40px #ff6600;
+  animation: textFlicker 3s infinite alternate;
+  animation-delay: 0.5s;
+}
+
+/* Estilos para IA */
+.ia-text {
+  color: #eaff00;
+  text-shadow: 
+    0 0 5px #eaff00,
+    0 0 10px #eaff00,
+    0 0 20px #eaff00,
+    0 0 40px #ff0080;
+  animation: textFlicker 3s infinite alternate;
+  animation-delay: 1s;
+}
+
+/* Prize Banner */
+.prize-banner {
+  grid-area: prize;
+  text-align: center;
+  padding: 15px;
+}
+
+.prize-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #00ffff;
+  text-shadow: 
+    0 0 10px #00ffff,
+    0 0 20px #00ffff,
+    0 0 30px #00ffff,
+    0 0 40px #00ffff;
+  animation: textFlicker 2s infinite alternate;
+  margin: 0;
+}
+
+.prize-amount {
+  font-size: 2.2rem;
+  color: #00FF00;
+  text-shadow: 
+    0 0 10px #00FF00,
+    0 0 20px #00FF00,
+    0 0 30px #00FF00,
+    0 0 40px #00FF00;
+}
+
+@keyframes prizeGlow {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas:
+      "prize prize"
+      "score score"
+      "board board"
+      "status button";
+    gap: 12px;
+  }
+  
+  .prize-text {
+    font-size: 1.5rem;
+  }
+  
+  .prize-amount {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .tictactoe-container {
+    padding: 10px;
+    margin-top: 50px;
+    min-height: calc(100vh - 60px);
+  }
+  
+  .neon-text {
+    font-size: 1.8rem;
+  }
+  
+  .score-value {
+    font-size: 1.8rem;
+  }
+  
+  .cell {
+    font-size: 2.2rem;
+  }
+  
+  .game-board {
+    padding: 20px;
+  }
+  
+  .board-grid {
+    gap: 10px;
+    max-width: 350px;
+  }
+  
+  .prize-text {
+    font-size: 1.3rem;
+  }
+  
+  .prize-amount {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "prize"
+      "score"
+      "board"
+      "status"
+      "button";
+    gap: 10px;
+  }
+  
+  .neon-text {
+    font-size: 1.5rem;
+  }
+  
+  .score-board {
+    flex-direction: row;
+    gap: 10px;
+  }
+  
+  .score-item h3 {
+    font-size: 0.9rem;
+  }
+  
+  .score-value {
+    font-size: 1.5rem;
+  }
+  
+  .cell {
+    font-size: 1.8rem;
+  }
+  
+  .board-grid {
+    gap: 8px;
+    max-width: 300px;
+  }
+  
+  .message {
+    font-size: 1.2rem;
+  }
+  
+  .new-game-btn {
+    padding: 12px 25px;
+    font-size: 1rem;
+  }
+  
+  .prize-text {
+    font-size: 1.1rem;
+  }
+  
+  .prize-amount {
+    font-size: 1.3rem;
+  }
+  
+  .game-board {
+    padding: 15px;
+  }
+  
+  .bento-card {
+    padding: 15px;
+  }
+}

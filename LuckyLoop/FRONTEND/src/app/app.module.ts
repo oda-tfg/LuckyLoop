@@ -27,6 +27,7 @@ import { AuthService } from './services/auth/auth.service';
 import { MinasComponent } from './components/minas/minas.component';
 import { RankingComponent } from './ranking/ranking.component';
 import { ManagerComponent } from './manager/manager.component';
+import { TictactoeComponent } from './components/tictactoe/tictactoe.component';
 
 
 @NgModule({
@@ -50,7 +51,8 @@ import { ManagerComponent } from './manager/manager.component';
     CrashComponent,
     MinasComponent,
     RankingComponent,
-    ManagerComponent 
+    ManagerComponent,
+    TictactoeComponent 
    ],
   imports: [
     BrowserModule,

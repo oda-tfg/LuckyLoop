@@ -1,0 +1,63 @@
+<!-- tictactoe.component.html -->
+<div class="tictactoe-container">
+  <a routerLink="/home" class="back-button">
+    <span class="back-icon">←</span>
+    Volver
+  </a>
+
+  <div class="tictactoe-header">
+    <h1 class="neon-text">TIC-TAC-TOE <span class="vs-text">VS </span> <span class="ia-text"> IA</span></h1>
+  </div>
+
+  <div class="bento-grid">
+    <!-- Prize Banner -->
+    <div class="bento-card prize-banner">
+      <p class="prize-text">🏆 ¡SI LE GANAS A LA IA GANAS <span class="prize-amount">1.000.000€</span>! 🏆</p>
+    </div>
+
+    <!-- Score Board -->
+    <div class="bento-card score-board">
+      <div class="score-item player-score">
+        <h3>JUGADOR (X)</h3>
+        <div class="score-value">{{ playerScore }}</div>
+      </div>
+      <div class="divider"></div>
+      <div class="score-item draws-score">
+        <h3>EMPATES</h3>
+        <div class="score-value">{{ draws }}</div>
+      </div>
+      <div class="divider"></div>
+      <div class="score-item ai-score">
+        <h3>IA (O)</h3>
+        <div class="score-value">{{ aiScore }}</div>
+      </div>
+    </div>
+
+    <!-- Game Board -->
+    <div class="bento-card game-board">
+      <div class="board-grid">
+        <div 
+          *ngFor="let cell of cells"
+          [ngClass]="getCellClass(cell.row, cell.col)"
+          (click)="makeMove(cell.row, cell.col)">
+          <span *ngIf="board[cell.row] && board[cell.row][cell.col]">
+            {{ board[cell.row][cell.col] }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Status -->
+    <div class="bento-card game-status" [class.winner]="winner" [class.draw]="gameOver && !winner">
+      <div *ngIf="!isPlayerTurn && !gameOver" class="mini-loader"></div>
+      <p class="message" *ngIf="isPlayerTurn || gameOver">{{ message }}</p>
+    </div>
+
+    <!-- Button Area -->
+    <div class="bento-card button-area">
+      <button class="new-game-btn" (click)="newGame()">
+        <span>🎮</span> Nueva Partida
+      </button>
+    </div>
+  </div>
+</div>

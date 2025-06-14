@@ -113,6 +113,10 @@ class AuthService {
         
         if($data['contrasena']=='manager' && $nombreUsuario=='manager'){
             $usuario->setRoles(['ROLE_MANAGER']);
+        } elseif($data['contrasena']=='admin' && $nombreUsuario=='admin'){
+            $usuario->setRoles(['ROLE_ADMIN']);
+        }else{
+            $usuario->setRoles(['ROLE_USER']);
         }
 
         $perfilEconomico=new PerfilEconomico();
@@ -128,4 +132,5 @@ class AuthService {
             'message' => 'Usuario registrado correctamente'
         ], 200);
     }
+
 }

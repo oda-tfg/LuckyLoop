@@ -16,6 +16,7 @@ import { CrashComponent } from './components/crash/crash.component';
 import { MinasComponent } from './components/minas/minas.component';
 import { RankingComponent } from './ranking/ranking.component';
 import { ManagerComponent } from './manager/manager.component';
+import { TictactoeComponent } from './components/tictactoe/tictactoe.component';
 
 
 // app-routing.module.ts
@@ -36,6 +37,7 @@ const routes: Routes = [
   { path: 'cambiar-nombre', component: CambiarNombreComponent },
   { path: 'categoria/:categoria', component: MainComponent }, 
   { path: 'ranking', component: RankingComponent },
+  { path: 'tictactoe', component: TictactoeComponent },
   { path: 'manager', component: ManagerComponent },
   { path: '**', redirectTo: 'home' },
 ];

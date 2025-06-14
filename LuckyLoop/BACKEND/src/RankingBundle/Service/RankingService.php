@@ -33,7 +33,8 @@ class RankingService
         $usuariosConBeneficio = [];
 
         foreach ($usuarios as $usuario) {
-            if ($usuario->getRoles()[0] != 'ROLE_MANAGER') {
+            //SOLO ENSEÑAMOS STATS DE USUSARIOS NORMALES
+            if (!in_array('ROLE_MANAGER', $usuario->getRoles()) && !in_array('ROLE_ADMIN', $usuario->getRoles())) {
                 $perfilEconomico = $this->em->getRepository(PerfilEconomico::class)->findOneBy(['usuario' => $usuario]);
 
                 if (isset($perfilEconomico)) {

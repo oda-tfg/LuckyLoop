@@ -189,4 +189,9 @@ public function __construct(AuthService $authService) {
     {
         return $this->authService->registrar($request);
     }
+
+    #[Route('/api/usuario/getRol', name: 'get_rol', methods: ['GET'])]
+    public function getRol(Request $request){
+        return new JsonResponse($this->getUser()->getRoles());
+    }
 }
