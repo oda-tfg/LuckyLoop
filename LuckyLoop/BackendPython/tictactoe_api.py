@@ -10,7 +10,7 @@ app = FastAPI()
 # Configurar CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],  # Tu app Angular
+    allow_origins=["http://localhost:4200"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -30,6 +30,7 @@ class TicTacToeGame:
         self.board = [[None for _ in range(3)] for _ in range(3)]
         self.current_player = 'X'  # Humano es X, IA es O
     
+    # Revisar quien gana
     def check_winner(self, board):
         # Revisar filas
         for row in board:
@@ -49,12 +50,14 @@ class TicTacToeGame:
         
         return None
     
+    # Ver si el tablero esta lleno
     def is_board_full(self, board):
         for row in board:
             if None in row:
                 return False
         return True
     
+    # Devuelve todos los movimientos posibles
     def get_available_moves(self, board):
         moves = []
         for i in range(3):

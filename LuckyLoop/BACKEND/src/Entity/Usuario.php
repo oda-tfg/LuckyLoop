@@ -55,7 +55,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: true)]
     private ?Recompensa $nivel = null;
 
-    #[ORM\Column(length: 50, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $tokenPassword = null;
     public function getId(): ?int
     {
