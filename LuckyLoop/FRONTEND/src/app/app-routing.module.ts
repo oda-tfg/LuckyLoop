@@ -35,7 +35,7 @@ const routes: Routes = [
   { path: 'cambiarPassword', component: CambiarPasswordComponent },
   { path: 'estadisticas', component: EstadisticasComponent },
   { path: 'cambiar-nombre', component: CambiarNombreComponent },
-  { path: 'categoria/:categoria', component: MainComponent }, 
+  { path: 'categoria/:categoria', component: FullLayoutComponent }, 
   { path: 'ranking', component: RankingComponent },
   { path: 'tictactoe', component: TictactoeComponent },
   { path: 'manager', component: ManagerComponent },

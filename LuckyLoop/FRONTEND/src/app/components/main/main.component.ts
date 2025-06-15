@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { url } from 'node:inspector';
 import { JuegosService } from '../../services/juegos/juegos.service';
 
 @Component({
@@ -19,6 +18,7 @@ export class MainComponent implements OnInit {
 
   constructor(
       private router : Router,
+      private route: ActivatedRoute,
       private juegosService: JuegosService
     ) {}
 
@@ -28,11 +28,35 @@ export class MainComponent implements OnInit {
         next: (games) => {
           this.featuredGames = games;
           this.filteredGames = [...this.featuredGames]; // Mostrar todos al inicio
+          this.checkRouteAndFilter(); // Verificar si hay una categoría en la ruta
         },
         error: (err) => {
           console.error('Error al cargar los juegos:', err);
         }
       });
+
+      // Escuchar cambios en la ruta
+      this.route.params.subscribe(params => {
+        this.checkRouteAndFilter();
+      });
+    }
+
+    // Método para verificar la ruta y filtrar según la categoría
+    checkRouteAndFilter(): void {
+      const category = this.route.snapshot.params['categoria']; // Cambiar 'category' por 'categoria'
+      if (category) {
+        this.filterByCategory(category);
+      } else {
+        // Si no hay categoría (ruta /home), mostrar todos
+        this.filteredGames = [...this.featuredGames];
+      }
+    }
+
+    // Método para filtrar por categoría
+    filterByCategory(category: string): void {
+      this.filteredGames = this.featuredGames.filter(game => 
+        game.category && game.category.toLowerCase() === category.toLowerCase()
+      );
     }
 
   //método para llamar desde el componente padre (donde esté el header)
@@ -43,7 +67,18 @@ export class MainComponent implements OnInit {
 
   //Metodo para filtrar los juegos basados en la busqueda
   filterGames(): void {
-    this.filteredGames = this.featuredGames.filter(game =>
+    const category = this.route.snapshot.params['categoria']; // Cambiar 'category' por 'categoria'
+    let gamesToFilter = this.featuredGames;
+    
+    // Si hay una categoría activa, filtrar primero por categoría
+    if (category) {
+      gamesToFilter = this.featuredGames.filter(game => 
+        game.category && game.category.toLowerCase() === category.toLowerCase()
+      );
+    }
+    
+    // Luego filtrar por búsqueda
+    this.filteredGames = gamesToFilter.filter(game =>
       game.name.toLowerCase().includes(this.searchTerm)
     );
   }
@@ -59,11 +94,3 @@ export class MainComponent implements OnInit {
     alert('Este juego no tiene una URL definida.');
   }
 }
-
-  
-
-  /* ngOnInit() {
-    this.route.data.subscribe(data => {
-      this.showGame = data['showGame'] || false;
-    });
-  } */

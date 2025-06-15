@@ -25,33 +25,33 @@ export class NavComponent implements OnInit {
   }
 
   loadCategorias() {
-    this.navService.getCategorias().subscribe({
-      next: (categorias) => {
-        // Crear items de menú para cada categoría
-        this.categoriaItems = categorias.map(cat => ({
-          title: cat,
-          route: `/category/${cat.toLowerCase()}`,
-          icon: this.getCategoryIcon(cat)
-        }));
-        
-        // Reconstruir el menú con: Inicio + Categorías + Torneos
-        this.menuItems = [
-          { title: 'Inicio', route: '/home', icon: 'home' },
-          ...this.categoriaItems,
-          { title: 'Torneos', route: '/tournaments', icon: 'trophy' }
-        ];
-      },
-      error: (error) => {
-        console.error('Error al cargar categorías:', error);
-      }
-    });
-  }
+  this.navService.getCategorias().subscribe({
+    next: (categorias) => {
+      // Crear items de menú para cada categoría
+      this.categoriaItems = categorias.map(cat => ({
+        title: cat,
+        route: `/categoria/${cat.toLowerCase()}`, 
+        icon: this.getCategoryIcon(cat)
+      }));
+      
+      // Reconstruir el menú con: Inicio + Categorías + Torneos
+      this.menuItems = [
+        { title: 'Inicio', route: '/home', icon: 'home' },
+        ...this.categoriaItems,
+        { title: 'Torneos', route: '/tournaments', icon: 'trophy' }
+      ];
+    },
+    error: (error) => {
+      console.error('Error al cargar categorías:', error);
+    }
+  });
+}
 
   // Método para asignar iconos según la categoría
   getCategoryIcon(category: string): string {
     const iconMap: {[key: string]: string} = {
       'Azar': 'dice',
-      'Programacion': 'code',
+      'IA': 'brain',
       // Añade más mapeos según necesites
     };
     
