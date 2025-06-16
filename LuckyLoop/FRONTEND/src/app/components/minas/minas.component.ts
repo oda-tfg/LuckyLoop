@@ -67,8 +67,8 @@ export class MinasComponent implements OnInit, OnDestroy {
   resultMessage: string = '';
   resultClass: string = '';
 
-  // ID del juego de minas (ajusta según tu base de datos)
-  private minasJuegoId: number = 0; // Asume que el ID del juego de minas es 2
+  // ID del juego de minas 
+  private minasJuegoId: number = 0; 
 
   constructor(
     private saldoService: SaldoService,
