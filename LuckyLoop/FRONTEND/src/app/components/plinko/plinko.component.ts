@@ -34,9 +34,10 @@ export class PlinkoComponent implements AfterViewInit, OnInit {
   pinRadius: number = 3;
   pinColor: string = '#ffffff';
 
-  // Configuración de física para dificultar llegar a los extremos
-  gravity: number = 0.05;     // Gravedad reducida (antes era 0.2)
-  bounceReduction: number = 0.8; // Menor conservación de energía en rebotes
+  // Configuración de física corregida
+  gravity: number = 0.1;     // Gravedad aumentada para velocidad apropiada
+  bounceReduction: number = 0.7; // Factor de rebote más realista
+  friction: number = 1; // Fricción del aire para hacer el movimiento más suave
 
   // Dimensiones del canvas
   canvasWidth: number = 0;
@@ -65,39 +66,33 @@ export class PlinkoComponent implements AfterViewInit, OnInit {
   ) { }
 
   ngOnInit(): void {
-
     this.loadUserBalance();
     this.bloquearZoomService.lockDisplaySettings(100);
     this.loadJuegoId();
   }
 
   ngOnDestroy(): void {
-
     this.bloquearZoomService.unlockDisplaySettings();
   }
 
-
-
   loadJuegoId(): void {
-  const currentPath = this.route.snapshot.routeConfig?.path || '';
+    const currentPath = this.route.snapshot.routeConfig?.path || '';
 
-  this.juegosService.getAllJuegos().subscribe({
-    next: (juegos) => {
-      const juego = juegos.find(j => j.url?.replace('/', '') === currentPath);
-      if (juego) {
-        this.plinkoJuegoId = juego.id;
-        console.log('ID dinámico asignado al juego:', this.plinkoJuegoId);
-      } else {
-        console.warn('No se encontró el ID del juego para la ruta:', currentPath);
+    this.juegosService.getAllJuegos().subscribe({
+      next: (juegos) => {
+        const juego = juegos.find(j => j.url?.replace('/', '') === currentPath);
+        if (juego) {
+          this.plinkoJuegoId = juego.id;
+          console.log('ID dinámico asignado al juego:', this.plinkoJuegoId);
+        } else {
+          console.warn('No se encontró el ID del juego para la ruta:', currentPath);
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener la lista de juegos:', error);
       }
-    },
-    error: (error) => {
-      console.error('Error al obtener la lista de juegos:', error);
-    }
-  });
-}
-
-
+    });
+  }
 
   // Cargar el saldo del usuario desde la base de datos
   loadUserBalance(): void {
@@ -295,90 +290,117 @@ export class PlinkoComponent implements AfterViewInit, OnInit {
     }
   }
 
- update() {
-  if (!this.isPlaying) return;
+  update() {
+    if (!this.isPlaying) return;
 
-  this.balls.forEach((ball, index) => {
-    // Movimiento sin gravedad
-    ball.x += ball.vx;
-    ball.y += ball.vy;
+    this.balls.forEach((ball, index) => {
+      // Aplicar gravedad
+      ball.vy += this.gravity;
 
-    // Colisiones con pines
-    this.pins.forEach((pin) => {
-      const dx = ball.x - pin.x;
-      const dy = ball.y - pin.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      const minDist = this.pinRadius + this.ballRadius;
-      if (distance < minDist) {
-        const angle = Math.atan2(dy, dx);
-        const targetX = pin.x + Math.cos(angle) * minDist;
-        const targetY = pin.y + Math.sin(angle) * minDist;
-        const ax = (targetX - ball.x) * 0.1;
-        const ay = (targetY - ball.y) * 0.1;
-        ball.vx -= ax;
-        ball.vy -= ay;
+      // Aplicar fricción del aire
+      ball.vx *= this.friction;
+      ball.vy *= this.friction;
+
+      // Actualizar posición
+      ball.x += ball.vx;
+      ball.y += ball.vy;
+
+      // Colisiones con pines
+      this.pins.forEach((pin) => {
+        const dx = ball.x - pin.x;
+        const dy = ball.y - pin.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const minDist = this.pinRadius + this.ballRadius;
+        
+        if (distance < minDist) {
+          // Normalizar vector de colisión
+          const nx = dx / distance;
+          const ny = dy / distance;
+          
+          // Separar la bola del pin
+          ball.x = pin.x + nx * minDist;
+          ball.y = pin.y + ny * minDist;
+          
+          // Calcular la velocidad relativa
+          const dvx = ball.vx;
+          const dvy = ball.vy;
+          
+          // Calcular el impulso
+          const impulse = 2 * (dvx * nx + dvy * ny);
+          
+          // Aplicar el impulso con el factor de rebote
+          ball.vx -= impulse * nx * this.bounceReduction;
+          ball.vy -= impulse * ny * this.bounceReduction;
+          
+          // Añadir un poco de aleatoriedad horizontal para hacer el juego más interesante
+          ball.vx += (Math.random() - 0.5) * 0.5;
+        }
+      });
+
+      // Colisiones con los bordes
+      if (ball.x - this.ballRadius < 0) {
+        ball.x = this.ballRadius;
+        ball.vx = Math.abs(ball.vx) * this.bounceReduction;
+      } else if (ball.x + this.ballRadius > this.canvasWidth) {
+        ball.x = this.canvasWidth - this.ballRadius;
+        ball.vx = -Math.abs(ball.vx) * this.bounceReduction;
+      }
+
+      // Verificación de caída en un bucket
+      if (ball.y > this.canvasHeight - this.ballRadius - this.buckets[0].height) {
+        for (let i = 0; i < this.buckets.length; i++) {
+          const bucket = this.buckets[i];
+          if (ball.x >= bucket.x && ball.x < bucket.x + bucket.width) {
+            const winAmount = this.amount * bucket.multiplier;
+            this.lastWinAmount = winAmount;
+            this.isWin = bucket.multiplier >= 1;
+            this.balance += winAmount;
+            this.updateBalanceInDatabase(winAmount);
+
+            this.showWinIndicator = true;
+            this.winIndicatorX = ball.x;
+            this.winIndicatorY = ball.y - 30;
+
+            bucket.isHit = true;
+            setTimeout(() => {
+              bucket.isHit = false;
+            }, 300);
+
+            this.balls.splice(index, 1);
+
+            setTimeout(() => {
+              this.showWinIndicator = false;
+            }, 2000);
+
+            // Registrar partida con PartidaService
+            const beneficioPartida = winAmount - this.amount;
+            const resultado = bucket.multiplier >= 1 ? 'victoria' : 'derrota';
+
+            this.partidaService.finPartida(
+              this.plinkoJuegoId,
+              beneficioPartida,
+              this.amount,
+              resultado
+            ).subscribe({
+              next: (response) => {
+                console.log('Partida de Plinko registrada correctamente:', response);
+              },
+              error: (error) => {
+                console.error('Error al registrar la partida de Plinko:', error);
+              }
+            });
+
+            break;
+          }
+        }
       }
     });
 
-    // Colisiones con los bordes
-    if (ball.x - this.ballRadius < 0 || ball.x + this.ballRadius > this.canvasWidth) {
-      ball.vx *= -1;
+    // Si no quedan bolas, detener la animación
+    if (this.balls.length === 0) {
+      this.isPlaying = false;
     }
-
-    // Verificación de caída en un bucket
-    if (ball.y > this.canvasHeight - this.ballRadius - this.buckets[0].height) {
-      for (let i = 0; i < this.buckets.length; i++) {
-        const bucket = this.buckets[i];
-        if (ball.x >= bucket.x && ball.x < bucket.x + bucket.width) {
-          const winAmount = this.amount * bucket.multiplier;
-          this.lastWinAmount = winAmount;
-          this.isWin = bucket.multiplier >= 1;
-          this.balance += winAmount;
-          this.updateBalanceInDatabase(winAmount);
-
-          this.showWinIndicator = true;
-          this.winIndicatorX = ball.x;
-          this.winIndicatorY = ball.y - 30;
-
-          bucket.isHit = true;
-          setTimeout(() => {
-            bucket.isHit = false;
-          }, 300);
-
-          this.balls.splice(index, 1);
-
-          setTimeout(() => {
-            this.showWinIndicator = false;
-          }, 2000);
-
-          // Registrar partida con PartidaService
-          const beneficioPartida = winAmount - this.amount;
-          const resultado = bucket.multiplier >= 1 ? 'victoria' : 'derrota';
-
-          this.partidaService.finPartida(
-            this.plinkoJuegoId,
-            beneficioPartida,
-            this.amount,
-            resultado
-          ).subscribe({
-            next: (response) => {
-              console.log('Partida de Plinko registrada correctamente:', response);
-            },
-            error: (error) => {
-              console.error('Error al registrar la partida de Plinko:', error);
-            }
-          });
-
-          break;
-        }
-      }
-    }
-  });
-
-  requestAnimationFrame(() => this.update());
-}
-
-
+  }
 
   // Método para actualizar el saldo en la base de datos
   updateBalanceInDatabase(winAmount: number): void {
@@ -427,16 +449,15 @@ export class PlinkoComponent implements AfterViewInit, OnInit {
       }
     });
 
-    // Crear una nueva bola en la parte superior central
-    const startX = this.canvasWidth / 2;
+    // Crear una nueva bola en la parte superior central con pequeña variación aleatoria
+    const startX = this.canvasWidth / 2 + (Math.random() - 0.5) * 10; // Pequeña variación horizontal
     const startY = 50;
 
-    // Con poca gravedad, aún necesitamos una velocidad inicial pequeña en Y
     this.balls.push({
       x: startX,
       y: startY,
-      vx: 0,
-      vy: 1, // Velocidad inicial vertical reducida ya que ahora tenemos algo de gravedad
+      vx: (Math.random() - 0.5) * 0.5, // Pequeña velocidad horizontal inicial aleatoria
+      vy: 0, // Empieza sin velocidad vertical (la gravedad se encargará)
       hasHitBucket: false
     });
 
@@ -466,11 +487,7 @@ export class PlinkoComponent implements AfterViewInit, OnInit {
   setDoubleAmount(): void {
     this.amount = this.amount * 2;
   }
-
-
 }
-
-
 
 interface Ball {
   x: number;
