@@ -57,8 +57,8 @@ export class CrashComponent implements OnInit, OnDestroy {
   // Intervalo para actualizar la animación
   private gameInterval: any;
   
-  // ID del juego de crash (ajusta según tu base de datos)
-  private crashJuegoId: number = 0; // Asumiendo que crash tiene ID 2
+  // ID del juego de crash 
+  private crashJuegoId: number = 0; 
 
   constructor(
     private saldoService: SaldoService,
