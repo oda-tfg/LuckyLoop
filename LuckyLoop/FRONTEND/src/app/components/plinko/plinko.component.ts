@@ -35,8 +35,8 @@ export class PlinkoComponent implements AfterViewInit, OnInit {
   pinColor: string = '#ffffff';
 
   // Configuración de física corregida
-  gravity: number = 0.1;     // Gravedad aumentada para velocidad apropiada
-  bounceReduction: number = 0.7; // Factor de rebote más realista
+  gravity: number = 0.1; //Mas gravedad
+  bounceReduction: number = 0.6; // Factor de rebote más realista
   friction: number = 1; // Fricción del aire para hacer el movimiento más suave
 
   // Dimensiones del canvas
